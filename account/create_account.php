@@ -1,11 +1,20 @@
 <?php
     require "../pdoconfig.php";
+    require "../auth/admin_auth.php";
+
+
+    
+    $authId = $_POST["auth_id"];
+    $authType = $_POST["auth_type"];
     
     $id = $_POST["id"];
     $fname = $_POST["f_name"];
     $lname = $_POST["l_name"];
     $email = $_POST["email"];
     $type = $_POST["type"];
+
+    //Validate auth
+    admin_auth($authId, $authType, $server, $database, $user, $pass, $conn);
 
     //Validate strings not empty
 
@@ -36,6 +45,7 @@
     }
     catch (PDOException $e)
     {
+        echo $e->getMessage();
         var_dump(http_response_code(400));
     }
     

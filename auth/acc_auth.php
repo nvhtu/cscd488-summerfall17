@@ -5,24 +5,6 @@
     {
         $conn = openDB($server, $database, $user, $pass, $conn);
 
-        if(strcmp($auth_type, 'Student') == 0)
-        {
-            $sql = $conn->prepare("SELECT COUNT(id) as count
-                                FROM student
-                                WHERE id = '$auth_id'");
-
-            $sql->execute();
-            $sqlResult = $sql->fetchAll(PDO::FETCH_ASSOC);
-
-            if($sqlResult[0]["count"] == 0)
-            {
-                var_dump(http_response_code(400));
-                $conn = null;
-                die("Unauthorized access");
-            }
-        }
-        else 
-        {
             $sql = $conn->prepare("SELECT type
                                 FROM account
                                 WHERE id = '$auth_id'");
@@ -49,6 +31,7 @@
                 die("Unauthorized access");
                 
             }
-        }   
+
+           
     }
 ?>

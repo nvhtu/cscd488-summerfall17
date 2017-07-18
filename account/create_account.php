@@ -1,20 +1,27 @@
 <?php
     require "../pdoconfig.php";
-    require "../auth/admin_auth.php";
-
+    require "../auth/acc_auth.php";
 
     
     $authId = $_POST["auth_id"];
     $authType = $_POST["auth_type"];
-    
+
     $id = $_POST["id"];
     $fname = $_POST["f_name"];
     $lname = $_POST["l_name"];
     $email = $_POST["email"];
     $type = $_POST["type"];
 
-    //Validate auth
+    //Validate admin auth
     admin_auth($authId, $authType, $server, $database, $user, $pass, $conn);
+    
+    //Validate only admin can create admin account
+    if(strcmp($authType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
+    {
+        var_dump(http_response_code(400));
+        $conn = null;
+        die("Unauthorized access. You must be an admin to create admin account.");
+    }
 
     //Validate strings not empty
 

@@ -1,10 +1,19 @@
 <?php
     require "../pdoconfig.php";
+    require "../auth/acc_auth.php";
+
+    
+    $authId = $_POST["auth_id"];
+    $authType = $_POST["auth_type"];
 
     $request = $_POST["request"];
+
+     //Validate admin auth
+    admin_auth($authId, $authType, $server, $database, $user, $pass, $conn);
     
 
     $conn = openDB($server, $database, $user, $pass, $conn);
+    
 
     /*
     Client must specify what they want to change in $request parameter
@@ -48,6 +57,17 @@
     {
         $id = $_POST["id"];
         $type = $_POST["type"];
+
+        $authType = $_POST["auth_type"];
+
+        //Validate only admin can change admin account
+        if(strcmp($authType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
+        {
+            var_dump(http_response_code(400));
+            $conn = null;
+            die("Unauthorized access. You must be an admin to chanage an admin account.");
+        }
+
         $sql = $conn->prepare("UPDATE account
                                 SET type = '$type'
                                 WHERE id = $id");

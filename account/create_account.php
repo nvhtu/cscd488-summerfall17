@@ -20,7 +20,7 @@
     {
         var_dump(http_response_code(400));
         $conn = null;
-        die("Unauthorized access. You must be an admin to create admin account.");
+        die("Unauthorized access. You must be an admin to create an admin account.");
     }
 
     //Validate strings not empty

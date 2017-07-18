@@ -47,7 +47,8 @@
         case "update_state_info":
                             updateState($conn);
                             updateInfo($conn);
-                            break;                  
+                            break;    
+        default: var_dump(http_response_code(400));          
     }
 
 
@@ -69,12 +70,12 @@
         }
 
         $sql = $conn->prepare("UPDATE account
-                                SET type = '$type'
-                                WHERE id = $id");
+                                SET type = :type
+                                WHERE id = :id");
 
         try
         {
-            $sql->execute();
+            $sql->execute(array(':type'=>$type, ':id'=>$id));
         }
         catch (PDOException $e)
         {
@@ -90,15 +91,16 @@
         $email = $_POST["email"];
 
         $sql = $conn->prepare("UPDATE user
-                                SET f_name = '$fname', l_name = '$lname', email = '$email'
-                                WHERE id = $id");
+                                SET f_name = :fname, l_name = :lname, email = :email
+                                WHERE id = :id");
 
         try
         {
-            $sql->execute();
+            $sql->execute(array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':id'=>$id));
         }
         catch (PDOException $e)
         {
+            echo $e->getMessage();
             var_dump(http_response_code(400));
         }
     }
@@ -108,15 +110,16 @@
         $id = $_POST["id"];
         $state = $_POST["state"];
         $sql = $conn->prepare("UPDATE student
-                                SET state = '$state'
-                                WHERE id = $id");
+                                SET state = :state
+                                WHERE id = :id");
 
         try
         {
-            $sql->execute();
+            $sql->execute(array(':state'=>$state, ':id'=>$id));
         }
         catch (PDOException $e)
         {
+            echo $e->getMessage();
             var_dump(http_response_code(400));
         }
     }

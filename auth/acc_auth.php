@@ -7,9 +7,9 @@
 
             $sql = $conn->prepare("SELECT type
                                 FROM account
-                                WHERE id = '$auth_id'");
+                                WHERE id = :auth_id");
 
-            $sql->execute();
+            $sql->execute(array(':auth_id'=>$auth_id));
             $sqlResult = $sql->fetchAll(PDO::FETCH_ASSOC);
 
             //echo json_encode($sqlResult);
@@ -25,7 +25,7 @@
 
             if(!$isAuth)
             {
-                echo "False";
+                //echo "False";
                 var_dump(http_response_code(400));
                 $conn = null;
                 die("Unauthorized access");

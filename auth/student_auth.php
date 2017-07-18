@@ -7,9 +7,9 @@
 
             $sql = $conn->prepare("SELECT COUNT(id) as count
                                 FROM student
-                                WHERE id = '$auth_id'");
+                                WHERE id = :auth_id");
 
-            $sql->execute();
+            $sql->execute(array(':auth_id'=>$auth_id));
             $sqlResult = $sql->fetchAll(PDO::FETCH_ASSOC);
 
             echo json_encode($sqlResult);

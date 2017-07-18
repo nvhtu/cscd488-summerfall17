@@ -26,29 +26,49 @@
     //Validate strings not empty
 
     //Validate strings
+
     
     $conn = openDB($server, $database, $user, $pass, $conn);
 
     $sql = $conn->prepare("INSERT INTO user (id, f_name, l_name, email) 
-                            VALUES ($id, '$fname', '$lname', '$email')");   
+                            VALUES (:id, :fname, :lname, :email)");   
 
     //Student account
     if(strcmp($type, "Student") == 0)
     {
         $state = $_POST["state"];
         $sql2 = $conn->prepare("INSERT INTO student (id, state)
-                            VALUES ($id, '$state')");
+                            VALUES (:id, :state)");
+
+        try
+        {
+            $sql2->execute(array(':id'=>$id, ':state'=>$state));
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            var_dump(http_response_code(400));
+        }
     }
     else 
     {
         $sql2 = $conn->prepare("INSERT INTO account (id, type)
-                            VALUES ($id, '$type')");
+                            VALUES (:id, :type)");
+        
+        try
+        {
+            $sql2->execute(array(':id'=>$id, ':type'=>$type));
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            var_dump(http_response_code(400));
+        }
     }
 
     try
     {
-        $sql->execute();
-        $sql2->execute();
+        $sql->execute(array(':id'=>$id, ':fname'=>$fname, ':lname'=>$lname, ':email'=>$email));
     }
     catch (PDOException $e)
     {

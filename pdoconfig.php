@@ -1,4 +1,14 @@
-<?php	
+<?php
+/**
+ * Database connection configurations
+ * @author: Tu Nguyen
+ * @version: 1.0
+ */
+
+	/**
+	 * Opens a connection to the database
+	 * @return PDO object
+	 */
 	function openDB()
 	{
 		$server="localhost";

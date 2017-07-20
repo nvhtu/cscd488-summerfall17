@@ -1,10 +1,12 @@
 <?php
-    require "../pdoconfig.php";
-    require "../auth/acc_auth.php";
+    //require "../pdoconfig.php";
+    require "../auth/user_auth.php";
+    require "../util/sql_exe.php";
 
     
-    $authId = $_POST["auth_id"];
-    $authType = $_POST["auth_type"];
+    $requesterId = $_POST["auth_id"];
+    $requesterType = $_POST["auth_type"];
+    $allowedType = array("Admin");
 
     $id = $_POST["id"];
     $fname = $_POST["f_name"];
@@ -12,9 +14,10 @@
     $email = $_POST["email"];
     $type = $_POST["type"];
 
-    //Validate admin auth
-    admin_auth($authId, $authType, $server, $database, $user, $pass, $conn);
-    
+    //User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
+
+    /*
     //Validate only admin can create admin account
     if(strcmp($authType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
     {
@@ -22,60 +25,35 @@
         $conn = null;
         die("Unauthorized access. You must be an admin to create an admin account.");
     }
+    */
 
     //Validate strings not empty
 
     //Validate strings
 
     
-    $conn = openDB($server, $database, $user, $pass, $conn);
 
-    $sql = $conn->prepare("INSERT INTO user (id, f_name, l_name, email) 
-                            VALUES (:id, :fname, :lname, :email)");   
+    $sqlInsertUser = "INSERT INTO user (user_id, f_name, l_name, email) 
+            VALUES (:id, :fname, :lname, :email)";  
+    sqlExecute($sqlInsertUser, array(':id'=>$id, ':fname'=>$fname, ':lname'=>$lname, ':email'=>$email), False);
 
-    //Student account
-    if(strcmp($type, "Student") == 0)
+    
+    if(strcmp($type, "Student") == 0) //Student account
     {
         $state = $_POST["state"];
-        $sql2 = $conn->prepare("INSERT INTO student (id, state)
-                            VALUES (:id, :state)");
+        $sqlInsertStudent = "INSERT INTO student (student_id, state)
+                            VALUES (:id, :state)";
 
-        try
-        {
-            $sql2->execute(array(':id'=>$id, ':state'=>$state));
-        }
-        catch (PDOException $e)
-        {
-            echo $e->getMessage();
-            var_dump(http_response_code(400));
-        }
+        sqlExecute($sqlInsertStudent, array(':id'=>$id, ':state'=>$state), False);
     }
-    else 
+    else //Admin, Teacher, Grader account
     {
-        $sql2 = $conn->prepare("INSERT INTO account (id, type)
-                            VALUES (:id, :type)");
+        $sqlInsertAccount= "INSERT INTO account (account_id, type)
+                            VALUES (:id, :type)";
         
-        try
-        {
-            $sql2->execute(array(':id'=>$id, ':type'=>$type));
-        }
-        catch (PDOException $e)
-        {
-            echo $e->getMessage();
-            var_dump(http_response_code(400));
-        }
+        sqlExecute($sqlInsertAccount, array(':id'=>$id, ':type'=>$type), False);
     }
 
-    try
-    {
-        $sql->execute(array(':id'=>$id, ':fname'=>$fname, ':lname'=>$lname, ':email'=>$email));
-    }
-    catch (PDOException $e)
-    {
-        echo $e->getMessage();
-        var_dump(http_response_code(400));
-    }
-    
     $conn = null;
 
 

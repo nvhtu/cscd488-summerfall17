@@ -1,19 +1,22 @@
 <?php
-    require "../pdoconfig.php";
-    require "../auth/acc_auth.php";
-
+/**
+ * Update info of Teacher, Grader, and Student account
+ * @author: Tu Nguyen
+ * @version: 1.2
+ */
+    //require "../pdoconfig.php";
+    require "../auth/user_auth.php";
+    require "../util/sql_exe.php";
     
-    $authId = $_POST["auth_id"];
-    $authType = $_POST["auth_type"];
+    $requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
 
     $request = $_POST["request"];
 
-     //Validate admin auth
-    admin_auth($authId, $authType, $server, $database, $user, $pass, $conn);
-    
+    //User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
 
-    $conn = openDB($server, $database, $user, $pass, $conn);
-    
 
     /*
     Client must specify what they want to change in $request parameter
@@ -32,21 +35,21 @@
 
     switch ($request)
     {
-        case "update_type": updateType($conn);
+        case "update_type": updateType();
                             break;
         case "update_type_info":
-                            updateType($conn);
-                            updateInfo($conn);
+                            updateType();
+                            updateInfo();
                             break;
         case "update_info":
-                            updateInfo($conn);
+                            updateInfo();
                             break;
         case "update_state":
-                            updateState($conn);
+                            updateState();
                             break; 
         case "update_state_info":
-                            updateState($conn);
-                            updateInfo($conn);
+                            updateState();
+                            updateInfo();
                             break;    
         default: var_dump(http_response_code(400));          
     }
@@ -54,73 +57,51 @@
 
     
 
-    function updateType($conn)
+    function updateType()
     {
         $id = $_POST["id"];
         $type = $_POST["type"];
 
-        $authType = $_POST["auth_type"];
+        $requesterType = $_POST["requester_type"];
 
         //Validate only admin can change admin account
-        if(strcmp($authType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
+        if(strcmp($requesterType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
         {
             var_dump(http_response_code(400));
             $conn = null;
             die("Unauthorized access. You must be an admin to chanage an admin account.");
         }
 
-        $sql = $conn->prepare("UPDATE account
-                                SET type = :type
-                                WHERE id = :id");
+        $sqlUpdateAccount = "UPDATE account
+                            SET type = :type
+                            WHERE account_id = :id";
 
-        try
-        {
-            $sql->execute(array(':type'=>$type, ':id'=>$id));
-        }
-        catch (PDOException $e)
-        {
-            var_dump(http_response_code(400));
-        }
+        sqlExecute($sqlUpdateAccount, array(':type'=>$type, ':id'=>$id), False);
     }
 
-    function updateInfo($conn)
+    function updateInfo()
     {
         $id = $_POST["id"];
         $fname = $_POST["f_name"];
         $lname = $_POST["l_name"];
         $email = $_POST["email"];
 
-        $sql = $conn->prepare("UPDATE user
-                                SET f_name = :fname, l_name = :lname, email = :email
-                                WHERE id = :id");
-
-        try
-        {
-            $sql->execute(array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':id'=>$id));
-        }
-        catch (PDOException $e)
-        {
-            echo $e->getMessage();
-            var_dump(http_response_code(400));
-        }
+        $sqlUpdateUser = "UPDATE user
+                        SET f_name = :fname, l_name = :lname, email = :email
+                        WHERE user_id = :id";
+        
+        sqlExecute($sqlUpdateUser, array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':id'=>$id), False);
     }
 
-    function updateState($conn)
+    function updateState()
     {
         $id = $_POST["id"];
         $state = $_POST["state"];
-        $sql = $conn->prepare("UPDATE student
-                                SET state = :state
-                                WHERE id = :id");
 
-        try
-        {
-            $sql->execute(array(':state'=>$state, ':id'=>$id));
-        }
-        catch (PDOException $e)
-        {
-            echo $e->getMessage();
-            var_dump(http_response_code(400));
-        }
+        $sqlUpdateStudent = "UPDATE student
+                            SET state = :state
+                            WHERE student_id = :id";
+
+        sqlExecute($sqlUpdateStudent, array(':state'=>$state, ':id'=>$id), False);
     }
 ?>

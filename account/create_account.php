@@ -4,9 +4,9 @@
     require "../util/sql_exe.php";
 
     
-    $requesterId = $_POST["auth_id"];
-    $requesterType = $_POST["auth_type"];
-    $allowedType = array("Admin");
+    $requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
 
     $id = $_POST["id"];
     $fname = $_POST["f_name"];

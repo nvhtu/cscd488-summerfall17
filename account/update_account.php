@@ -20,7 +20,6 @@
 
     /*
     Client must specify what they want to change in $request parameter
-    if request ==
     "update_type": requires "id" and "type"
     "update_type_info": requires "id", "type", "f_name", "l_name", "email"
     "update_info": requires "id", "f_name", "l_name", "email"
@@ -51,7 +50,8 @@
                             updateState();
                             updateInfo();
                             break;    
-        default: var_dump(http_response_code(400));          
+        default: var_dump(http_response_code(400));
+                echo "Unrecognized request string.";          
     }
 
 

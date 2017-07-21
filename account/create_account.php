@@ -1,4 +1,9 @@
 <?php
+/**
+ * Create new Teacher, Grader, and Student account
+ * @author: Tu Nguyen
+ * @version: 1.2
+ */
     //require "../pdoconfig.php";
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
@@ -46,7 +51,7 @@
 
         sqlExecute($sqlInsertStudent, array(':id'=>$id, ':state'=>$state), False);
     }
-    else //Admin, Teacher, Grader account
+    else //Teacher, Grader account
     {
         $sqlInsertAccount= "INSERT INTO account (account_id, type)
                             VALUES (:id, :type)";

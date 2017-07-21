@@ -18,34 +18,50 @@
      */
     function user_auth($requesterId, $requesterType, $allowedType)
     {
-        $conn = openDB();
-
-            $sql = $conn->prepare("SELECT type
-                                FROM account
-                                WHERE account_id = :auth_id");
-
-            $sql->execute(array(':auth_id'=>$requesterId));
-            $sqlResult = $sql->fetchAll(PDO::FETCH_ASSOC);
-
-            //echo json_encode($sqlResult);
-            //echo count ($sqlResult);
-
+            $conn = openDB();
             $isAuth = False;
 
-            //Checks if passed-in type matches type in database.
-            for($i=0; $i<count($sqlResult); $i++)
+            if(strcmp($requesterType, "Student") == 0) //Student account
             {
-                if(strcmp($requesterType, $sqlResult[$i]["type"]) == 0)
-                    $isAuth = True;
-            }
+                $sqlCountStudent = "SELECT COUNT(student_id) as count
+                                    FROM student
+                                    WHERE student_id = :requester_id";
 
-            if(!$isAuth)
+                $sqlResult = sqlExecute($sqlCountStudent, array(':requester_id'=>$requesterId), True);
+
+                if($sqlResult[0]["count"] == 0)
+                {
+                    var_dump(http_response_code(400));
+                    $conn = null;
+                    die("Unauthorized access. Account does not exist.");
+                }
+            }
+            else //Admin, Grader, Teacher account
             {
-                //echo "False";
-                var_dump(http_response_code(400));
-                $conn = null;
-                die("Unauthorized access. Account does not exist.");
-                
+                $sqlSelectAccount = "SELECT type
+                                    FROM account
+                                    WHERE account_id = :requester_id";
+
+                $sqlResult = sqlExecute($sqlSelectAccount, array(':requester_id'=>$requesterId), True);
+
+                //echo json_encode($sqlResult);
+                //echo count ($sqlResult);    
+
+                //Checks if passed-in type matches type in database.
+                for($i=0; $i<count($sqlResult); $i++)
+                {
+                    if(strcmp($requesterType, $sqlResult[$i]["type"]) == 0)
+                        $isAuth = True;
+                }
+
+                if(!$isAuth)
+                {
+                    //echo "False";
+                    var_dump(http_response_code(400));
+                    $conn = null;
+                    die("Unauthorized access. Account does not exist.");
+                    
+                }
             }
 
             //Check if passed-in type is allowed to use the caller function

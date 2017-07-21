@@ -25,16 +25,19 @@
         catch (PDOException $e)
         {
             var_dump(http_response_code(400));
+            $conn = null;
             die();
         }
         
         if($isDataReturned)
         {
             $sqlResult = $sql->fetchall(PDO::FETCH_ASSOC);
+            $conn = null;
             return $sqlResult;
         }
         else 
         {
+            $conn = null;
             return $sqlResult;
         }
         

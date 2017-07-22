@@ -7,7 +7,7 @@
     //require "../pdoconfig.php";
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
-
+    require_once "check_examid_studentid.php";
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
@@ -26,29 +26,8 @@
 
     //Validate strings
 
-    //Validate exam id exists
-    $sqlCheckExists = "SELECT COUNT(*) as count
-                            FROM exam
-                            WHERE exam_id = :exam_id";
-    $sqlResult = sqlExecute($sqlCheckExists, array('exam_id'=>$examId), TRUE);
-
-    if($sqlResult[0]["count"] == 0)
-    {
-        var_dump(http_response_code(400));
-        die("Exam ID does not exist.");
-    }
-    
-    //Validate student id exists
-    $sqlCheckExists = "SELECT COUNT(*) as count
-                            FROM student
-                            WHERE student_id = :student_id";
-    $sqlResult = sqlExecute($sqlCheckExists, array('student_id'=>$studentId), TRUE);
-
-    if($sqlResult[0]["count"] == 0)
-    {
-        var_dump(http_response_code(400));
-        die("Student ID does not exist.");
-    }
+    checkExamExists($examId);
+    checkStudentExists($studentId);
 
     //Add student exam grade
     $sqlAddExamGrade = "INSERT INTO exam_grade(exam_id, student_id, grade, passed, possible_grade)

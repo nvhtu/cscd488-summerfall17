@@ -7,13 +7,12 @@
     //require "../pdoconfig.php";
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
-
     
-    $requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+    $requesterId = $_GET["requester_id"];
+    $requesterType = $_GET["requester_type"];
     $allowedType = array("Admin", "Teacher", "Student");
 
-    $request = $_POST["request"];
+    $request = $_GET["request"];
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
@@ -71,7 +70,7 @@
     */
     function getAccountById()
     {
-        $id = $_POST["id"];
+        $id = $_GET["id"];
 
 
         $sqlCountStudent = "SELECT COUNT(student_id) as count

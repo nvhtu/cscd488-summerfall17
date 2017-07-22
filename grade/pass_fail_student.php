@@ -1,6 +1,6 @@
 <?php
 /**
- * Update a student exam grade
+ * Pass or fail a student
  * @author: Tu Nguyen
  * @version: 1.0
  */
@@ -12,11 +12,11 @@
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
-    $allowedType = array("Admin", "Teacher");
+    $allowedType = array("Admin");
 
     $examId = $_POST["exam_id"];
     $studentId = $_POST["student_id"];
-    $grade = $_POST["grade"];
+    $passed = $_POST["passed"];
 
 
     //User authentication
@@ -29,12 +29,12 @@
     checkExamExists($examId);
     checkStudentExists($studentId);
 
-    //Update student exam grade
-    $sqlUpdateExamGrade = "UPDATE exam_grade
-                        SET grade = :grade
+    //Add student exam grade
+    $sqlUpdatePassed = "UPDATE exam_grade
+                        SET passed = :passed
                         WHERE student_id = :student_id";
     
-    sqlExecute($sqlUpdateExamGrade, array('grade'=>$grade, 'student_id'=>$studentId), False);
+    sqlExecute($sqlUpdatePassed, array('passed'=>$passed, 'student_id'=>$studentId), False);
 
 
 ?>    

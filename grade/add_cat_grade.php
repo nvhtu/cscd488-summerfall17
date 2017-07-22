@@ -1,6 +1,6 @@
 <?php
 /**
- * Update a student exam grade
+ * Add exam category grade for a student
  * @author: Tu Nguyen
  * @version: 1.0
  */
@@ -8,16 +8,14 @@
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
     require_once "check_id.php";
-
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
-    $allowedType = array("Admin", "Teacher");
+    $allowedType = array("Admin", "Teacher", "Grader");
 
-    $examId = $_POST["exam_id"];
+    $graderExamCatId = $_POST["grader_exam_cat_id"];
     $studentId = $_POST["student_id"];
     $grade = $_POST["grade"];
-
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
@@ -26,15 +24,12 @@
 
     //Validate strings
 
-    checkExamExists($examId);
+    checkGraderExamCatExists($graderExamCatId);
     checkStudentExists($studentId);
 
-    //Update student exam grade
-    $sqlUpdateExamGrade = "UPDATE exam_grade
-                        SET grade = :grade
-                        WHERE student_id = :student_id";
+    //Add student category grade
+    $sqlAddCatGrade = "INSERT INTO category_grade(grader_exam_cat_id, student_id, grade)
+                        VALUES (:grader_exam_cat_id, :student_id, :grade)";
     
-    sqlExecute($sqlUpdateExamGrade, array('grade'=>$grade, 'student_id'=>$studentId), False);
-
-
+    sqlExecute($sqlAddCatGrade, array('grader_exam_cat_id'=>$graderExamCatId, 'student_id'=>$studentId, 'grade'=>$grade), False);
 ?>    

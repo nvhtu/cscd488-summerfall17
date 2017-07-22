@@ -29,4 +29,18 @@
             die("Student ID does not exist.");
         }
     }
+
+    function checkGraderExamCatExists($examCatId)
+    {
+        $sqlCheckExists = "SELECT COUNT(*) as count
+                                FROM assigned_grader
+                                WHERE grader_exam_cat_id = :grader_exam_cat_id";
+        $sqlResult = sqlExecute($sqlCheckExists, array('grader_exam_cat_id'=>$examCatId), TRUE);
+
+        if($sqlResult[0]["count"] == 0)
+        {
+            var_dump(http_response_code(400));
+            die("Assigned Grader on exame category ID does not exist.");
+        }
+    }
 ?>

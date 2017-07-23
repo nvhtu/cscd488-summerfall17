@@ -8,9 +8,12 @@
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
 
-    $requesterId = $_POST["auth_id"];
-    $requesterType = $_POST["auth_type"];
+    $requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
     $allowedType = array("Admin", "Teacher");
+
+    //User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
 
     $quarter = $_POST["quarter"];
     $date = $_POST["date"];
@@ -20,9 +23,6 @@
     $duration = $_POST["duration"];
     $start_time = $_POST["start_time"];
     $cutoff = $_POST["cutoff"];
-
-    //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
 
     $sqlInsertExam = "INSERT INTO exam (quarter, date, location, state, passing_grade, duration, start_time, cutoff)
                                    VALUES (:quarter, :exam_date, :location, :state, :passing_grade, :duration, :start_time, :cutoff)";

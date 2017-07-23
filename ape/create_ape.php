@@ -38,8 +38,11 @@
     );
 
     sqlExecute($sqlInsertExam, $data, false);
-    //Need id returned after sqlExecute!
-    $exam_id = $conn->lastInsertId();
+
+    //get ID of exam that was just inserted
+    $sqlInsertExam = "SELECT exam_id from exam ORDER BY exam_id DESC LIMIT 1";
+    $data = null;
+    $exam_id = sqlExecute($sqlInsertExam, $data, true)[0]["exam_id"];
 
     //Add exam to in_class_exam if account is teacher
     if(strcmp($requesterType, "Teacher") == 0) //Teacher account
@@ -47,6 +50,6 @@
         $sqlInsertInClass = "INSERT INTO in_class_exam (exam_id, teacher_id)
                              VALUES (:exam_id, :teacher_id)";
         $data = array(':exam_id' => $exam_id, ':teacher_id' => $requesterId);
-        $exam = sqlExecute($sqlInsertInClass, $data, true);
+        $exam = sqlExecute($sqlInsertInClass, $data, false);
     }
 ?>

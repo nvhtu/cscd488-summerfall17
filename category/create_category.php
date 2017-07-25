@@ -1,23 +1,20 @@
 <?php
-	require "../pdoconfig.php";
+	require_once "../util/sql_exe.php";
+	require_once "../auth/user_auth.php";
 	
-	//$id = $_POST["id"];
+	$requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
+	
+	//TODO: validate name is set/valid
 	$name = $_POST["name"];
 	
-	//validate input
+	//echo "before auth";
 	
-	$conn = openDB($server, $database, $user, $pass, $conn);
-	$sql = $conn->prepare("INSERT INTO category (name) 
-							VALUES ('$name')");
+	//User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
 	
-	try
-	{
-		$sql->execute();
-	}
-	catch (PDOException $e)
-	{
-		var_dump(http_response_code(400));
-	}
-	
-	$conn = null;
+	sqlExecute("INSERT INTO category (name) VALUES (:name)",
+				array(':name' => $name),
+				false);
 ?>

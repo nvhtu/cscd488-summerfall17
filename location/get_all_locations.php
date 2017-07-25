@@ -1,20 +1,17 @@
 <?php
-	require "../pdoconfig.php";
+	require_once "../util/sql_exe.php";
+	require_once "../auth/user_auth.php";
 	
-	$conn = openDB($server, $database, $user, $pass, $conn);
-	$sql = $conn->prepare("SELECT * 
-							FROM location");
+	$requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
 	
-	try
-	{
-		$sql->execute();
-	}
-	catch (PDOException $e)
-	{
-		var_dump(http_response_code(400));
-	}
+	//User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
 	
-	$sqlResult = $sql->fetchall(PDO::FETCH_ASSOC);
+	$sqlResult = sqlExecute("SELECT * FROM location",
+				 array(),
+				 true);
+
 	echo json_encode($sqlResult);
-	$conn = null;
 ?>

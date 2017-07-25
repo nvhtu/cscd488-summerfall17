@@ -1,24 +1,19 @@
 <?php
-	require "../pdoconfig.php";
+	require_once "../util/sql_exe.php";
+	require_once "../auth/user_auth.php";
 	
+	$requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
+	
+	//TODO: validate name and id are set/valid
 	$id = $_POST["id"];
 	$name = $_POST["name"];
 	
-	//validate input
-	
-	$conn = openDB($server, $database, $user, $pass, $conn);
-	$sql = $conn->prepare("UPDATE category
-							SET name = '$name'
-							WHERE id = $id");
-	
-	try
-	{
-		$sql->execute();
-	}
-	catch (PDOException $e)
-	{
-		var_dump(http_response_code(400));
-	}
-	
-	$conn = null;
+	//User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
+	//echo "after auth";
+	sqlExecute("UPDATE category SET name = :name WHERE cat_id = :id",
+				array(':name' => $name, ':id' => $id),
+				False);
 ?>

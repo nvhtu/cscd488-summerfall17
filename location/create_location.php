@@ -1,24 +1,19 @@
 <?php
-	require "../pdoconfig.php";
+	require_once "../util/sql_exe.php";
+	require_once "../auth/user_auth.php";
 	
-	//$id = $_POST["id"];
+	$requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
+	
+	//TODO: validate name and seats are set/valid
 	$name = $_POST["name"];
 	$seats = $_POST["seats"];
 	
-	//validate input
+	//User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
 	
-	$conn = openDB($server, $database, $user, $pass, $conn);
-	$sql = $conn->prepare("INSERT INTO location (name, seats) 
-							VALUES ('$name', $seats)");
-	
-	try
-	{
-		$sql->execute();
-	}
-	catch (PDOException $e)
-	{
-		var_dump(http_response_code(400));
-	}
-	
-	$conn = null;
+	sqlExecute("INSERT INTO location (name, seats) VALUES (:name, :seats)",
+				array(':name' => $name, ':seats' => $seats),
+				false);
 ?>

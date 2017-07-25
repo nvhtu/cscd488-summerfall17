@@ -1,6 +1,6 @@
 <?php
 /**
- * Create new exam
+ * Get exam info depending on account type
  * @author: Aaron Griffis
  * @version: 1.0
  */
@@ -14,9 +14,20 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
-    $sqlSelectExams = "SELECT * FROM exam";
-    $data = array();
+    //If teacher, get only their exams
+    if(strcmp($requesterType, 'Teacher') == 0)
+    {
+        $sqlSelectExams = "SELECT exam.*
+                            FROM exam
+                            INNER JOIN in_class_exam
+                            USING (exam_id)
+                            WHERE teacher_id = :teacher_id";
+        $data = array(':teacher_id' => $requesterId);
+        $teacherExams = sqlExecute($sqlSelectId, $data, true);
+    }
 
-    $sqlResult = sqlExecute($sqlSelectExams, $data, true);
+    //TO DO: Restrict student accounts
+
+    $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
 	echo json_encode($sqlResult);
 ?>

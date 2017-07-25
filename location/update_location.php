@@ -1,25 +1,20 @@
 <?php
-	require "../pdoconfig.php";
+	require_once "../util/sql_exe.php";
+	require_once "../auth/user_auth.php";
 	
+	$requesterId = $_POST["requester_id"];
+    $requesterType = $_POST["requester_type"];
+    $allowedType = array("Admin", "Teacher");
+	
+	//TODO: validate name, id, and seats are set/valid
 	$id = $_POST["id"];
 	$name = $_POST["name"];
 	$seats = $_POST["seats"];
 	
-	//validate input
+	//User authentication
+    user_auth($requesterId, $requesterType, $allowedType);
 	
-	$conn = openDB($server, $database, $user, $pass, $conn);
-	$sql = $conn->prepare("UPDATE location 
-							SET name = '$name', seats = $seats
-							WHERE id = $id");
-	
-	try
-	{
-		$sql->execute();
-	}
-	catch (PDOException $e)
-	{
-		var_dump(http_response_code(400));
-	}
-	
-	$conn = null;
+	sqlExecute("UPDATE location SET name = :name, seats = :seats WHERE loc_id = :id",
+				array(':name' => $name, ':seats' => $seats, ':id' => $id),
+				false);
 ?>

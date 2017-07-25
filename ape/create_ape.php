@@ -2,11 +2,10 @@
 /**
  * Create new exam
  * @author: Aaron Griffis
- * @version: 1.0
+ * @version: 1.1
  */
-    //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
 
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];

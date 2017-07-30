@@ -15,4 +15,11 @@ phpCAS::setCasServerCACert($cas_server_ca_cert_path);
 phpCAS::handleLogoutRequests(true, $cas_real_hosts);
 phpCAS::forceAuthentication();
 
+$_SESSION['loggedIn'] = true;
+//get all attributes from returned object.
+//Array includes: "UserType", "Email", "FirstName", "Ewuid", "LastName"
+$userAttr = phpCAS::getAttributes();
+$_SESSION['ewuid'] = $userAttr["Ewuid"];
+echo $_SESSION['ewuid'];
+
 ?>

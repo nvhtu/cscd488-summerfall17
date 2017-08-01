@@ -18,7 +18,7 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
-    //Validate strings not empty
+    //Validate strings not emp
 
     //Validate strings
 

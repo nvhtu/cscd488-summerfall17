@@ -2,7 +2,7 @@
 /**
  * Get exam info depending on account type
  * @author: Aaron Griffis
- * @version: 1.0
+ * @version: 1.2
  */
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
@@ -23,11 +23,10 @@
                             USING (exam_id)
                             WHERE teacher_id = :teacher_id";
         $data = array(':teacher_id' => $requesterId);
-        $teacherExams = sqlExecute($sqlSelectId, $data, true);
+        $sqlResult = sqlExecute($sqlSelectId, $data, true);
+    } else {
+      $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
     }
-
-    //TO DO: Restrict student accounts
-
-    $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+    
 	echo json_encode($sqlResult);
 ?>

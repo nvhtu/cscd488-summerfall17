@@ -1,5 +1,5 @@
 <?php
-    require_once "../util/sql_exe.php";  
+    require_once "sql_exe.php";  
      
      
     function checkExamExists($examId)
@@ -27,6 +27,34 @@
         {
             var_dump(http_response_code(400));
             die("Student ID does not exist.");
+        }
+    }
+
+    function checkUserExists($accountId)
+    {
+        $sqlCheckExists = "SELECT COUNT(*) as count
+                                FROM user
+                                WHERE user_id = :user_id";
+        $sqlResult = sqlExecute($sqlCheckExists, array('user_id'=>$accountId), TRUE);
+
+        if($sqlResult[0]["count"] == 0)
+        {
+            var_dump(http_response_code(400));
+            die("User ID does not exist.");
+        }
+    }
+
+    function checkNotStudentExists($accountId)
+    {
+        $sqlCheckExists = "SELECT COUNT(*) as count
+                                FROM account
+                                WHERE account_id = :account_id";
+        $sqlResult = sqlExecute($sqlCheckExists, array('account_id'=>$accountId), TRUE);
+
+        if($sqlResult[0]["count"] == 0)
+        {
+            var_dump(http_response_code(400));
+            die("Admin/Teacher/Grader Account ID does not exist.");
         }
     }
 

@@ -7,7 +7,7 @@
     //require "../pdoconfig.php";
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
-    require_once "check_id.php";
+    require_once "../util/check_id.php";
 
     
     $requesterId = $_POST["requester_id"];

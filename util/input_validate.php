@@ -7,7 +7,8 @@
     }
 
     function validate_name($name){
-        check("`^[a-zA-Z ]+$`", $name);
+        //Must be letters and spaces
+        check_input_format("`^[a-zA-Z ]+$`", $name);
         return true;
     }
 
@@ -21,32 +22,32 @@
 
     function validate_date($date){
         //must be in YYYY-MM-DD format
-        check("`^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$`", $date);
+        check_input_format("`^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$`", $date);
         return true;
     }
 
     function validate_time($time){
         //HH:MM:SS, HH:MM, H:MM:SS, or H:MM in 24hr format
-        check("`^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$`", $time);
+        check_input_format("`^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$`", $time);
         return true;
     }
 
     function validate_exam_state($state){
-        check("`^(hidden|open|in_progress|grading|archived)$`", $state);
+        check_input_format("`^(hidden|open|in_progress|grading|archived)$`", $state);
         return true;
     }
 
     function validate_only_numbers($input){
-        check("`^[0-9]+$`", $input);
+        check_input_format("`^[0-9]+$`", $input);
         return true;
     }
 
     function validate_numbers_letters($input){
-        check("`^[a-zA-Z0-9]+$`", $input);
+        check_input_format("`^[a-zA-Z0-9]+$`", $input);
         return true;
     }
 
-    function check($patt, $input){
+    function check_input_format($patt, $input){
         if(!preg_match($patt, $input)){
             var_dump(http_response_code(400));
             die();

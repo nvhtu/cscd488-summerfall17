@@ -11,13 +11,11 @@
 	$exam_id = $_POST["exam_id"];
 	
 	//User authentication
-    /*user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType);
 	
 	//Authenticate student being registered
 	$allowedType = array("Student");
-	user_auth($student_id, "Student", $allowedType);*/
-	
-	//Find open seat/check if there are any open seats
+	user_auth($student_id, "Student", $allowedType);
 	
 	sqlExecute("DELETE FROM exam_roster WHERE exam_id = :exam AND student_id = :student",
 				array(':exam' => $exam_id, ':student' => $student_id),

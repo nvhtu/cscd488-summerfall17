@@ -2,128 +2,208 @@
 <html lang="en">
 
 <head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
    <title>EWU Advancement Programming Exam</title>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="icon" href="./img/favicon.ico">
-   <link rel="stylesheet" href="./css/styles.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <script src="./js/script.js"></script>
+
+   <link rel="icon" href="./img/cropped-cropped-Eagle_512x512-32x32.png">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous">
+   <link rel="stylesheet" href="./css/custom.css">
 </head>
 
 <body>
-   <header>
-      <a href="http://www.ewu.edu"><img src="./img/logo_uh_color-template.png" alt="EWU Logo"></a>
-      <div>
-         <a href="http://www.ewu.edu">Home</a>
-         <a href="http://access.ewu.edu">EWU Access</a>
-         <a href="http://access.ewu.edu/it/services/accounts-passwords.xml" target="cas_help">Help</a>
-      </div>
-      <form action="http://www.ewu.edu/Search.xml" method="get" id="forms">
-         <div class="search">
-            <div class="search-bg">
-               <label for="submit-query">Search terms:</label>
-               <input value="005562583543807985001:n6h_bzdpmve" name="cx" type="hidden" />
-               <input value="FORID:11" name="cof" type="hidden" />
-               <input value="UTF-8" name="ie" type="hidden" />
-               <input value="" tabindex="6" id="submit-query" class="submit-query" name="q" type="text" rel="search..." />
-               <label for="selectbox">Select Type of Search:</label>
-               <select tabindex="7" name="selectbox" id="selectbox" class="selectbox">
-								<option value="ewu">EWU</option>
-								<option value="web">Web</option>
-								<option value="people">People</option>
-								<option value="programs">Programs</option>
-							</select>
+
+   <!-- Category Modal -->
+   <div class="modal fade" id="addCatModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+               <h4 class="modal-title">Create a Category</h4>
             </div>
-            <input alt="Go" value="Go" name="sa" type="image" class="search-submit" />
-         </div>
-      </form>
-
-      <div id="breadcrumbs">
-         <h1>EWU Advancement Programming Exam</h1>
-         <div>
-            <a href="#">Login</a>
-            <a href="#">APE Home</a>
+            <div class="modal-body">
+               <label for="name">Category Name:</label>
+               <input type="text" name="name" />
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary">Add</button>
+            </div>
          </div>
       </div>
-   </header>
+   </div>
 
-   <section>
-      <fieldset>
-         <legend>Create an exam</legend>
-
-         <label for="name">Exam Name:</label>
-         <input type="text" name="name"/>
-
-         <label for="date">Date:</label>
-         <input type="text" name="date"/>
-
-         <label for="location">Location:</label>
-         <input type="text" name="location"/>
-
-         <label for="state">State:</label>
-         <input type="text" name="state"/>
-
-         <label for="passing_grade">Passing Grade:</label>
-         <input type="text" name="passing_grade"/>
-
-         <label for="duration">Duration:</label>
-         <input type="text" name="duration"/>
-
-         <label for="start_time">Start Time:</label>
-         <input type="text" name="start_time"/>
-
-         <label for="cutoff">Cutoff:</label>
-         <input type="text" name="cutoff"/>
-         
-         <button>Create</button>
-      </fieldset>
-
-      <table>
-         <thead>
-            <tr>
-               <th>Name</th>
-               <th>Quarter</th>
-               <th>Date</th>
-               <th>Location</th>
-               <th>State</th>
-               <th>Passing Grade</th>
-               <th>Duration</th>
-               <th>Start Time</th>
-               <th>Cutoff</th>
-               <th>Edit</th>
-               <th>Delete</th>
-            </tr>
-         </thead>
-         <tbody>
-
-         </tbody>
-      </table>
-   </section>
-
-   <footer>
-      <div>
-         <a href="http://www.ewu.edu/about">About</a>
-         <a href="http://www.ewu.edu/contact-ewu">Contact Info</a>
-         <a href="http://www.ewu.edu/foundation">Give to EWU</a>
-         <a href="http://www.ewu.edu/visit">Locations / Map</a>
-         <a href="http://canvas.ewu.edu">Canvas</a>
-         <a href="http://eaglenet.ewu.edu">EagleNET</a>
-         <a href="http://www.ewu.edu/library">Library</a>
-         <a href="http://www.ewu.edu/jobs">Jobs</a>
-         <a href="http://www.ewu.edu/site-map">Site Map</a>
-      </div>
-
-      <div>
-         <small>&copy; 2017 Eastern Washington University</small>
-         <div>
-            <span>Stu Steiner</span>
-            <a href="mailto:ssteiner@ewu.edu">ssteiner@ewu.edu</a>
-            <a href="http://www.ewu.edu/Privacy-Policy">Privacy Policy</a>
+   <!-- Navbar -->
+   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+         <div class="navbar-header pull-left">
+            <a class="navbar-brand" href="https://www.ewu.edu">
+               <img src="./img/header_logo.png" alt="EWU Logo">
+            </a>
+            <p class="navbar-text visible-xs-*">EWU Advancement Programming Exam</p>
          </div>
+
+         <div class="navbar-header pull-right">
+            <button type="button" class="btn btn-default navbar-btn">Sign in</button>
+         </div>
+      </div>
+   </nav>
+
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+               <li class="active"><a href="#">APE Home <span class="sr-only">(current)</span></a></li>
+               <li><a href="#">Exams</a></li>
+               <li><a href="#">Categories</a></li>
+               <li><a href="#">Locations</a></li>
+               <li><a href="#">Users</a></li>
+            </ul>
+         </div>
+
+         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Table</h1>
+            <div class="table-responsive">
+               <table class="table table-striped">
+                  <thead>
+                     <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                        <th>Header 3</th>
+                        <th>Header 4</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                     <tr>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                        <td>Data</td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <footer class="footer">
+      <div class="container">
+         <ul class="list-inline">
+            <li class="list-inline-item">
+               <a href="http://www.ewu.edu/contact-ewu">Contact Info</a>
+            </li><li class="list-inline-item">
+               <a href="http://www.ewu.edu/about">About</a>
+            </li><li class="list-inline-item">
+               <a href="http://www.ewu.edu/foundation">Give to EWU</a>
+            </li><li class="list-inline-item">
+               <a href="http://www.ewu.edu/visit">Locations / Map</a>
+            </li><li class="list-inline-item">
+               <a href="http://canvas.ewu.edu">Canvas</a>
+            </li><li class="list-inline-item">
+               <a href="http://eaglenet.ewu.edu">EagleNET</a>
+            </li><li class="list-inline-item">
+               <a href="http://www.ewu.edu/library">Library</a>
+            </li><li class="list-inline-item">
+               <a href="http://www.ewu.edu/jobs">Jobs</a>
+            </li><li class="list-inline-item">
+               <a href="http://www.ewu.edu/site-map">Site Map</a>
+            </li>
+         </ul>
+         <p class="small text-center">&copy; 2017 Eastern Washington University</p>
       </div>
    </footer>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <script src="./js/script.js"></script>
 </body>
 
 </html>

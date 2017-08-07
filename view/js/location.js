@@ -3,7 +3,7 @@ $(document).ready(loaded);
 function loaded() {
     //get all current locations and send to loadTable function,
     $.post("../location/get_all_locations.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin"}, 
         loadTable,
         "json");
@@ -74,7 +74,7 @@ function onClickAdd() {
 function onclickEdit(e) {
     showInput();
     $.post("../location/get_all_locations.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin"}, 
         function(data){
             populateEdit(data, $(e.target).data("id"));},
@@ -100,7 +100,7 @@ function onclickDelete(e) {
     if(window.confirm("Are you sure you want to delete this location?")){
         console.log($(e.target).data("id"));
         $.post("../location/remove_location.php", 
-            {requester_id: "0",
+            {requester_id: "1",
             requester_type: "Admin",
             id: $(e.target).data("id")}, 
             function(data) {
@@ -126,7 +126,7 @@ function onClickSave() {
 //Adds location to database and calls onSuccessfulAdd function
 function addLocation(){
     $.post("../location/create_location.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin",
         name: $("input[name='name']").val(),
         seats: $("input[name='seats']").val()}, 
@@ -137,7 +137,7 @@ function addLocation(){
 //last record in data (the record just added)
 function onSuccessfulAdd(){
     $.post("../location/get_all_locations.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin"},
         function(data){
             var row = buildRow(data[data.length - 1]);
@@ -149,7 +149,7 @@ function onSuccessfulAdd(){
 //Updates location with form data, then calls onSuccessfulUpdate function
 //with the name and data needed for row creation
 function updateLocation(){
-    var sendData = {requester_id: "0",
+    var sendData = {requester_id: "1",
         requester_type: "Admin",
         name: $("input[name='name']").val(),
         seats: $("input[name='seats']").val(),

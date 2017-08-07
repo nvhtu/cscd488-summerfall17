@@ -3,7 +3,7 @@ $(document).ready(loaded);
 function loaded() {
     //get all current categories and send to loadTable function,
     $.post("../category/get_all_categories.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin"}, 
         loadTable,
         "json");
@@ -73,7 +73,7 @@ function onClickAdd() {
 function onclickEdit(e) {
     showInput();
     $.post("../category/get_all_categories.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin"}, 
         function(data){
             populateEdit(data, $(e.target).data("id"));},
@@ -98,7 +98,7 @@ function populateEdit(data, id) {
 function onclickDelete(e) {
     if(window.confirm("Are you sure you want to delete this category?")){
         $.post("../category/remove_category.php", 
-            {requester_id: "0",
+            {requester_id: "1",
             requester_type: "Admin",
             id: $(e.target).data("id")}, 
             function(data) {
@@ -124,7 +124,7 @@ function onClickSave() {
 //Adds category to database and calls onSuccessfulAdd function
 function addCategory(){
     $.post("../category/create_category.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin",
         name: $("input[name='name']").val()}, 
         onSuccessfulAdd);
@@ -134,7 +134,7 @@ function addCategory(){
 //last record in data (the record just added)
 function onSuccessfulAdd(){
     $.post("../category/get_all_categories.php", 
-        {requester_id: "0",
+        {requester_id: "1",
         requester_type: "Admin"},
         function(data){
             var row = buildRow(data[data.length - 1]);
@@ -146,7 +146,7 @@ function onSuccessfulAdd(){
 //Updates category with form data, then calls onSuccessfulUpdate function
 //with the name and data needed for row creation
 function updateCategory(){
-    var sendData = {requester_id: "0",
+    var sendData = {requester_id: "1",
         requester_type: "Admin",
         name: $("input[name='name']").val(),
         id: $("#id-input").val()};

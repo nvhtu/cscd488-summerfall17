@@ -3,7 +3,7 @@ function submitForm (userId, userType, userSessionId, name, quarter, date, locat
      console.log(name, quarter, date, location, state, passingGrade, duration, startTime, cutoff);
         
 
-    $.post("../../ape/create_ape.php", {
+    $.post("../ape/create_ape.php", {
                                 requester_id: userId,
                                 requester_type: userType,
                                 quarter: quarter, 
@@ -20,7 +20,7 @@ function submitForm (userId, userType, userSessionId, name, quarter, date, locat
 
 function getAllLoc(userId, userType, userSessionId)
 {
-    $.post("../../location/get_all_locations.php",{
+    $.post("../location/get_all_locations.php",{
                                 requester_id: userId,
                                 requester_type: userType,
                                 requester_session_id: userSessionId

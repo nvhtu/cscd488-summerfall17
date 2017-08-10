@@ -25,6 +25,10 @@ function loadTable(data) {
 
 function createButtonClick()
 {
+    $("#requester-id").val(userId);
+    $("#requester-type").val(userType);
+    $("#requester-session").val(userSessionId);
+
     getAllLoc();
 }
 
@@ -51,20 +55,8 @@ function submitForm ()
 
     console.log($("#add-exam-form").serialize());
 
-    /*
-    $.post("../ape/create_ape.php", {
-                                requester_id: userId,
-                                requester_type: userType,
-                                quarter: quarter, 
-                                date: date, 
-                                location: location,
-                                state: state,
-                                passing_grade: passingGrade,
-                                duration: duration,
-                                start_time: startTime,
-                                cutoff: cutoff
-                                });
-           */                 
+    
+    $.post("../ape/create_ape.php", $("#add-exam-form").serialize());                 
 }
 
 

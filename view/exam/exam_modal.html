@@ -8,7 +8,10 @@
          <div class="modal-body form-horizontal">
              <form id="add-exam-form">
 
-                <input type="text" class="form-control" name="requester_id" hidden/>
+                <input type="hidden" class="form-control" id="requester-id" name="requester_id"/>
+                <input type="hidden" class="form-control" id="requester-type" name="requester_type"/>
+                <input type="hidden" class="form-control" id="requester-session" name="requester_session"/>
+                
 
                 <div class="form-group">
                 <label for="name" class="col-sm-3 control-label">Exam Name:</label>
@@ -34,7 +37,7 @@
                 <div class="form-group">
                 <label for="location" class="col-sm-3 control-label">Location:</label>
                 <div class="col-sm-9">
-                    <select id="ape-loc"></select>
+                    <select name="location" id="ape-loc"></select>
                 </div>
                 </div>
 

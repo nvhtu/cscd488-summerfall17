@@ -12,7 +12,7 @@
         if($sqlResult[0]["count"] == 0)
         {
             var_dump(http_response_code(400));
-            die("Exam ID does not exist.");
+            return False;
         }
         else {
             return True;
@@ -29,7 +29,7 @@
         if($sqlResult[0]["count"] == 0)
         {
             var_dump(http_response_code(400));
-            die("Student ID does not exist.");
+            return False;
         }
         else {
             return True;
@@ -46,7 +46,7 @@
         if($sqlResult[0]["count"] == 0)
         {
             var_dump(http_response_code(400));
-            die("User ID does not exist.");
+            return False;
         }
         else {
             return True;
@@ -63,7 +63,7 @@
         if($sqlResult[0]["count"] == 0)
         {
             var_dump(http_response_code(400));
-            die("Admin/Teacher/Grader Account ID does not exist.");
+            return False;
         }
         else {
             return True;
@@ -80,7 +80,7 @@
         if($sqlResult[0]["count"] == 0)
         {
             var_dump(http_response_code(400));
-            die("Assigned Grader on exame category ID does not exist.");
+            return False;
         }
         else {
             return True;

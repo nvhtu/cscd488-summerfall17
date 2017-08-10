@@ -11,7 +11,7 @@
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
-    $allowedType = array("Admin", "Teacher");
+    $allowedType = array("Admin", "Teacher", "System");
 
     $id = $_POST["id"];
     $fname = $_POST["f_name"];

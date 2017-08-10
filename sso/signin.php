@@ -5,7 +5,9 @@
  * @version 1.0
  */
 
-require_once('CAS/CAS.php');
+require_once "CAS/CAS.php";
+require_once "../util/check_id.php";
+
 $cas_server_ca_cert_path = 'comodo_combo.pem';
 $cas_real_hosts = array('it-adfs01.eastern.ewu.edu',
                         'it-casauth01.eastern.ewu.edu');
@@ -21,5 +23,23 @@ $_SESSION['loggedIn'] = true;
 $userAttr = phpCAS::getAttributes();
 $_SESSION['ewuid'] = $userAttr["Ewuid"];
 echo $_SESSION['ewuid'];
+echo $_SESSION["phpCAS"]["attributes"]["UserType"];
+
+if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
+{
+    if(checkStudentExists($_SESSION['ewuid']))
+    {
+        echo "login success. Go home";
+    }
+    else 
+    {
+        echo "student doesn't exists. Go to create new student account";
+        header('Location: create_student.html');
+    }
+}
+else 
+{
+    
+}
 
 ?>

@@ -43,6 +43,7 @@ function getAllLoc()
 
 function populateLocation(data)
 {
+    $("#ape-loc").empty();
     $.each(data, function(i){
         $("#ape-loc").append($("<option></option")
                     .attr("value", data[i]["loc_id"])
@@ -52,10 +53,6 @@ function populateLocation(data)
 
 function submitForm ()
 {
-
-    console.log($("#add-exam-form").serialize());
-
-    
     $.post("../ape/create_ape.php", $("#add-exam-form").serialize());                 
 }
 

@@ -76,6 +76,25 @@ body > .container {
 }
 
 /*
+ * Table
+ */
+table .accordion-toggle td:last-child {
+   width: 129px;
+}
+
+.table>tbody>tr>td {
+   vertical-align: middle;
+}
+
+.hidden-row {
+    padding: 0 !important;
+}
+
+.hidden-row div {
+   padding: 5px;
+}
+
+/*
  * Footer
  */
 .footer {

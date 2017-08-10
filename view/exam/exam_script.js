@@ -6,6 +6,14 @@ function loaded() {
         requester_type: "Admin"}, 
         loadTable,
         "json");
+
+    //Automatic GLOBAL variables
+    userId = "1";
+    userType = "Admin";
+    userSessionId = "0";
+
+    $("#create-button").click(createButtonClick);
+    $("#submit-button").click(submitForm);
 }
 
 function loadTable(data) {
@@ -14,6 +22,51 @@ function loadTable(data) {
         appendRow(row);
     });
 }
+
+function createButtonClick()
+{
+    getAllLoc();
+}
+
+function getAllLoc()
+{
+    $.post("../location/get_all_locations.php",{
+                                requester_id: userId,
+                                requester_type: userType,
+                                requester_session_id: userSessionId
+                                }, populateLocation, "json");
+}
+
+function populateLocation(data)
+{
+    $.each(data, function(i){
+        $("#ape-loc").append($("<option></option")
+                    .attr("value", data[i]["loc_id"])
+                    .text(data[i]["name"]));
+    });
+}
+
+function submitForm ()
+{
+
+    console.log($("#add-exam-form").serialize());
+
+    /*
+    $.post("../ape/create_ape.php", {
+                                requester_id: userId,
+                                requester_type: userType,
+                                quarter: quarter, 
+                                date: date, 
+                                location: location,
+                                state: state,
+                                passing_grade: passingGrade,
+                                duration: duration,
+                                start_time: startTime,
+                                cutoff: cutoff
+                                });
+           */                 
+}
+
 
 function buildRow(item) {
     //create edit button

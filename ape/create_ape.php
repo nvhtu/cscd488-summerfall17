@@ -14,6 +14,7 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
+    $name = $_POST["name"];
     $quarter = $_POST["quarter"];
     $date = $_POST["date"];
     $location = $_POST["location"];
@@ -23,9 +24,10 @@
     $start_time = $_POST["start_time"];
     $cutoff = $_POST["cutoff"];
 
-    $sqlInsertExam = "INSERT INTO exam (quarter, date, location, state, passing_grade, duration, start_time, cutoff)
-                                   VALUES (:quarter, :exam_date, :location, :state, :passing_grade, :duration, :start_time, :cutoff)";
+    $sqlInsertExam = "INSERT INTO exam (name, quarter, date, location, state, passing_grade, duration, start_time, cutoff)
+                                   VALUES (:name, :quarter, :exam_date, :location, :state, :passing_grade, :duration, :start_time, :cutoff)";
     $data = array(
+        ':name' => $name,
         ':quarter' => $quarter,
         ':exam_date' => $date,
         ':location' => $location,

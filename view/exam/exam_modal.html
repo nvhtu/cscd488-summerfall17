@@ -6,12 +6,16 @@
             <h4 class="modal-title">Create an Exam</h4>
          </div>
          <div class="modal-body form-horizontal">
-             <form id="add-exam-form">
+             <form id="exam-form">
 
+                <!--
+                Hidden input fields for requester id, requester type, and requester session that auto populated 
+                so $("#form").serialize() will include those values
+                !-->
                 <input type="hidden" class="form-control" id="requester-id" name="requester_id"/>
                 <input type="hidden" class="form-control" id="requester-type" name="requester_type"/>
                 <input type="hidden" class="form-control" id="requester-session" name="requester_session"/>
-                
+                <input type="hidden" class="form-control" id="exam-id" name="exam_id"/>
 
                 <div class="form-group">
                 <label for="name" class="col-sm-3 control-label">Exam Name:</label>
@@ -37,7 +41,7 @@
                 <div class="form-group">
                 <label for="location" class="col-sm-3 control-label">Location:</label>
                 <div class="col-sm-9">
-                    <select name="location" id="ape-loc"></select>
+                    <select type="text" class="form-control" name="location" id="ape-loc"></select>
                 </div>
                 </div>
 
@@ -86,7 +90,7 @@
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button">Create</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button" data-operation="create">Create</button>
          </div>
       </div>
    </div>

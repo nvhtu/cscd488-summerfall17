@@ -7,12 +7,11 @@ function loaded() {
         requester_type: "Admin"}, 
         loadTable,
         "json");
-    //hide form
-    $("#form-fieldset").attr("hidden", "true");
-    //set click handlers
-    $("#add-bttn").click(onClickAdd);
-    $("#cancel-bttn").click(hideInput);
-    $("#save-bttn").click(onClickSave);
+
+    //Set click handlers
+    $("#create-button").click(onClickCreate);
+
+    $("#submit-button").click(onClickSubmit);
 }
 
 //Adds json data to table using buildRow and appendRow helper functions
@@ -25,14 +24,15 @@ function loadTable(data) {
 
 function buildRow(item) {
     //create edit button
-    var $bttnEdit = $('<input type="button" value="Edit" class="bttn"/>');
+    var $bttnEdit = $('<button type="button" name="edit" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addCategoryModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", item.cat_id); //add unique ID from item as a data tag
     $bttnEdit.click(onclickEdit);
 
     //create delete button
-    var $bttnDel = $('<input type="button" value="Delete" class="bttn"/>');
+    var $bttnDel = $('<button type="button" name="delete" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
     $bttnDel.attr("data-id", item.cat_id);
     $bttnDel.click(onclickDelete);
+
 
     //wrap each piece of data in <td> tags, then wrap them all in a <tr> tag and return row
     return $("<tr>")
@@ -48,35 +48,25 @@ function appendRow(row){
     row.appendTo("#category-table");
 }
 
-//slides form down, disables Edit/Delete buttons, and gives focus to first input field
-function showInput() {
-    $("#form-fieldset").slideDown("slow");
-    $(".bttn").prop("disabled", true);
-    $("#add-bttn").prop("disabled", true);
-    $("input[name='name']").focus();
+//empties all inputs, including hidden id-input
+function onClickCreate() {
+    $("input").val("");
 }
 
-//hides form, and enables Edit/Delete buttons
-function hideInput() {
-    $(".bttn").prop("disabled", false);
-    $("#add-bttn").prop("disabled", false);
-    $("#form-fieldset").slideUp("slow");
-}
-
-//Shows form and empties all inputs, including hidden id-input
-function onClickAdd() {
-    showInput();
-    $("#form-fieldset input").val("");
-}
-
-//Shows form and sends category data to populateEdit function
+//sends category data to populateEdit function
 function onclickEdit(e) {
-    showInput();
+    if(e.target.nodeName == "SPAN"){
+        //if user clicks on icon, get reference to button 
+        var btn = $(e.target).parent();
+    }
+    else{
+        var btn = $(e.target);
+    }
     $.post("../category/get_all_categories.php", 
         {requester_id: "1",
         requester_type: "Admin"}, 
         function(data){
-            populateEdit(data, $(e.target).data("id"));},
+            populateEdit(data, btn.data("id"));},
         "json");
 }
 
@@ -91,25 +81,39 @@ function populateEdit(data, id) {
             });
         }
     }
+
+    //setTimeout forces this to wait till modal has opened
+    setTimeout(function(){
+        console.log($("input[name='name']")[0]);
+        $("input[name='name']")[0].focus();
+    }); 
 }
 
 //Prompts user to confirm delete, then deletes from database and removes
 //the row containing the clicked delete button
 function onclickDelete(e) {
     if(window.confirm("Are you sure you want to delete this category?")){
+        if(e.target.nodeName == "SPAN"){
+            //if user clicks on icon, get reference to button
+            var btn = $(e.target).parent();
+        }
+        else{
+            var btn = $(e.target);
+        }
+
         $.post("../category/remove_category.php", 
             {requester_id: "1",
             requester_type: "Admin",
-            id: $(e.target).data("id")}, 
+            id: btn.data("id")}, 
             function(data) {
-                $(e.target).parent().parent().remove();
+                btn.parent().parent().remove();
             });
     }
 }
 
 //Checks if this is an update or add action by seeing if the hidden 
 //id-input is empty or not, then calls appropriate function and hides form
-function onClickSave() {
+function onClickSubmit() {
     if($("#id-input").val() === ""){
         //Add new category
         addCategory();
@@ -118,7 +122,6 @@ function onClickSave() {
         //Update existing category
         updateCategory();
     }   
-    hideInput();
 }
 
 //Adds category to database and calls onSuccessfulAdd function
@@ -161,5 +164,5 @@ function updateCategory(){
 //row containing the corresponding data-id with the updated version
 function onSuccessfulUpdate(item) {
     var row = buildRow(item);
-    $("[value = Edit][data-id =" + item.cat_id + "]").parent().parent().replaceWith(row);
+    $("[name = edit][data-id =" + item.cat_id + "]").parent().parent().replaceWith(row);
 }

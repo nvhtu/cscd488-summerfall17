@@ -61,41 +61,71 @@ function submitForm (e)
         
 }
 
-function loadTable(data) 
-{
+function loadTable(data) {
     _allAPEdata = data;
-    console.log(_allAPEdata);
     $.each(data, function(i, item) {
-        var row = buildRow(i, item);
+        var row = buildRow(item);
         appendRow(row);
+        var detailRow = buildDetailRow(item);
+        appendRow(detailRow);
     });
 }
 
-function buildRow(i, item) {
-    //create edit button
-    var $bttnEdit = $('<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addExamModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
-    $bttnEdit.attr("data-id", item.exam_id); //item id from database
-    $bttnEdit.attr("data-index", i); //index of the item in the data array
-    $bttnEdit.click(onclickEdit);
 
-    //create delete button
-    var $bttnDel = $('<button type="button" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
-    $bttnDel.attr("data-id", item.exam_id);
-    $bttnDel.click(onclickDelete);
+function buildRow(item) {
+   //create info button
+   var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#' + item.exam_id + '" data-toggle="collapse"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
+    
+   //create edit button
+   var $bttnEdit = $('<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addExamModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
+   $bttnEdit.attr("data-id", item.cat_id); //add unique ID from item as a data tag
+   $bttnEdit.click(onclickEdit);
 
-    //wrap each piece of data in <td> tags, then wrap them all in a <tr> tag and return row
-    return $("<tr class='item-row'>")
-        .append(
-            $("<td>").text(item.name),
-            $("<td>").text(item.date),
-            $("<td>").text(item.start_time),
-            $("<td>").text(item.state),
-            $("<td>").text(item.passing_grade),
-            $("<td>").text(item.duration),
-            $("<td>").text(item.cutoff),
-            $("<td>").append($bttnEdit),
-            $("<td>").append($bttnDel)
-        );
+   //create delete button
+   var $bttnDel = $('<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#addExamModal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
+   $bttnDel.attr("data-id", item.cat_id);
+   $bttnDel.click(onclickDelete);
+
+   //wrap each piece of data in <td> tags, then wrap them all in a <tr> tag and return row
+   return $('<tr data-toggle="collapse" class="accordion-toggle" aria-expanded="true">')
+      .append(
+         $("<td>").text(item.name),
+         $("<td>").text(item.quarter),
+         $("<td>").text(item.date),
+         $("<td>").text(item.start_time),
+         $("<td>").text(item.state),
+         $("<td>").append(
+            $('<div class="btn-group" role="group">').append(
+               $bttnInfo, $bttnEdit, $bttnDel)
+         )
+      );
+}
+
+function buildDetailRow(item) {
+   return $('<tr class="collapse" id="' + item.exam_id + '">').append(
+      $('<td colspan="6" class="well">').append(
+         $('<div class="panel panel-default">').append(
+            $('<table class="table table-condensed">').append(
+               $('<thead>').append(
+                  $('<tr>').append(
+                     $('<th>').text("Location"),
+                     $('<th>').text("Duration"),
+                     $('<th>').text("Passing Grade"),
+                     $('<th>').text("Cutoff")
+                  )
+               ),
+               $('<tbody>').append(
+                  $('<tr>').append(
+                     $('<td>').text(item.location),
+                     $('<td>').text(item.duration + " hours"),
+                     $('<td>').text(item.passing_grade + "%"),
+                     $('<td>').text(item.cutoff + " hours")
+                  )
+               )
+            )
+         )
+      )
+   );
 }
 
 function appendRow(row){

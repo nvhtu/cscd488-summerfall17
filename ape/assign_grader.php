@@ -26,5 +26,7 @@
     $sqlAddGrader = "INSERT INTO assigned_grader(exam_cat_id, user_id)
                         VALUES (:exam_cat_id, :user_id)";
     
-    sqlExecute($sqlAddGrader, array(':exam_cat_id'=>$examCatId, ':user_id'=>$userId), False);
+    $lastInsertId = sqlExecute($sqlAddGrader, array(':exam_cat_id'=>$examCatId, ':user_id'=>$userId), False);
+    
+    echo $lastInsertId;
 ?>    

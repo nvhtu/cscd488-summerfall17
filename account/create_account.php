@@ -50,6 +50,7 @@
                             VALUES (:id, :state)";
 
         sqlExecute($sqlInsertStudent, array(':id'=>$id, ':state'=>$state), False);
+
     }
     else //Teacher, Grader account
     {
@@ -59,7 +60,6 @@
         sqlExecute($sqlInsertAccount, array(':id'=>$id, ':type'=>$type), False);
     }
 
-    $conn = null;
-
+    echo $id;
 
 ?>    

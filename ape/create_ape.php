@@ -38,12 +38,13 @@
         ':cutoff' => $cutoff
     );
 
-    sqlExecute($sqlInsertExam, $data, false);
+    $lastInsertId = sqlExecute($sqlInsertExam, $data, false);
 
+    /*
     //get ID of exam that was just inserted
     $sqlInsertExam = "SELECT exam_id from exam ORDER BY exam_id DESC LIMIT 1";
     $data = null;
-    $exam_id = sqlExecute($sqlInsertExam, $data, true)[0]["exam_id"];
+    $exam_id = sqlExecute($sqlInsertExam, $data, true)[0]["exam_id"];*/
 
     //Add exam to in_class_exam if account is teacher
     if(strcmp($requesterType, "Teacher") == 0) //Teacher account
@@ -53,4 +54,6 @@
         $data = array(':exam_id' => $exam_id, ':teacher_id' => $requesterId);
         $exam = sqlExecute($sqlInsertInClass, $data, false);
     }
+
+    echo $lastInsertId;
 ?>

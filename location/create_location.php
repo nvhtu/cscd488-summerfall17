@@ -28,7 +28,9 @@
 	//User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 	
-	sqlExecute("INSERT INTO location (name, seats) VALUES (:name, :seats)",
+	$lastInsertId = sqlExecute("INSERT INTO location (name, seats) VALUES (:name, :seats)",
 				array(':name' => $name, ':seats' => $seats),
 				false);
+
+	echo $lastInsertId;
 ?>

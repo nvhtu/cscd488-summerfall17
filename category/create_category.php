@@ -25,7 +25,9 @@
 	//User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 	
-	sqlExecute("INSERT INTO category (name) VALUES (:name)",
+	$lastInsertId = sqlExecute("INSERT INTO category (name) VALUES (:name)",
 				array(':name' => $name),
 				false);
+
+	echo $lastInsertId;
 ?>

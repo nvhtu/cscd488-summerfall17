@@ -38,8 +38,18 @@
         }
         else 
         {
-            $conn = null;
-            return $sqlResult;
+            if(strcmp(explode(" ", $query, 1)[0], "INSERT"))
+            {
+                $sqlResult = $conn->lastInsertId();
+                $conn = null;
+                return $sqlResult;
+            }
+            else 
+            {
+                $conn = null;
+                return $sqlResult;
+            }
+            
         }
         
     }

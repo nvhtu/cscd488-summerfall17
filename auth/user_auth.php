@@ -27,7 +27,7 @@
                                     FROM student
                                     WHERE student_id = :requester_id";
 
-                $sqlResult = sqlExecute($sqlCountStudent, array(':requester_id'=>$requesterId), True);
+                $sqlResult = sqlExecute($sqlCountStudent, array(':requester_id'=>$requesterId), True, False);
 
                 if($sqlResult[0]["count"] == 0)
                 {

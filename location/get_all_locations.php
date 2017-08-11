@@ -8,8 +8,8 @@
         die("Incomplete input.");
 	}
 
-	$requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+	$requesterId = $_GET["requester_id"];
+    $requesterType = $_GET["requester_type"];
     $allowedType = array("Admin", "Teacher");
 	
 	//Sanitize the input

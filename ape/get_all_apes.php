@@ -7,8 +7,8 @@
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
 
-    $requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+    $requesterId = $_GET["requester_id"];
+    $requesterType = $_GET["requester_type"];
     $allowedType = array("Admin", "Teacher", "Student");
 
     //User authentication

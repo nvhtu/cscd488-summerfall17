@@ -106,19 +106,21 @@ function buildDetailRow(item) {
       $('<td colspan="6" class="well">').append(
          $('<div class="panel panel-default">').append(
             $('<table class="table table-condensed">').append(
-               $('<thead>').append(
-                  $('<tr>').append(
-                     $('<th>').text("Location"),
-                     $('<th>').text("Duration"),
-                     $('<th>').text("Passing Grade"),
-                     $('<th>').text("Cutoff")
-                  )
-               ),
                $('<tbody>').append(
                   $('<tr>').append(
-                     $('<td>').text(item.location),
-                     $('<td>').text(item.duration + " hours"),
-                     $('<td>').text(item.passing_grade + "%"),
+                     $('<th>').text("Location"),
+                     $('<td>').text(item.location)
+                  ),
+                  $('<tr>').append(
+                     $('<th>').text("Duration"),
+                     $('<td>').text(item.duration + " hours")
+                  ),
+                  $('<tr>').append(
+                     $('<th>').text("Passing Grade"),
+                     $('<td>').text(item.passing_grade + "%")
+                  ),
+                  $('<tr>').append(
+                     $('<th>').text("Cutoff"),
                      $('<td>').text(item.cutoff + " hours")
                   )
                )

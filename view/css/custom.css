@@ -86,12 +86,8 @@ table .accordion-toggle td:last-child {
    vertical-align: middle;
 }
 
-.hidden-row {
-    padding: 0 !important;
-}
-
-.hidden-row div {
-   padding: 5px;
+.table .well .panel {
+   display: inline-block;
 }
 
 /*

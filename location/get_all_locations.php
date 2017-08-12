@@ -3,7 +3,7 @@
 	require_once "../auth/user_auth.php";
 	require_once "../util/input_validate.php";
 	
-	if(empty($_POST["requester_id"]) || empty($_POST["requester_type"])){
+	if(empty($_GET["requester_id"]) || empty($_GET["requester_type"])){
 		var_dump(http_response_code(400));
         die("Incomplete input.");
 	}

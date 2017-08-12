@@ -24,7 +24,7 @@ function loaded() {
 
 function getAllLoc()
 {
-    $.post("../location/get_all_locations.php",{
+    $.get("../location/get_all_locations.php",{
                                 requester_id: userId,
                                 requester_type: userType,
                                 requester_session_id: userSessionId

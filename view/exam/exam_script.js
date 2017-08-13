@@ -6,6 +6,8 @@ function loaded() {
     _userId = "111";
     _userType = "Admin";
     _userSessionId = "0";
+    
+    _targetModal = "examModal";
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
@@ -14,25 +16,27 @@ function loaded() {
     getAllAPE();
     getAllLoc();
 
+    buildTable();
+
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
 }
 
-
+function buildTable()
+{
+    var tableId = "exam-table";
+    var headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
+    var table = buildMainTable(tableId, headersArr);
+    $(".table-responsive").html(table);
+}
 
 
 function getAllLoc()
 {
     $.get("../location/get_all_locations.php",{
-<<<<<<< HEAD
                                 requester_id: _userId,
                                 requester_type: _userType,
                                 requester_session_id: _userSessionId
-=======
-                                requester_id: userId,
-                                requester_type: userType,
-                                requester_session_id: userSessionId
->>>>>>> 4bda1f874e1f551760013f98f46fa60041793cd0
                                 }, populateLocation, "json");
 }
 
@@ -97,89 +101,34 @@ function submitForm (e)
 function loadTable(data) {
     console.log(data);
     $.each(data, function(i, item) {
-        var row = buildRow(item);
-        appendRow(row);
-        var detailRow = buildDetailRow(item);
-        appendRow(detailRow);
+        //build summaryData object
+        var summaryData = {
+            id: item.exam_id,
+            name: item.name,
+            date: item.date,
+            start_time: item.start_time,
+            location: item.location
+        };
+
+        var examRow = buildItemRow(summaryData, _targetModal);
+
+        //build detailData object
+        var detailData = {
+            id: item.exam_id,
+            duration: item.duration,
+            passing_grade: item.passing_grade,
+            cutoff: item.cutoff
+        };
+
+        var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+
+        var detailExamRow = buildDetailRow(detailData, namesArr);
+
+        console.log(detailExamRow);
+
+        $("#exam-table").append(examRow);
+        $("#exam-table").append(detailExamRow);
     });
-}
-
-
-function buildRow(item) {
-   //create info button
-   var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + item.exam_id + '" data-toggle="collapse"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
-    
-   //create edit button
-   var $bttnEdit = $('<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#addExamModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
-   $bttnEdit.attr("data-id", item.exam_id); //add unique ID from item as a data tag
-   $bttnEdit.click(onclickEdit);
-
-   //create delete button
-   var $bttnDel = $('<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#addExamModal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
-   $bttnDel.attr("data-id", item.exam_id);
-   $bttnDel.click(onclickDelete);
-
-
-
-   //wrap each piece of data in <td> tags, then wrap them all in a <tr> tag and return row
-   return $('<tr name="item-row"  aria-expanded="true">')
-      .append(
-         $("<td>").text(item.name),
-         $("<td>").text(item.date),
-         $("<td>").text(item.start_time),
-         $("<td>").text(item.location),
-         $("<td>").append(
-            $('<div class="btn-group" role="group">').append(
-               $bttnInfo, $bttnEdit, $bttnDel)
-         )
-      );
-}
-
-function buildDetailRow(item) {
-   return $('<tr class="collapse" id="#item-' + item.exam_id + '" name="row-detail">').append(
-      $('<td colspan="6" class="well">').append(
-         $('<div class="panel panel-default">').append(
-            $('<table class="table table-condensed">').append(
-               $('<tbody>').append(
-                  $('<tr>').append(
-<<<<<<< HEAD
-                     $('<th>').text("Passing Grade"),
-                     $('<th>').text("Duration"),
-                     $('<th>').text("State"),
-                     $('<th>').text("Cutoff")
-                  )
-               ),
-               $('<tbody>').append(
-                  $('<tr>').append(
-                     $('<td>').text(item.passing_grade + "%"),
-                     $('<td>').text(item.duration + " hours"),
-                     $('<td>').text(item.state),
-=======
-                     $('<th>').text("Location"),
-                     $('<td>').text(item.location)
-                  ),
-                  $('<tr>').append(
-                     $('<th>').text("Duration"),
-                     $('<td>').text(item.duration + " hours")
-                  ),
-                  $('<tr>').append(
-                     $('<th>').text("Passing Grade"),
-                     $('<td>').text(item.passing_grade + "%")
-                  ),
-                  $('<tr>').append(
-                     $('<th>').text("Cutoff"),
->>>>>>> 4bda1f874e1f551760013f98f46fa60041793cd0
-                     $('<td>').text(item.cutoff + " hours")
-                  )
-               )
-            )
-         )
-      )
-   );
-}
-
-function appendRow(row){
-    row.appendTo("#exam-table");
 }
 
 function onclickCreate()
@@ -237,9 +186,4 @@ function getAllAPE()
         requester_session_id: _userSessionId}, 
         loadTable,
         "json");
-}
-
-function getAnAPE (exam_id)
-{
-
 }

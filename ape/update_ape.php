@@ -14,6 +14,7 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
+    $name = $_POST["name"];
     $exam_id = $_POST["exam_id"];
     $quarter = $_POST["quarter"];   //Shouldn't come from the user! Use date to determine quarter
     $date = $_POST["date"];
@@ -40,7 +41,8 @@
     }
 
     $sqlUpdateExam = "UPDATE exam
-                        SET quarter = :quarter,
+                        SET name = :name,
+                            quarter = :quarter,
                             date = :exam_date,
                             location = :location,
                             state = :state,
@@ -50,6 +52,7 @@
                             cutoff = :cutoff
                         WHERE exam_id = :exam_id";
     $data = array(
+            ':name' => $name,  
             ':quarter' => $quarter,
             ':exam_date' => $date,
             ':location' => $location,

@@ -24,9 +24,15 @@ function loaded() {
 function getAllLoc()
 {
     $.get("../location/get_all_locations.php",{
+<<<<<<< HEAD
                                 requester_id: _userId,
                                 requester_type: _userType,
                                 requester_session_id: _userSessionId
+=======
+                                requester_id: userId,
+                                requester_type: userType,
+                                requester_session_id: userSessionId
+>>>>>>> 4bda1f874e1f551760013f98f46fa60041793cd0
                                 }, populateLocation, "json");
 }
 
@@ -134,8 +140,9 @@ function buildDetailRow(item) {
       $('<td colspan="6" class="well">').append(
          $('<div class="panel panel-default">').append(
             $('<table class="table table-condensed">').append(
-               $('<thead>').append(
+               $('<tbody>').append(
                   $('<tr>').append(
+<<<<<<< HEAD
                      $('<th>').text("Passing Grade"),
                      $('<th>').text("Duration"),
                      $('<th>').text("State"),
@@ -147,6 +154,21 @@ function buildDetailRow(item) {
                      $('<td>').text(item.passing_grade + "%"),
                      $('<td>').text(item.duration + " hours"),
                      $('<td>').text(item.state),
+=======
+                     $('<th>').text("Location"),
+                     $('<td>').text(item.location)
+                  ),
+                  $('<tr>').append(
+                     $('<th>').text("Duration"),
+                     $('<td>').text(item.duration + " hours")
+                  ),
+                  $('<tr>').append(
+                     $('<th>').text("Passing Grade"),
+                     $('<td>').text(item.passing_grade + "%")
+                  ),
+                  $('<tr>').append(
+                     $('<th>').text("Cutoff"),
+>>>>>>> 4bda1f874e1f551760013f98f46fa60041793cd0
                      $('<td>').text(item.cutoff + " hours")
                   )
                )

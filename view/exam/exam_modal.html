@@ -1,4 +1,4 @@
-<div class="modal fade" id="examModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
@@ -6,16 +6,16 @@
             <h4 class="modal-title">Create an Exam</h4>
          </div>
          <div class="modal-body form-horizontal">
-             <form id="exam-form">
+             <form id="main-form">
 
                 <!--
-                Hidden input fields for requester id, requester type, and requester session that auto populated 
-                so $("#form").serialize() will include those values
+                Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
+                so $("#main-form").serialize() will include those values
                 !-->
                 <input type="hidden" class="form-control" id="requester-id" name="requester_id"/>
                 <input type="hidden" class="form-control" id="requester-type" name="requester_type"/>
                 <input type="hidden" class="form-control" id="requester-session" name="requester_session"/>
-                <input type="hidden" class="form-control" id="exam-id" name="exam_id"/>
+                <input type="hidden" class="form-control" id="item-id" name="exam_id"/>
 
                 <div class="form-group">
                 <label for="name" class="col-sm-3 control-label">Exam Name:</label>
@@ -90,7 +90,7 @@
          </div>
          <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button" data-operation="create">Create</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button" data-action="create">Create</button>
          </div>
       </div>
    </div>

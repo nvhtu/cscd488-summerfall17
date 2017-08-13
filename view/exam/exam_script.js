@@ -1,19 +1,28 @@
+/**
+ * Exam page script
+ * @author: Tu Nguyen
+ * @version: 1.0
+ */
+
 $(document).ready(loaded);
 
-function loaded() {
+function loaded() 
+{
 
     //Automatic GLOBAL variables
     _userId = "111";
     _userType = "Admin";
     _userSessionId = "0";
     
-    _targetModal = "examModal";
+    _targetModal = "detail-modal";
+    _tableId = "main-table";
+    _formId = "main-form";
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
 
-    getAllAPE();
+    getAllItems();
     getAllLoc();
 
     buildTable();
@@ -24,10 +33,54 @@ function loaded() {
 
 function buildTable()
 {
-    var tableId = "exam-table";
     var headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
-    var table = buildMainTable(tableId, headersArr);
+    var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
+}
+
+function buildItemSummaryRow(item)
+{
+    var summaryData = {
+        id: item.exam_id,
+        name: item.name,
+        date: item.date,
+        start_time: item.start_time,
+        location: item.location
+    };
+
+    var row = buildItemRow(summaryData);
+
+    return row;
+}
+
+function buildItemDetailRow(item)
+{
+    var detailData = {
+        id: item.exam_id,
+        duration: item.duration,
+        passing_grade: item.passing_grade,
+        cutoff: item.cutoff
+    };
+
+    var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+    var detailRow = buildDetailRow(detailData, namesArr);
+
+    return detailRow;
+}
+
+function loadTable(data) 
+{
+    //console.log(data);
+    $.each(data, function(i, item) {
+        var row = buildItemSummaryRow(item);
+
+        var detailRow = buildItemDetailRow(item);
+
+        //console.log(detailExamRow);
+
+        $("#" + _tableId).append(row);
+        $("#" + _tableId).append(detailRow);
+    });
 }
 
 
@@ -50,85 +103,59 @@ function populateLocation(data)
     });
 }
 
-
-
 function submitForm (e)
 {
-    if(e.currentTarget.dataset["operation"] == "create")
+    if(e.currentTarget.dataset["action"] == "create")
     {
-        console.log($("#exam-form").serialize());
-        $.post("../ape/create_ape.php", $("#exam-form").serialize(), function(lastInsertId){
-            $.get("../ape/get_all_apes.php", 
-            {requester_id: _userId,
-            requester_type: _userType,
-            requester_session_id: _userSessionId,
-            exam_id: lastInsertId}, 
-            function(item){
-
-                console.log(item);
-                loadTable(item);
-            },
-            "json");
-        });
-
+        createItem();
     }
         
-    if(e.currentTarget.dataset["operation"] == "update")
+    if(e.currentTarget.dataset["action"] == "update")
     {
-        console.log($("#exam-form").serialize());
-        $.post("../ape/update_ape.php", $("#exam-form").serialize(), function(){
-            var item = $("#exam-form").serialize();
-            $.get("../ape/get_all_apes.php", 
-            {requester_id: _userId,
-            requester_type: _userType,
-            requester_session_id: _userSessionId,
-            exam_id: $("#exam-id").val()}, 
-            function(item){
-                var row = buildRow(item[0]);
-                var detailRow = buildDetailRow(item[0]);
-                console.log(item);
-
-                var dataTarget = "#" + item[0].exam_id;
-                $("[name = 'item-row'][id = " + item[0].exam_id + "]").replaceWith(row);
-                $("[name = 'row-detail'][id = " + item[0].exam_id + "]").replaceWith(detailRow);
-            },
-            "json");
-        }); 
+        updateItem();
     }
         
 }
 
-function loadTable(data) {
-    console.log(data);
-    $.each(data, function(i, item) {
-        //build summaryData object
-        var summaryData = {
-            id: item.exam_id,
-            name: item.name,
-            date: item.date,
-            start_time: item.start_time,
-            location: item.location
-        };
+function createItem()
+{
+    //console.log($("#" + _formId).serialize());
+    $.post("../ape/create_ape.php", $("#" + _formId).serialize(), function(lastInsertId){
+        $.get("../ape/get_all_apes.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: lastInsertId}, 
+        function(item){
 
-        var examRow = buildItemRow(summaryData, _targetModal);
-
-        //build detailData object
-        var detailData = {
-            id: item.exam_id,
-            duration: item.duration,
-            passing_grade: item.passing_grade,
-            cutoff: item.cutoff
-        };
-
-        var namesArr = ["Duration", "Passing Grade", "Cutoff"];
-
-        var detailExamRow = buildDetailRow(detailData, namesArr);
-
-        console.log(detailExamRow);
-
-        $("#exam-table").append(examRow);
-        $("#exam-table").append(detailExamRow);
+            //console.log(item);
+            loadTable(item);
+        },
+        "json");
     });
+}
+
+function updateItem()
+{
+    //console.log($("#" + _formId).serialize());
+    $.post("../ape/update_ape.php", $("#" + _formId).serialize(), function(){
+        var item = $("#" + _formId).serialize();
+        $.get("../ape/get_all_apes.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: $("#item-id").val()}, 
+        function(item){
+            var row = buildItemSummaryRow(item[0]);
+            var detailRow = buildItemDetailRow(item[0]);
+
+            //console.log(row);
+            //console.log(detailRow);
+            $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
+            $("tr[id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+        },
+        "json");
+    }); 
 }
 
 function onclickCreate()
@@ -136,27 +163,24 @@ function onclickCreate()
     clearForm();
     //getAllLoc();
     $(".modal-title").html("Create an Exam");
-    $("#submit-button").attr("data-operation", "create");
+    $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
-
-
 }
 
-   
 function onclickEdit(e) 
 {
     clearForm();
-    var exam_id = e.currentTarget.dataset["id"];
-    $("#exam-id").val(e.currentTarget.dataset["id"]);
+    var itemId = e.currentTarget.dataset["id"];
+    $("#item-id").val(e.currentTarget.dataset["id"]);
     $(".modal-title").html("Edit an Exam");
-    $("#submit-button").attr("data-operation", "update");
+    $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 
     $.get("../ape/get_all_apes.php", 
     {requester_id: _userId,
     requester_type: _userType,
     requester_session_id: _userSessionId,
-    exam_id: exam_id}, 
+    exam_id: itemId}, 
     function(item){
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
@@ -167,18 +191,32 @@ function onclickEdit(e)
 
 }
 
-function onclickDelete(e) {
-    
+function onclickDelete(e) 
+{
+    if(window.confirm("Are you sure you want to delete this exam?"))
+    {
+        var itemId = e.currentTarget.dataset["id"];
+        
+        $.post("../ape/remove_ape.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: itemId},
+        function(){
+            $("tr[data-target='#item-" + itemId + "']").remove();
+            $("tr[id='item-" + itemId + "']").remove();
+        });
+    }
 }
 
 function clearForm()
 {
-    $("#exam-form").find("input[type=text], textarea").val(""); 
+    $("#" + _formId).find("input[type=text], textarea").val(""); 
 }
 
-function getAllAPE()
+function getAllItems()
 {
-    $("#exam-table .item-row").empty();
+    $("#"+_tableId + " .item-row").empty();
     
     $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,

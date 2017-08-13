@@ -14,19 +14,31 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
-    //If teacher, get only their exams
-    if(strcmp($requesterType, 'Teacher') == 0)
+    if (!empty($_GET["exam_id"]))
     {
-        $sqlSelectExams = "SELECT exam.*
+        $sqlSelectExam = "SELECT *
                             FROM exam
-                            INNER JOIN in_class_exam
-                            USING (exam_id)
-                            WHERE teacher_id = :teacher_id";
-        $data = array(':teacher_id' => $requesterId);
-        $sqlResult = sqlExecute($sqlSelectId, $data, true);
-    } else {
-      $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+                            WHERE exam_id = :exam_id";
+        $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$_GET["exam_id"]), true);
     }
+    else 
+    {
+        //If teacher, get only their exams
+        if(strcmp($requesterType, 'Teacher') == 0)
+        {
+            $sqlSelectExams = "SELECT exam.*
+                                FROM exam
+                                INNER JOIN in_class_exam
+                                USING (exam_id)
+                                WHERE teacher_id = :teacher_id";
+            $data = array(':teacher_id' => $requesterId);
+            $sqlResult = sqlExecute($sqlSelectExams, $data, true);
+        } else {
+        $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+        }
+    }
+
+
     
 	echo json_encode($sqlResult);
 ?>

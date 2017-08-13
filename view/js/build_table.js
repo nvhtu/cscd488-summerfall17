@@ -41,7 +41,7 @@ function buildItemRow(summaryData)
     $bttnDel.attr("data-id", summaryData.id);
     $bttnDel.click(onclickDelete);
 
-    var rowHTML = '<tr data-target="#item-' + summaryData.id + '" aria-expanded="true" name = "item-row">';
+    var rowHTML = '<tr class="item-row" data-target="#item-' + summaryData.id + '" aria-expanded="true">';
 
     for (var property in summaryData) 
     {
@@ -55,9 +55,7 @@ function buildItemRow(summaryData)
         }
     }
 
-    rowHTML += '<div class="btn-group" role="group">';
-
-    return $(rowHTML).append($bttnInfo, $bttnEdit, $bttnDel);
+    return $(rowHTML).append($('<td>').append($('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, $bttnDel)));
 
 }
 
@@ -69,9 +67,9 @@ function buildItemRow(summaryData)
  */
 function buildDetailRow(detailData, namesArr)
 {
-    var detailRowHTML = '<tr class="collapse" id="item-' + detailData.id + '" name = "item-detail-row">'
-    + '<td colspan="6" class="well">'
-    + '<div class="panel panel-default">'
+    var detailRowHTML = '<tr class="item-detail-row">'
+    + '<td colspan="100%">'
+    + '<div class="collapse" id="item-' + detailData.id + '">'
     + '<table class="table table-condensed">'
     + '<tbody>';
 
@@ -83,8 +81,8 @@ function buildDetailRow(detailData, namesArr)
         {
             if(detailData[property] != detailData.id)
             {
-                detailRowHTML += '<tr>'
-                                + '<th>' + namesArr[count] + '</th>'
+                detailRowHTML += '<tr class="active">'
+                                + '<th>' + namesArr[count] + ':</th>'
                                 + '<td>' + detailData[property] + '</td'
                                 + '</tr>';
                 

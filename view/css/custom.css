@@ -78,16 +78,27 @@ body > .container {
 /*
  * Table
  */
-table .accordion-toggle td:last-child {
-   width: 129px;
-}
-
 .table>tbody>tr>td {
    vertical-align: middle;
 }
 
-.table .well .panel {
-   display: inline-block;
+.table .item-row td:last-child {
+   width: 129px;
+}
+
+.table .item-detail-row>td {
+   padding: 0;
+   border-top: 0;
+}
+
+.table .item-detail-row table {
+   margin-bottom: 0;
+}
+
+.table .item-detail-row table th {
+   white-space: nowrap;
+   width: 1%;
+   text-align: right;
 }
 
 /*

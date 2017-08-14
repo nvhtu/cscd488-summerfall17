@@ -2,4 +2,4 @@
 <li><a href="http://localhost/cscd488-summerfall17/view/exam/index.php">Exams</a></li>
 <li><a href="http://localhost/cscd488-summerfall17/view/category/index.php">Categories</a></li>
 <li><a href="http://localhost/cscd488-summerfall17/view/location/index.php">Locations</a></li>
-<li><a href="#">Users</a></li>
+<li><a href="http://localhost/cscd488-summerfall17/view/user/index.php">Users</a></li>

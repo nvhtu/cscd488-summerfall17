@@ -2,7 +2,7 @@ $(document).ready(loaded);
 
 function loaded() {
     //get all current categories and send to loadTable function,
-    $.post("../category/get_all_categories.php", 
+    $.get("../category/get_all_categories.php", 
         {requester_id: "1",
         requester_type: "Admin"}, 
         loadTable,
@@ -62,7 +62,7 @@ function onclickEdit(e) {
     else{
         var btn = $(e.target);
     }
-    $.post("../category/get_all_categories.php", 
+    $.get("../category/get_all_categories.php", 
         {requester_id: "1",
         requester_type: "Admin"}, 
         function(data){
@@ -136,7 +136,7 @@ function addCategory(){
 //Gets category data and creates and appends a row using the
 //last record in data (the record just added)
 function onSuccessfulAdd(){
-    $.post("../category/get_all_categories.php", 
+    $.get("../category/get_all_categories.php", 
         {requester_id: "1",
         requester_type: "Admin"},
         function(data){

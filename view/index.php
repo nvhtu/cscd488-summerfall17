@@ -12,7 +12,8 @@
    $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "cscd488-summerfall17" . DIRECTORY_SEPARATOR . "view";
    $path = $absPath . DIRECTORY_SEPARATOR . $page . DIRECTORY_SEPARATOR . $page;
    $modalPath = $path . "_modal.html";
-   $bodyPath = $path . "_table.html";
+   $tablePath = $absPath . DIRECTORY_SEPARATOR . "table.php";
+   //$bodyPath = $path . "_table.html";
    //$scriptPath = $path . "_script.js";
    $scriptPath = "$page/" . $page . "_script.js";
 ?>
@@ -48,7 +49,13 @@
          </div>
 
          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <?php require_once $bodyPath; ?>
+            <?php 
+               if (strcmp($page, "home") === 0) {
+                  require_once $path . ".html";
+               } else {
+                  require_once $tablePath;
+               }
+             ?>
          </div>
       </div>
    </div>

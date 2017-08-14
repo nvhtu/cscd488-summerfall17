@@ -2,7 +2,7 @@ $(document).ready(loaded);
 
 function loaded() {
     //get all current locations and send to loadTable function,
-    $.post("../location/get_all_locations.php", 
+    $.get("../location/get_all_locations.php", 
         {requester_id: "1",
         requester_type: "Admin"}, 
         loadTable,
@@ -63,7 +63,7 @@ function onclickEdit(e) {
     else{
         var btn = $(e.target);
     }
-    $.post("../location/get_all_locations.php", 
+    $.get("../location/get_all_locations.php", 
         {requester_id: "1",
         requester_type: "Admin"}, 
         function(data){
@@ -139,7 +139,7 @@ function addLocation(){
 //Gets location data and creates and appends a row using the
 //last record in data (the record just added)
 function onSuccessfulAdd(){
-    $.post("../location/get_all_locations.php", 
+    $.get("../location/get_all_locations.php", 
         {requester_id: "1",
         requester_type: "Admin"},
         function(data){

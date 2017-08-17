@@ -51,7 +51,7 @@
     {
         $sqlInsertInClass = "INSERT INTO in_class_exam (exam_id, teacher_id)
                              VALUES (:exam_id, :teacher_id)";
-        $data = array(':exam_id' => $exam_id, ':teacher_id' => $requesterId);
+        $data = array(':exam_id' => $lastInsertId, ':teacher_id' => $requesterId);
         $exam = sqlExecute($sqlInsertInClass, $data, false);
     }
 

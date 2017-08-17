@@ -26,7 +26,7 @@ function loaded()
 
 function buildTable()
 {
-    var headersArr = ["Name"];
+    var headersArr = ["Name", "Action"];
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
 }

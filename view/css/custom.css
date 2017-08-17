@@ -95,6 +95,10 @@ body > .container {
    font-size: 20px;
 }
 
+.panel .table {
+   margin-bottom: 0;
+}
+
 .table>thead:first-child>tr:first-child>th {
    border-top: 2px solid #ddd;
 }
@@ -104,7 +108,20 @@ body > .container {
 }
 
 .table .item-row td:last-child {
-   width: 129px;
+   width: 1%;
+}
+
+.table .btn-group {
+   white-space: nowrap;
+}
+
+.table .btn-group .btn {
+   display: inline-block;
+   float: none;
+}
+
+.table .btn-group .btn + .btn {
+   margin-left: -5px;
 }
 
 .table .item-detail-row>td {

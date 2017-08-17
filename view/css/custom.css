@@ -57,8 +57,8 @@ body > .container {
 }
 
 /*
-* Accordion
-*/
+ * Accordion
+ */
 #accordion .panel-heading a {
     display: block;
     padding: 10px 15px;
@@ -78,8 +78,25 @@ body > .container {
 /*
  * Table
  */
-.panel-default>.panel-heading>.panel-title {
-   padding-top: 8px;
+.panel.with-nav-tabs .panel-heading {
+   padding-bottom: 0;
+}
+
+.panel.with-nav-tabs .nav-tabs {
+   border-bottom: none;
+}
+
+.table-toolbar {
+   padding: 15px;
+}
+
+.panel-default>.panel-heading .panel-title {
+   padding-top: 5px;
+   font-size: 20px;
+}
+
+.table>thead:first-child>tr:first-child>th {
+   border-top: 2px solid #ddd;
 }
 
 .table>tbody>tr>td {
@@ -103,6 +120,10 @@ body > .container {
    white-space: nowrap;
    width: 1%;
    text-align: right;
+}
+
+.panel-footer .pagination {
+   margin: 0;
 }
 
 /*

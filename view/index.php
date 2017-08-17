@@ -13,6 +13,7 @@
    $path = $absPath . DIRECTORY_SEPARATOR . $page . DIRECTORY_SEPARATOR . $page;
    $modalPath = $path . "_modal.html";
    $tablePath = $absPath . DIRECTORY_SEPARATOR . "table.php";
+   $tabbedTablePath = $absPath . DIRECTORY_SEPARATOR . "tabbedTable.php";
    //$bodyPath = $path . "_table.html";
    //$scriptPath = $path . "_script.js";
    $scriptPath = "$page/" . $page . "_script.js";
@@ -53,7 +54,11 @@
                if (strcmp($page, "home") === 0) {
                   require_once $path . ".html";
                } else {
-                  require_once $tablePath;
+                  if (isset($tableTabs)) {
+                     require_once $tabbedTablePath;
+                  } else {
+                     require_once $tablePath;
+                  }
                }
              ?>
          </div>

@@ -1,6 +1,16 @@
-<div class="panel panel-default">
-   <div class="panel-heading">
-      <h4 class="panel-title"><strong><?php echo $tableTitle; ?></strong></h4>
+<div class="panel panel-default with-nav-tabs">
+   <div class="panel-heading clearfix">
+      <h4 class="panel-title pull-left"><strong><?php echo $tableTitle; ?></strong></h4>
+      <ul class="nav nav-tabs pull-right">
+         <?php for ($i = 0; $i < count($tableTabs); $i++) {
+            $str = str_replace(' ', '_', $tableTabs[$i]);
+            if ($i == 0) {
+               echo "<li class='active'><a href='#$str' role='tab' data-toggle='tab'>$tableTabs[$i]</a></li>";
+            } else {
+               echo "<li><a href='#$str' role='tab' data-toggle='tab'>$tableTabs[$i]</a></li>";
+            }
+         } ?>
+      </ul>
    </div>
 
    <div>
@@ -18,7 +28,19 @@
          </form>
       </div>
 
-      <div class="table-responsive"></div>
+      <div class="tab-content">
+         <?php for ($i = 0; $i < count($tableTabs); $i++):
+            $str = str_replace(' ', '_', $tableTabs[$i]);
+            if ($i == 0) {
+               echo "<div role='tabpanel' class='tab-pane fade in active' id='$str'>";
+            } else {
+               echo "<div role='tabpanel' class='tab-pane fade in' id='$str'>";
+            } ?>
+               
+               <div class='table-responsive'></div>
+            </div>
+         <?php endfor; ?>
+      </div>
    </div>
 
    <div class="panel-footer clearfix">

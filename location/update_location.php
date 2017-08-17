@@ -4,7 +4,7 @@
 	require_once "../util/input_validate.php";
 	
 	if(empty($_POST["requester_id"]) || empty($_POST["requester_type"]) || 
-	empty($_POST["id"]) || empty($_POST["name"]) || empty($_POST["seats"])){
+	empty($_POST["loc_id"]) || empty($_POST["name"]) || empty($_POST["seats"])){
 		var_dump(http_response_code(400));
         die("Incomplete input.");
 	}
@@ -13,7 +13,7 @@
     $requesterType = $_POST["requester_type"];
     $allowedType = array("Admin", "Teacher");
 	
-	$id = $_POST["id"];
+	$id = $_POST["loc_id"];
 	$name = $_POST["name"];
 	$seats = $_POST["seats"];
 

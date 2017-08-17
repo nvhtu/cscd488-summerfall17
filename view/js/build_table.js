@@ -67,7 +67,7 @@ function buildItemRow(summaryData)
  */
 function buildDetailRow(detailData, namesArr)
 {
-    var detailRowHTML = '<tr class="item-detail-row">'
+    var detailRowHTML = '<tr class="item-detail-row" data-id="item-' + detailData.id + '">'
     + '<td colspan="100%">'
     + '<div class="collapse" id="item-' + detailData.id + '">'
     + '<table class="table table-condensed">'

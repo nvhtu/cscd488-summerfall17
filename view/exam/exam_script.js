@@ -10,8 +10,8 @@ function loaded()
 {
 
     //Automatic GLOBAL variables
-    _userId = "111";
-    _userType = "Admin";
+    _userId = "222";
+    _userType = "Teacher";
     _userSessionId = "0";
     
     _targetModal = "detail-modal";
@@ -152,7 +152,7 @@ function updateItem()
             //console.log(row);
             //console.log(detailRow);
             $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
-            $("tr[id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+            $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
         },
         "json");
     }); 

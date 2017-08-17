@@ -21,10 +21,17 @@
 
 	//User authentication
     user_auth($requesterId, $requesterType, $allowedType);
-	
-	$sqlResult = sqlExecute("SELECT * FROM category",
-				 array(),
-				 true);
-
+	if(!empty($_GET["cat_id"]))
+	{
+		$sqlResult = sqlExecute("SELECT * FROM category WHERE cat_id = :id",
+					 array(":id" => $_GET["cat_id"]),
+					 true);
+	}
+	else 
+	{
+		$sqlResult = sqlExecute("SELECT * FROM category",
+					 array(),
+					 true);
+	}
 	echo json_encode($sqlResult);
 ?>

@@ -11,7 +11,7 @@
  */
 function buildMainTable(headersArr)
 {
-    var tableHTML = '<table class="table table-condensed" id="main-table"> <thead> <tr>';
+    var tableHTML = '<table class="table table-condensed main-table"> <thead> <tr>';
     for (header of headersArr)
     {
         tableHTML += '<th>' + header + '</th>';
@@ -48,7 +48,7 @@ function buildItemRow(summaryData)
         if (summaryData.hasOwnProperty(property)) 
         {
             //console.log(summaryData[property]);
-            if(summaryData[property] != summaryData.id)
+            if(property != "id")
             {
                 rowHTML += '<td>' + summaryData[property] + '</td>';
             }      

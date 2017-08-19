@@ -36,6 +36,8 @@
                                 getAccountById();
                             }
                             break;
+        case ("get_by_type"): getAllByType();
+                            break;
         default: var_dump(http_response_code(400));
                 echo "Unrecognized request string.";
     }
@@ -90,29 +92,44 @@
     }
 
     /**
+    * Gets all account by type
+    * @return: void
+    */
+    function getAllByType()
+    {
+        $type = $_GET["type"];
+        $sqlResult;
+
+        if(strcmp($type, "Student") == 0)
+        {
+            $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state FROM student JOIN user ON student_id = user_id";
+            $sqlResult = sqlExecute($sqlGetAllStudents, null, True);
+
+        }
+        else 
+        {
+            $sqlGetAllNonStudents = "SELECT user_id, f_name, l_name, email
+                                    FROM account JOIN user ON account_id = user_id
+                                    WHERE account.type LIKE :type";
+            $sqlResult = sqlExecute($sqlGetAllNonStudents, array('type'=>$type), True);
+        }
+
+        echo json_encode($sqlResult);
+    }
+
+    /**
     * Gets student account info and state
     * @return: string json
     */
     function getStudentInfo($id)
     {
-        $sqlGetAccount = "SELECT *
-                         FROM user
-                         WHERE user_id = :id";
+        $sqlGetAccount = "SELECT user_id, f_name, l_name, email, state
+                        FROM student JOIN user ON student_id = user_id
+                        WHERE user_id LIKE :id";
 
         $sqlResult = sqlExecute($sqlGetAccount, array('id'=>$id), True);
-
-        if(count($sqlResult) == 0)
-            return "NULL";
-
-        //get Student state
-        $sqlGetState = "SELECT state
-                        FROM student
-                        WHERE student_id = :id";
-        $sqlResultState = sqlExecute($sqlGetState, array('id'=>$id), True);
-            
-        $sqlResult[0]["state"] = $sqlResultState[0]["state"];
         $sqlResult[0]["type"] = array("Student");
-
+        
         return json_encode($sqlResult);
     }
 

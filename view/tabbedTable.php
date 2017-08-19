@@ -5,9 +5,9 @@
          <?php for ($i = 0; $i < count($tableTabs); $i++) {
             $str = str_replace(' ', '_', $tableTabs[$i]);
             if ($i == 0) {
-               echo "<li class='active'><a href='#$str' role='tab' data-toggle='tab'>$tableTabs[$i]</a></li>";
+               echo "<li class='active'><a href='#$str-panel' role='tab' data-toggle='tab'>$tableTabs[$i]</a></li>";
             } else {
-               echo "<li><a href='#$str' role='tab' data-toggle='tab'>$tableTabs[$i]</a></li>";
+               echo "<li><a href='#$str-panel' role='tab' data-toggle='tab'>$tableTabs[$i]</a></li>";
             }
          } ?>
       </ul>
@@ -32,9 +32,9 @@
          <?php for ($i = 0; $i < count($tableTabs); $i++):
             $str = str_replace(' ', '_', $tableTabs[$i]);
             if ($i == 0) {
-               echo "<div role='tabpanel' class='tab-pane fade in active' id='$str'>";
+               echo "<div role='tabpanel' class='tab-pane fade in active' id='$str-panel'>";
             } else {
-               echo "<div role='tabpanel' class='tab-pane fade in' id='$str'>";
+               echo "<div role='tabpanel' class='tab-pane fade in' id='$str-panel'>";
             } ?>
                
                <div class='table-responsive'></div>

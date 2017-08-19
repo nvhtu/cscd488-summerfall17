@@ -49,7 +49,7 @@ function loadTable(data)
         var row = buildItemSummaryRow(item);
         $(row).find(".btn-info").remove();
 
-        $("#" + _tableId).append(row);
+        $("." + _tableId).append(row);
     });
 }
 
@@ -157,7 +157,7 @@ function clearForm()
 
 function getAllItems()
 {
-    $("#"+_tableId + " .item-row").empty();
+    $("."+_tableId + " .item-row").empty();
     
     $.get("../category/get_all_categories.php", 
         {requester_id: _userId,

@@ -23,8 +23,6 @@ function loaded()
     $("#requester-session").val(_userSessionId);
     
     checkTypeFunction();
-    getAllItems();
-    getAllLoc();
 
     buildTable();
 
@@ -34,20 +32,52 @@ function loaded()
 
 function buildTable()
 {
-    var headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
+    //build Admins table
+    var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "Action"];
     var table = buildMainTable(headersArr);
-    $(".table-responsive").html(table);
+    $("#Admins-panel > .table-responsive").html(table);
+    getAllItems("Admin");
+
+    //build Teachers table
+    $("#Teachers-panel > .table-responsive").html(table);
+    getAllItems("Teacher");
+
+    //build Graders table
+    $("#Graders-panel > .table-responsive").html(table);
+    getAllItems("Grader");
+
+    //build Student table
+    var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
+    var table = buildMainTable(headersArr);
+    $("#Students-panel > .table-responsive").html(table);
+    getAllItems("Student");
 }
 
-function buildItemSummaryRow(item)
+function buildItemSummaryRow(item, type)
 {
-    var summaryData = {
-        id: item.exam_id,
-        name: item.name,
-        date: item.date,
-        start_time: item.start_time,
-        location: item.location
-    };
+    var summaryData;
+    if(type == "Student")
+    {
+        summaryData = {
+            id: item.user_id,
+            ewu_id: item.user_id,
+            f_name: item.f_name,
+            l_name: item.l_name,
+            email: item.email,
+            state: item.state
+        };
+    }
+    else
+    {
+        summaryData = {
+            id: item.user_id,
+            ewu_id: item.user_id,
+            f_name: item.f_name,
+            l_name: item.l_name,
+            email: item.email
+        };
+    }
+    
 
     var row = buildItemRow(summaryData);
 
@@ -69,18 +99,19 @@ function buildItemDetailRow(item)
     return detailRow;
 }
 
-function loadTable(data) 
+function loadTable(data, type) 
 {
     //console.log(data);
     $.each(data, function(i, item) {
-        var row = buildItemSummaryRow(item);
+        var row = buildItemSummaryRow(item, type);
 
         var detailRow = buildItemDetailRow(item);
 
         //console.log(detailExamRow);
 
-        $("#" + _tableId).append(row);
-        $("#" + _tableId).append(detailRow);
+        $("#" + type + "s-panel > .table-responsive > ." + _tableId).append(row);
+        
+        //$("." + _tableId).append(detailRow);
     });
 }
 
@@ -217,15 +248,19 @@ function clearForm()
     $("#" + _formId).find("input[type=text], textarea").val(""); 
 }
 
-function getAllItems()
+function getAllItems(type)
 {
-    $("#"+_tableId + " .item-row").empty();
+    $("#" + type + "s-panel > .table-responsive > ."+_tableId + " .item-row").empty();
     
-    $.get("../ape/get_all_apes.php", 
+    $.get("../account/get_account_info.php", 
         {requester_id: _userId,
         requester_type: _userType,
-        requester_session_id: _userSessionId}, 
-        loadTable,
+        requester_session_id: _userSessionId,
+        request: "get_by_type",
+        type: type}, 
+        function(data){
+            loadTable(data, type);
+        },
         "json");
 }
 

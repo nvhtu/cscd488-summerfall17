@@ -28,6 +28,11 @@ function loaded()
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
+
+    $("a[href='#Admins-panel']").click(function(){getAllItems("Admin")});
+    $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher")});
+    $("a[href='#Graders-panel']").click(function(){getAllItems("Grader")});
+    $("a[href='#Students-panel']").click(function(){getAllItems("Student")});
 }
 
 function buildTable()
@@ -170,24 +175,33 @@ function createItem()
 function updateItem()
 {
     //console.log($("#" + _formId).serialize());
-    $.post("../ape/update_ape.php", $("#" + _formId).serialize(), function(){
-        var item = $("#" + _formId).serialize();
-        $.get("../ape/get_all_apes.php", 
-        {requester_id: _userId,
-        requester_type: _userType,
-        requester_session_id: _userSessionId,
-        exam_id: $("#item-id").val()}, 
-        function(item){
-            var row = buildItemSummaryRow(item[0]);
-            var detailRow = buildItemDetailRow(item[0]);
 
-            //console.log(row);
-            //console.log(detailRow);
-            $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
-            $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
-        },
-        "json");
-    }); 
+    //build "type" string
+    var type = new Array();
+    if($("#type-admin-checkbox").prop("checked"))
+        type.push("Admin");
+    if($("#type-teacher-checkbox").prop("checked"))
+        type.push("Teacher");
+    if($("#type-grader-checkbox").prop("checked"))
+        type.push("Grader");
+    if($("#type-student-checkbox").prop("checked"))
+        type.push("Student");
+
+    //console.log(type);
+
+    
+
+    $.post("../account/update_account.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "update_type_info",
+    id: $("input[name='user_id']").val(),
+    f_name: $("input[name='f_name']").val(),
+    l_name: $("input[name='l_name']").val(),
+    email: $("input[name='email']").val(),
+    type: type});
+    
 }
 
 function onclickCreate()
@@ -206,15 +220,16 @@ function onclickEdit(e)
     clearForm();
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
-    $(".modal-title").html("Edit an Exam");
+    $(".modal-title").html("Edit a User");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 
-    $.get("../ape/get_all_apes.php", 
+    $.get("../account/get_account_info.php", 
     {requester_id: _userId,
     requester_type: _userType,
     requester_session_id: _userSessionId,
-    exam_id: itemId}, 
+    request: "get_by_id",
+    id: itemId}, 
     function(item){
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
@@ -227,7 +242,7 @@ function onclickEdit(e)
 
 function onclickDelete(e) 
 {
-    if(window.confirm("Are you sure you want to delete this exam?"))
+    if(window.confirm("Are you sure you want to delete this user?"))
     {
         var itemId = e.currentTarget.dataset["id"];
         

@@ -72,11 +72,23 @@
             die("Unauthorized access. You must be an admin to chanage an admin account.");
         }
 
-        $sqlUpdateAccount = "UPDATE account
-                            SET type = :type
-                            WHERE account_id = :id";
+        //Delete all records that matching with the account id in account table
+        //=> Delete all roles and add those from the request
 
-        sqlExecute($sqlUpdateAccount, array(':type'=>$type, ':id'=>$id), False);
+        $sqlDeleteAllRoles = "DELETE FROM account WHERE account_id LIKE :id";
+        sqlExecute($sqlDeleteAllRoles, array(':id'=>$id), False);
+        
+
+        foreach ($type as $theType)
+        {
+
+            $sqlAddAccount = "INSERT INTO account(account_id, type)
+                            VALUES (:id, :type)";
+
+            sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$theType), False);
+
+        }
+        
     }
 
     function updateInfo()

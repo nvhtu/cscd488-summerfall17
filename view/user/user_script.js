@@ -46,16 +46,26 @@ function loaded()
     //show/hide student state select when check/uncheck student type
 
     $(".type-checkbox").click(function(){
-        $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap, #type-student-wrap").show();
+        $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled", false);
+        
         if($("#type-student-checkbox").prop("checked"))
         {
             $("#state-form-group").fadeIn(100);
-            $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap").fadeOut(100);
+            $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", true);
+
         } 
             
         else
         {
-            $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap").fadeIn(100);
+            if($("#type-admin-checkbox").prop("checked") || $("#type-teacher-checkbox").prop("checked") || $("#type-grader-checkbox").prop("checked"))
+            {
+                $("#type-student-checkbox").prop("disabled", true);
+            }
+            else
+            {
+                $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", false);
+            }
+            
             $("#state-form-group").fadeOut(100);
         }
 
@@ -291,9 +301,11 @@ function onclickCreate()
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 
-    $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap, #type-student-wrap").show();
+    $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     $("input[name='user_id']").prop("disabled", false);
     $("#state-form-group").hide();
+    $("#type-student-wrap").show();
+    $(".type-nonstudent-wrap").show();
     $("input[name='type']").prop('disabled', false);
 
     clearForm();
@@ -304,7 +316,8 @@ function onclickEdit(e)
 {
     clearForm();
     $("input[name='user_id']").prop("disabled", true);
-    $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap, #type-student-wrap").show();
+    $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
+    
 
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
@@ -315,11 +328,15 @@ function onclickEdit(e)
     if(_selectedTab == "Student")
     {
         $("#state-form-group").show();
+        $("#type-student-wrap").show();
         $("input[name='type']").prop('disabled', true);
+        $(".type-nonstudent-wrap").hide();
     }
     else
     {
+        $("#type-student-wrap").hide();
         $("#state-form-group").hide();
+        $(".type-nonstudent-wrap").show();
         $("input[name='type']").prop('disabled', false);
     }
 
@@ -348,7 +365,8 @@ function onclickDelete(e)
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], textarea").val(""); 
+    $("input[type=text]").val("");
+    $("input[type=checkbox]").prop("checked", false); 
 }
 
 function getAllItems(type)
@@ -378,7 +396,7 @@ function checkTypeFunction()
             case "Teacher": $("#type-admin-wrap").remove();
                             $("#type-grader-wrap").remove();
                             $("#type-teacher-wrap").remove();
-                            $("#type-student-checkbox").prop('checked', true);
+                            $("#type-student-wrap").prop('checked', true);
                             break;
             case "Grader": $("#create-button").remove();
                             break;

@@ -45,7 +45,7 @@
                 </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" id="type-form-group">
                     <label for="type" class="col-sm-3 control-label">Type:</label>
                     <div class="col-sm-9">
                         <label id="type-admin"><input type="checkbox"  id="type-admin-checkbox" class="form-control" name="type" value="Admin"/>Admin</label>
@@ -54,6 +54,19 @@
                         <label id="type-student"><input type="checkbox" id="type-student-checkbox" class="form-control" name="type" value="Student"/>Student</label>
                     </div>
                     <input type="hidden" class="form-control" id="type" name="type"/>
+                </div>
+
+                <div class="form-group" id="state-form-group">
+                        <label for="type" class="col-sm-3 control-label">Student State:</label>
+                        <div class="col-sm-9">
+                                <select type="text" class="form-control" name="state" />
+                                <option value="Ready">Ready to Register</option>
+                                <option value="Registered">Registered</option>
+                                <option value="Blocked">Blocked</option>
+                                <option value="Passed">Passed</option>
+                                </select>
+                             </div>
+                        <input type="hidden" class="form-control" id="type" name="type"/>
                 </div>
             </form>    
 

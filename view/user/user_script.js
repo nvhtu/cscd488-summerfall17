@@ -18,21 +18,28 @@ function loaded()
     _tableId = "main-table";
     _formId = "main-form";
 
+    _selectedTab = "";
+
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
+
+    
     
     checkTypeFunction();
 
     buildTable();
 
+    $(".btn-group > .btn-danger").remove();
+    $("#state-form-group").hide();
+
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
 
-    $("a[href='#Admins-panel']").click(function(){getAllItems("Admin")});
-    $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher")});
-    $("a[href='#Graders-panel']").click(function(){getAllItems("Grader")});
-    $("a[href='#Students-panel']").click(function(){getAllItems("Student")});
+    $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin";});
+    $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher";});
+    $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader";});
+    $("a[href='#Students-panel']").click(function(){getAllItems("Student"); _selectedTab = "Student";});
 }
 
 function buildTable()
@@ -118,6 +125,8 @@ function loadTable(data, type)
         
         //$("." + _tableId).append(detailRow);
     });
+
+    $(".btn-group > .btn-danger").remove();
 }
 
 
@@ -189,18 +198,43 @@ function updateItem()
 
     //console.log(type);
 
-    
+    var request = "";
+
+    if(_selectedTab == "Student")
+    {
+        request = "update_state_info";
+    }
+    else
+    {
+        request = "update_type_info";
+    }
 
     $.post("../account/update_account.php", 
     {requester_id: _userId,
     requester_type: _userType,
     requester_session_id: _userSessionId,
-    request: "update_type_info",
+    request: request,
     id: $("input[name='user_id']").val(),
     f_name: $("input[name='f_name']").val(),
     l_name: $("input[name='l_name']").val(),
     email: $("input[name='email']").val(),
-    type: type});
+    type: type,
+    state: $("select[name='state']").val()},
+    function(){
+        $.get("../account/get_account_info.php",
+            {
+                requester_id: _userId,
+                requester_type: _userType,
+                requester_session_id: _userSessionId,
+                request: "get_by_id",
+                id: $("#item-id").val()
+            }, function(item){
+                var row = buildItemSummaryRow(item[0], _selectedTab);
+                $("tr[data-target='#item-" + item[0].user_id + "']").replaceWith(row);
+                $(".btn-group > .btn-danger").remove();
+            }, "json");
+    });
+
     
 }
 
@@ -224,6 +258,17 @@ function onclickEdit(e)
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 
+    if(_selectedTab == "Student")
+    {
+        $("#state-form-group").show();
+        $("input[name='type']").prop('disabled', true);
+    }
+    else
+    {
+        $("#state-form-group").hide();
+        $("input[name='type']").prop('disabled', false);
+    }
+
     $.get("../account/get_account_info.php", 
     {requester_id: _userId,
     requester_type: _userType,
@@ -240,23 +285,12 @@ function onclickEdit(e)
 
 }
 
+
 function onclickDelete(e) 
 {
-    if(window.confirm("Are you sure you want to delete this user?"))
-    {
-        var itemId = e.currentTarget.dataset["id"];
-        
-        $.post("../ape/remove_ape.php", 
-        {requester_id: _userId,
-        requester_type: _userType,
-        requester_session_id: _userSessionId,
-        exam_id: itemId},
-        function(){
-            $("tr[data-target='#item-" + itemId + "']").remove();
-            $("tr[id='item-" + itemId + "']").remove();
-        });
-    }
+
 }
+
 
 function clearForm()
 {
@@ -265,7 +299,7 @@ function clearForm()
 
 function getAllItems(type)
 {
-    $("#" + type + "s-panel > .table-responsive > ."+_tableId + " .item-row").empty();
+    $("#" + type + "s-panel > .table-responsive > ."+_tableId + " tbody").empty();
     
     $.get("../account/get_account_info.php", 
         {requester_id: _userId,
@@ -277,6 +311,8 @@ function getAllItems(type)
             loadTable(data, type);
         },
         "json");
+    
+        
 }
 
 //disable and hide controls based on user type
@@ -292,5 +328,7 @@ function checkTypeFunction()
                             break;
             case "Grader": $("#create-button").remove();
                             break;
+            
+            case "Student": 
         }
 }

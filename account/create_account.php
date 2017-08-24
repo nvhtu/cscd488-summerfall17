@@ -43,7 +43,7 @@
     sqlExecute($sqlInsertUser, array(':id'=>$id, ':fname'=>$fname, ':lname'=>$lname, ':email'=>$email), False);
 
     
-    if(strcmp($type, "Student") == 0) //Student account
+    if(in_array("Student", $type)) //Student account
     {
         $state = $_POST["state"];
         $sqlInsertStudent = "INSERT INTO student (student_id, state)
@@ -54,10 +54,15 @@
     }
     else //Teacher, Grader account
     {
-        $sqlInsertAccount= "INSERT INTO account (account_id, type)
+        foreach ($type as $theType)
+        {
+
+            $sqlAddAccount = "INSERT INTO account(account_id, type)
                             VALUES (:id, :type)";
-        
-        sqlExecute($sqlInsertAccount, array(':id'=>$id, ':type'=>$type), False);
+
+            sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$theType), False);
+
+        }
     }
 
     echo $id;

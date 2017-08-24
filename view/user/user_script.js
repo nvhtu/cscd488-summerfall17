@@ -33,6 +33,8 @@ function loaded()
     $(".btn-group > .btn-danger").remove();
     $("#state-form-group").hide();
 
+
+
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
 
@@ -40,6 +42,24 @@ function loaded()
     $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher";});
     $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader";});
     $("a[href='#Students-panel']").click(function(){getAllItems("Student"); _selectedTab = "Student";});
+
+    //show/hide student state select when check/uncheck student type
+
+    $(".type-checkbox").click(function(){
+        $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap, #type-student-wrap").show();
+        if($("#type-student-checkbox").prop("checked"))
+        {
+            $("#state-form-group").fadeIn(100);
+            $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap").fadeOut(100);
+        } 
+            
+        else
+        {
+            $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap").fadeIn(100);
+            $("#state-form-group").fadeOut(100);
+        }
+
+    });
 }
 
 function buildTable()
@@ -165,18 +185,33 @@ function submitForm (e)
 
 function createItem()
 {
-    //console.log($("#" + _formId).serialize());
-    $.post("../ape/create_ape.php", $("#" + _formId).serialize(), function(lastInsertId){
-        $.get("../ape/get_all_apes.php", 
+
+    var type = buildTypeString();
+
+    $.post("../account/create_account.php", 
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
-        exam_id: lastInsertId}, 
-        function(item){
-
-            //console.log(item);
-            loadTable(item);
-        },
+        id: $("#ewu-id").val(),
+        f_name: $("input[name='f_name']").val(),
+        l_name: $("input[name='l_name']").val(),
+        email: $("input[name='email']").val(),
+        type: type,
+        state: $("select[name='state']").val()}, 
+        function(lastInsertId){
+            $.get("../account/get_account_info.php", 
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            request: "get_by_id",
+            id: lastInsertId},
+            function(item){
+                //console.log(item);
+                $.each(type, function(i, theType){
+                    loadTable(item, theType);
+                });
+                
+            },
         "json");
     });
 }
@@ -186,15 +221,8 @@ function updateItem()
     //console.log($("#" + _formId).serialize());
 
     //build "type" string
-    var type = new Array();
-    if($("#type-admin-checkbox").prop("checked"))
-        type.push("Admin");
-    if($("#type-teacher-checkbox").prop("checked"))
-        type.push("Teacher");
-    if($("#type-grader-checkbox").prop("checked"))
-        type.push("Grader");
-    if($("#type-student-checkbox").prop("checked"))
-        type.push("Student");
+    var type = buildTypeString();
+    
 
     //console.log(type);
 
@@ -238,20 +266,46 @@ function updateItem()
     
 }
 
+function buildTypeString()
+{
+
+    type = Array();
+
+    if($("#type-admin-checkbox").prop("checked"))
+        type.push("Admin");
+    if($("#type-teacher-checkbox").prop("checked"))
+        type.push("Teacher");
+    if($("#type-grader-checkbox").prop("checked"))
+        type.push("Grader");
+    if($("#type-student-checkbox").prop("checked"))
+        type.push("Student");
+
+    return type;
+}
+
 function onclickCreate()
 {
-    clearForm();
+    
     //getAllLoc();
     $(".modal-title").html("Create a User");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 
+    $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap, #type-student-wrap").show();
+    $("input[name='user_id']").prop("disabled", false);
+    $("#state-form-group").hide();
+    $("input[name='type']").prop('disabled', false);
+
+    clearForm();
 
 }
 
 function onclickEdit(e) 
 {
     clearForm();
+    $("input[name='user_id']").prop("disabled", true);
+    $("#type-admin-wrap, #type-teacher-wrap, #type-grader-wrap, #type-student-wrap").show();
+
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
     $(".modal-title").html("Edit a User");
@@ -321,9 +375,9 @@ function checkTypeFunction()
         
         switch(_userType)
         {
-            case "Teacher": $("#type-admin").remove();
-                            $("#type-grader").remove();
-                            $("#type-teacher").remove();
+            case "Teacher": $("#type-admin-wrap").remove();
+                            $("#type-grader-wrap").remove();
+                            $("#type-teacher-wrap").remove();
                             $("#type-student-checkbox").prop('checked', true);
                             break;
             case "Grader": $("#create-button").remove();

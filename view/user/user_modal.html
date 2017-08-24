@@ -20,7 +20,7 @@
                 <div class="form-group">
                 <label for="user_id" class="col-sm-3 control-label">EWU ID:</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="user_id" disabled="disabled"/>
+                    <input type="text" class="form-control" id="ewu-id" name="user_id" disabled="disabled"/>
                 </div>
                 </div>
                 
@@ -48,10 +48,10 @@
                 <div class="form-group" id="type-form-group">
                     <label for="type" class="col-sm-3 control-label">Type:</label>
                     <div class="col-sm-9">
-                        <label id="type-admin"><input type="checkbox"  id="type-admin-checkbox" class="form-control" name="type" value="Admin"/>Admin</label>
-                        <label id="type-teacher"><input type="checkbox" id="type-teacher-checkbox" class="form-control" name="type" value="Teacher"/>Teacher</label>
-                        <label id="type-grader"><input type="checkbox" id="type-grader-checkbox" class="form-control" name="type" value="Grader"/>Grader</label>
-                        <label id="type-student"><input type="checkbox" id="type-student-checkbox" class="form-control" name="type" value="Student"/>Student</label>
+                        <label id="type-admin-wrap"><input type="checkbox"  id="type-admin-checkbox" class="form-control type-checkbox" name="type" value="Admin"/>Admin</label>
+                        <label id="type-teacher-wrap"><input type="checkbox" id="type-teacher-checkbox" class="form-control type-checkbox" name="type" value="Teacher"/>Teacher</label>
+                        <label id="type-grader-wrap"><input type="checkbox" id="type-grader-checkbox" class="form-control type-checkbox" name="type" value="Grader"/>Grader</label>
+                        <label id="type-student-wrap"><input type="checkbox" id="type-student-checkbox" class="form-control type-checkbox" name="type" value="Student"/>Student</label>
                     </div>
                     <input type="hidden" class="form-control" id="type" name="type"/>
                 </div>

@@ -18,14 +18,17 @@ function loaded()
     _tableId = "main-table";
     _formId = "main-form";
 
+    _locData = Array();
+
     _selectedTab = "";
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
 
-    getAllItems();
     getAllLoc();
+    
+    
 
     buildTable();
 
@@ -48,12 +51,23 @@ function buildTable()
 
 function buildItemSummaryRow(item)
 {
+    var locName = "";
+
+    $.each(_locData, function(i,locItem){
+        if(item.location == locItem.loc_id)
+        {
+            locName = locItem.name;
+        }
+    });
+
+    console.log(locName);
+
     var summaryData = {
         id: item.exam_id,
         name: item.name,
         date: item.date,
         start_time: item.start_time,
-        location: item.location
+        location: locName
     };
 
     var row = buildItemRow(summaryData);
@@ -109,11 +123,14 @@ function getAllLoc()
 function populateLocation(data)
 {
     $("#ape-loc").empty();
+    _locData = data;
     $.each(data, function(i){
         $("#ape-loc").append($("<option></option")
                     .attr("value", data[i]["loc_id"])
                     .text(data[i]["name"]));
     });
+
+    getAllItems();
 }
 
 function submitForm (e)

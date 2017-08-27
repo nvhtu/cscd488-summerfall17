@@ -10,13 +10,15 @@ function loaded()
 {
 
     //Automatic GLOBAL variables
-    _userId = "222";
-    _userType = "Teacher";
+    _userId = "111";
+    _userType = "Admin";
     _userSessionId = "0";
     
     _targetModal = "detail-modal";
     _tableId = "main-table";
     _formId = "main-form";
+
+    _selectedTab = "";
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
@@ -29,6 +31,12 @@ function loaded()
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
+
+    $("a[href='#Open-panel']").click(function(){getAllItems("Open"); _selectedTab = "Open";});
+    $("a[href='#In_Progress-panel']").click(function(){getAllItems("In_Progress"); _selectedTab = "In_Progress";});
+    $("a[href='#Grading-panel']").click(function(){getAllItems("Grading"); _selectedTab = "Grading";});
+    $("a[href='#Archived-panel']").click(function(){getAllItems("Archived"); _selectedTab = "Archived";});
+    $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
 }
 
 function buildTable()
@@ -72,14 +80,19 @@ function loadTable(data)
 {
     //console.log(data);
     $.each(data, function(i, item) {
+
+        //console.log(item.state);
+
         var row = buildItemSummaryRow(item);
 
         var detailRow = buildItemDetailRow(item);
 
+        $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
+        $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
         //console.log(detailExamRow);
 
-        $("#" + _tableId).append(row);
-        $("#" + _tableId).append(detailRow);
+        //$("#" + _tableId).append(row);
+        //$("#" + _tableId).append(detailRow);
     });
 }
 
@@ -214,9 +227,9 @@ function clearForm()
     $("#" + _formId).find("input[type=text], textarea").val(""); 
 }
 
-function getAllItems()
+function getAllItems(state)
 {
-    $("#"+_tableId + " .item-row").empty();
+    $("#" + state + "-panel > .table-responsive > ."+_tableId + " tbody").empty();
     
     $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,

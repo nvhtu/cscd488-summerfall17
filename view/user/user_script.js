@@ -160,25 +160,6 @@ function loadTable(data, type)
 }
 
 
-function getAllLoc()
-{
-    $.get("../location/get_all_locations.php",{
-                                requester_id: _userId,
-                                requester_type: _userType,
-                                requester_session_id: _userSessionId
-                                }, populateLocation, "json");
-}
-
-function populateLocation(data)
-{
-    $("#ape-loc").empty();
-    $.each(data, function(i){
-        $("#ape-loc").append($("<option></option")
-                    .attr("value", data[i]["loc_id"])
-                    .text(data[i]["name"]));
-    });
-}
-
 function submitForm (e)
 {
     if(e.currentTarget.dataset["action"] == "create")

@@ -60,8 +60,6 @@ function buildItemSummaryRow(item)
         }
     });
 
-    console.log(locName);
-
     var summaryData = {
         id: item.exam_id,
         name: item.name,

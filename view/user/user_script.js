@@ -390,14 +390,19 @@ function checkTypeFunction()
 
 function search(searchStr)
 {
-    $.get("../account/student_search.php", 
-    {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    search_str: searchStr}, 
-    function(data){
-        
-        loadTable(data, "Student");
-    },
-    "json");
+    if(searchStr != "")
+    {
+        $("#Students-panel > .table-responsive > ."+_tableId + " tbody").empty();
+        $.get("../account/student_search.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        search_str: searchStr}, 
+        function(data){
+            
+            loadTable(data, "Student");
+        },
+        "json");
+    }
+
 }

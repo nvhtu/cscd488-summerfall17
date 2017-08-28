@@ -43,6 +43,8 @@ function loaded()
     $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader";});
     $("a[href='#Students-panel']").click(function(){getAllItems("Student"); _selectedTab = "Student";});
 
+    $("#btn-search").click(function(){search($("input[name='search']").val())});
+
     //show/hide student state select when check/uncheck student type
 
     $(".type-checkbox").click(function(){
@@ -384,4 +386,18 @@ function checkTypeFunction()
             
             case "Student": 
         }
+}
+
+function search(searchStr)
+{
+    $.get("../account/student_search.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    search_str: searchStr}, 
+    function(data){
+        
+        loadTable(data, "Student");
+    },
+    "json");
 }

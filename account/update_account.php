@@ -50,7 +50,7 @@
                             updateState();
                             updateInfo();
                             break;    
-        default: var_dump(http_response_code(400));
+        default: http_response_code(400);
                 echo "Unrecognized request string.";          
     }
 
@@ -67,7 +67,7 @@
         //Validate only admin can change admin account
         if(strcmp($requesterType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             $conn = null;
             die("Unauthorized access. You must be an admin to chanage an admin account.");
         }

@@ -26,7 +26,7 @@
     //Validate only admin can create admin account
     if(strcmp($authType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
     {
-        var_dump(http_response_code(400));
+        http_response_code(400);
         $conn = null;
         die("Unauthorized access. You must be an admin to create an admin account.");
     }

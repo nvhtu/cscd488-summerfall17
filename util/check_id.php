@@ -11,7 +11,7 @@
 
         if($sqlResult[0]["count"] == 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             return False;
         }
         else {
@@ -28,7 +28,7 @@
 
         if($sqlResult[0]["count"] == 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             return False;
         }
         else {
@@ -45,7 +45,7 @@
 
         if($sqlResult[0]["count"] == 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             return False;
         }
         else {
@@ -62,7 +62,7 @@
 
         if($sqlResult[0]["count"] == 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             return False;
         }
         else {
@@ -79,7 +79,7 @@
 
         if($sqlResult[0]["count"] == 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             return False;
         }
         else {

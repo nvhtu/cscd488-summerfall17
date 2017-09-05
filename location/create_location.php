@@ -4,7 +4,7 @@
 	require_once "../util/input_validate.php";
 	
 	if(empty($_POST["requester_id"]) || empty($_POST["requester_type"]) || empty($_POST["name"]) || empty($_POST["seats"])){
-		var_dump(http_response_code(400));
+		http_response_code(400);
         die("Incomplete input.");
 	}
 

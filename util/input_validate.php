@@ -14,7 +14,7 @@
 
     function validate_email($email){
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-            var_dump(http_response_code(400));
+            http_response_code(400);
             die("Invalid input");
         }
         return true;
@@ -49,7 +49,7 @@
 
     function check_input_format($patt, $input){
         if(!preg_match($patt, $input)){
-            var_dump(http_response_code(400));
+            http_response_code(400);
             die("Invalid input");
         }
     }

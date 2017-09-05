@@ -11,7 +11,7 @@ function loaded()
 
     //Automatic GLOBAL variables
     _userId = "111";
-    _userType = "Admin";
+    _userType = "Student";
     _userSessionId = "0";
     
     _targetModal = "detail-modal";
@@ -76,6 +76,10 @@ function loaded()
         }
 
     });
+
+    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+        console.log(jqxhr.responseText);
+      });
 }
 
 function buildTable()
@@ -203,6 +207,7 @@ function createItem()
             request: "get_by_id",
             id: lastInsertId},
             function(item){
+                console.log(xhr.status);
                 //console.log(item);
                 $.each(type, function(i, theType){
                     loadTable(item, theType);
@@ -366,7 +371,9 @@ function getAllItems(type)
         requester_session_id: _userSessionId,
         request: "get_by_type",
         type: type}, 
-        function(data){
+        function(data,asd, xhr){
+            console.log("asfdsf");
+            console.log(xhr);
             loadTable(data, type);
         },
         "json");

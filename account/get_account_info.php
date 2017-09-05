@@ -28,7 +28,7 @@
         case ("get_by_id"): //Student and Grader can't request account info other than their own
                             if(strcmp($requesterType, "Student") == 0 || strcmp($requesterType, "Grader") == 0) 
                             {
-                                var_dump(http_response_code(400));
+                                http_response_code(400);
                                 die("Unauthorized access. Your account type can't use this function.");
                             }
                             else 
@@ -38,7 +38,7 @@
                             break;
         case ("get_by_type"): getAllByType();
                             break;
-        default: var_dump(http_response_code(400));
+        default: http_response_code(400);
                 echo "Unrecognized request string.";
     }
 

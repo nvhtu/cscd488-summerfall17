@@ -28,7 +28,7 @@
     {
         if(strcmp($requesterId,$studentId) != 0)
         {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             die("Unauthorized access. A student can't request other student's grade.");
         }
     }

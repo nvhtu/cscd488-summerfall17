@@ -35,7 +35,7 @@
 	}
 
 	else{//No room in exam
-		var_dump(http_response_code(400));
+		http_response_code(400);
 		die("Exam is full");
 	}	
 

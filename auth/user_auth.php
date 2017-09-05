@@ -31,7 +31,7 @@
 
                 if($sqlResult[0]["count"] == 0)
                 {
-                    var_dump(http_response_code(400));
+                    http_response_code(400);
                     $conn = null;
                     die("Unauthorized access. Account does not exist.");
                 }
@@ -57,7 +57,7 @@
                 if(!$isAuth)
                 {
                     //echo "False";
-                    var_dump(http_response_code(400));
+                    http_response_code(400);
                     $conn = null;
                     die("Unauthorized access. Account does not exist.");
                     
@@ -81,7 +81,7 @@
             if(!$isAuth)
             {
                 //echo "False";
-                var_dump(http_response_code(400));
+                http_response_code(400);
                 $conn = null;
                 die("Unauthorized access. Your account type can't use this function.");
                 

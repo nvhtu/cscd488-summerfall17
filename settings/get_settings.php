@@ -4,7 +4,7 @@
     require_once "./init_settings.php";
     
     if(empty($_GET["requester_id"]) || empty($_GET["requester_type"])){
-		var_dump(http_response_code(400));
+		http_response_code(400);
         die("Incomplete input.");
 	}
 

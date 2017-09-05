@@ -35,7 +35,7 @@
         $teacher_id = sqlExecute($sqlSelectId, $data, true);
 
         if( strcmp($teacher_id[0]["teacher_id"], $requesterId) != 0 ) {
-            var_dump(http_response_code(400));
+            http_response_code(400);
             die("Unauthorized access. Only the teacher that created this exam may edit it.");
         }
     }

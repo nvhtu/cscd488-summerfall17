@@ -25,7 +25,7 @@
         catch (PDOException $e)
         {
             echo $e->getMessage();
-            var_dump(http_response_code(400));
+            http_response_code(400);
             $conn = null;
             die();
         }

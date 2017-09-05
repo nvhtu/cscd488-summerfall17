@@ -8,11 +8,11 @@
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
 
-    /*
+
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
     $allowedType = array("Admin", "Teacher", "System");
-*/
+
     //if searchStr contains white space, split it into f_name and l_name
 
 
@@ -21,9 +21,6 @@
     //Validate strings not empty
 
     //Validate strings
-
-
-    var_dump($_FILES);
 
 
     $target_dir = "../../upload/";

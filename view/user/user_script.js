@@ -19,16 +19,20 @@ function loaded()
     _formId = "main-form";
 
     _selectedTab = "";
-
-    $("#requester-id").val(_userId);
-    $("#requester-type").val(_userType);
-    $("#requester-session").val(_userSessionId);
-
-    
     
     checkTypeFunction();
 
     buildTable();
+
+    buildUploadModal();
+
+    $("input[name='requester_id']").val(_userId);
+    $("input[name='requester_type']").val(_userType);
+    $("input[name='requester_session']").val(_userSessionId);
+
+    //Create import button in Students tab
+    $("#create-button").after('<button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
+    $("#import-students-button").hide();
 
     $(".btn-group > .btn-danger").remove();
     $("#state-form-group").hide();
@@ -38,10 +42,10 @@ function loaded()
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
 
-    $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin";});
-    $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher";});
-    $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader";});
-    $("a[href='#Students-panel']").click(function(){getAllItems("Student"); _selectedTab = "Student";});
+    $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin"; $("#import-students-button").hide();});
+    $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher"; $("#import-students-button").hide();});
+    $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader"; $("#import-students-button").hide();});
+    $("a[href='#Students-panel']").click(function(){getAllItems("Student"); _selectedTab = "Student"; $("#import-students-button").show()});
 
     $("#btn-search").click(function(){search($("input[name='search']").val())});
 
@@ -405,4 +409,70 @@ function search(searchStr)
         "json");
     }
 
+}
+
+function buildUploadModal()
+{
+    var modalHTML = '<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-hidden="true">' +
+    '<div class="modal-dialog">' +
+       '<div class="modal-content">' +
+          '<div class="modal-header">' +
+             '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+             '<h4 class="modal-title">Import Students</h4>' +
+          '</div>' +
+
+          '<form id="upload-form" name="upload-form">' +
+          '<div class="modal-body form-horizontal">' +
+                
+                                         '<!--' +
+                                         'Hidden input fields for requester id, requester type, requester session, and item id that auto populated ' +
+                                         'so $("#main-form").serialize() will include those values' +
+                                         '!-->' +
+                                         '<input type="hidden" class="form-control" id="requester-id" name="requester_id"/>' +
+                                         '<input type="hidden" class="form-control" id="requester-type" name="requester_type"/>' +
+                                         '<input type="hidden" class="form-control" id="requester-session" name="requester_session"/>' +
+                    '<div class="form-group">' +
+                        '<label for="user_id" class="col-sm-12">Select a CSV to upload. The CSV file must contains a header row.</label>' +
+                        '<div class="col-sm-12">' +
+                            '<label class="btn btn-default" for="fileToUpload">' +
+                                '<input type="file" name="fileToUpload" id="fileToUpload" hidden>' +
+                            '</label>' +
+                        '</div>' +
+                    '</div>' +
+                
+          '</div>' +
+          '<div class="modal-footer">' +
+             '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+             '<input type="submit" id="upload-button" class="btn btn-primary" value="Import CSV">' +
+          '</div>' +
+          '</form>    ' +
+       '</div>' +
+    '</div>' +
+ '</div>';
+
+ $("#detail-modal").after(modalHTML);
+ $("#upload-button").click(onsubmitUploadForm);
+}
+
+function onsubmitUploadForm(e)
+{
+
+
+    e.preventDefault();
+    var uploadForm = document.getElementById('upload-form');
+    var formData = new FormData(uploadForm);
+    console.log(formData);
+
+    $.ajax({
+        url: '../account/upload_student_csv.php',
+        type: 'POST',
+        data: formData,
+        async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (returndata) {
+          alert(returndata);
+        }
+      });
 }

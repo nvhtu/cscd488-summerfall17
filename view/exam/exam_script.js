@@ -21,7 +21,6 @@ $(document).ready(loaded);
 function loaded() 
 {
 
-    //$(".nav-sidebar").text("");
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 
     
@@ -42,8 +41,13 @@ function loadUserInfo(data)
     _userType = data.userType;
     _userSessionId = data.userSession;
 
-    console.log(_userId, _userType, _userSessionId);
+    init();
     
+    
+}
+
+function init()
+{
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);

@@ -4,33 +4,27 @@
  * @version: 1.0
  */
 
+var _userId = "";
+var _userType = "";
+var _userSessionId = "";
+
+var _targetModal = "detail-modal";
+var _tableId = "main-table";
+var _formId = "main-form";
+
+var _locData = Array();
+
+var _selectedTab = "";
+
 $(document).ready(loaded);
 
 function loaded() 
 {
 
-    //Automatic GLOBAL variables
-    _userId = "111";
-    _userType = "Admin";
-    _userSessionId = "0";
+    //$(".nav-sidebar").text("");
+    $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
+
     
-    _targetModal = "detail-modal";
-    _tableId = "main-table";
-    _formId = "main-form";
-
-    _locData = Array();
-
-    _selectedTab = "";
-
-    $("#requester-id").val(_userId);
-    $("#requester-type").val(_userType);
-    $("#requester-session").val(_userSessionId);
-
-    getAllLoc();
-    
-    
-
-    buildTable();
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
@@ -40,6 +34,23 @@ function loaded()
     $("a[href='#Grading-panel']").click(function(){getAllItems("Grading"); _selectedTab = "Grading";});
     $("a[href='#Archived-panel']").click(function(){getAllItems("Archived"); _selectedTab = "Archived";});
     $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
+}
+
+function loadUserInfo(data)
+{
+    _userId = data.userId;
+    _userType = data.userType;
+    _userSessionId = data.userSession;
+
+    console.log(_userId, _userType, _userSessionId);
+    
+    $("#requester-id").val(_userId);
+    $("#requester-type").val(_userType);
+    $("#requester-session").val(_userSessionId);
+
+    getAllLoc();
+
+    buildTable();
 }
 
 function buildTable()

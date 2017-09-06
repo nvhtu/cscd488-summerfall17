@@ -4,110 +4,139 @@
  * @version: 1.0
  */
 
+var _userId = "";
+var _userType = "";
+var _userSessionId = "";
+
+var _targetModal = "detail-modal";
+var _tableId = "main-table";
+var _formId = "main-form";
+
+var _locData = Array();
+
+var _selectedTab = "";
+
 $(document).ready(loaded);
 
 function loaded() 
 {
 
-    //Automatic GLOBAL variables
-    _userId = "111";
-    _userType = "Adminas";
-    _userSessionId = "0";
+    $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
     
-    _targetModal = "detail-modal";
-    _tableId = "main-table";
-    _formId = "main-form";
+    
+}
 
-    _selectedTab = "";
-    
+function loadUserInfo(data)
+{
+    _userId = data.userId;
+    _userType = data.userType;
+    _userSessionId = data.userSession;
+
+    init();
+}
+
+function init()
+{
     checkTypeFunction();
-
-    buildTable();
-
-    buildUploadModal();
-
-    $("input[name='requester_id']").val(_userId);
-    $("input[name='requester_type']").val(_userType);
-    $("input[name='requester_session']").val(_userSessionId);
-
-    //Create import button in Students tab
-    $("#create-button").after('<button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
-    $("#import-students-button").hide();
-
-    $(".btn-group > .btn-danger").remove();
-    $("#state-form-group").hide();
-
-
-
-    $("#create-button").click(onclickCreate);
-    $("#submit-button").click(submitForm);
-
-    $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin"; $("#import-students-button").hide();});
-    $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher"; $("#import-students-button").hide();});
-    $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader"; $("#import-students-button").hide();});
-    $("a[href='#Students-panel']").click(function(){getAllItems("Student"); _selectedTab = "Student"; $("#import-students-button").show()});
-
-    $("#btn-search").click(function(){search($("input[name='search']").val())});
-
-    //show/hide student state select when check/uncheck student type
-
-    $(".type-checkbox").click(function(){
-        $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled", false);
+    
+        buildTable();
+    
+        buildUploadModal();
+    
+        $("input[name='requester_id']").val(_userId);
+        $("input[name='requester_type']").val(_userType);
+        $("input[name='requester_session']").val(_userSessionId);
+    
+        //Create import button in Students tab
+        $("#create-button").after('<button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
         
-        if($("#type-student-checkbox").prop("checked"))
-        {
-            $("#state-form-group").fadeIn(100);
-            $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", true);
-
-        } 
+        if(_userType == "Admin")
+            $("#import-students-button").hide();
+        else if(_userType == "Teacher")
+                _selectedTab = "Student"; 
+    
+        $(".btn-group > .btn-danger").remove();
+        $("#state-form-group").hide();
+    
+    
+    
+        $("#create-button").click(onclickCreate);
+        $("#submit-button").click(submitForm);
+    
+        $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin"; $("#import-students-button").hide();});
+        $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher"; $("#import-students-button").hide();});
+        $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader"; $("#import-students-button").hide();});
+        $("a[href='#Students-panel']").click(function(){
+                                            $("#Students-panel > .table-responsive > ."+_tableId + " tbody").empty(); 
+                                            for(i=0;i<3;i++) {
+                                                $("#search").parent().fadeTo(150, 0.2).fadeTo(150, 1.0);
+                                              }
+                                            _selectedTab = "Student"; 
+                                            $("#import-students-button").show()});
+    
+        $("#btn-search").click(function(){search($("input[name='search']").val())});
+    
+        //show/hide student state select when check/uncheck student type
+    
+        $(".type-checkbox").click(function(){
+            $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled", false);
             
-        else
-        {
-            if($("#type-admin-checkbox").prop("checked") || $("#type-teacher-checkbox").prop("checked") || $("#type-grader-checkbox").prop("checked"))
+            if($("#type-student-checkbox").prop("checked"))
             {
-                $("#type-student-checkbox").prop("disabled", true);
-            }
+                $("#state-form-group").fadeIn(100);
+                $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", true);
+    
+            } 
+                
             else
             {
-                $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", false);
+                if($("#type-admin-checkbox").prop("checked") || $("#type-teacher-checkbox").prop("checked") || $("#type-grader-checkbox").prop("checked"))
+                {
+                    $("#type-student-checkbox").prop("disabled", true);
+                }
+                else
+                {
+                    $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", false);
+                }
+                
+                $("#state-form-group").fadeOut(100);
             }
-            
-            $("#state-form-group").fadeOut(100);
-        }
-
-    });
-
-    $(".msg-box").hide();
-
-    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
-        console.log(jqxhr.responseText);
-        $(".msg-box").addClass("alert-danger");
-        $(".msg-box").fadeIn();
-        $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
-    });
+    
+        });
+    
+        $(".msg-box").hide();
+    
+        $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+            console.log(jqxhr.responseText);
+            $(".msg-box").addClass("alert-danger");
+            $(".msg-box").fadeIn();
+            $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
+        });
 }
 
 function buildTable()
 {
-    //build Admins table
-    var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "Action"];
-    var table = buildMainTable(headersArr);
-    $("#Admins-panel > .table-responsive").html(table);
-    getAllItems("Admin");
-
-    //build Teachers table
-    $("#Teachers-panel > .table-responsive").html(table);
-    getAllItems("Teacher");
-
-    //build Graders table
-    $("#Graders-panel > .table-responsive").html(table);
-    getAllItems("Grader");
-
-    //build Student table
-    var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
-    var table = buildMainTable(headersArr);
-    $("#Students-panel > .table-responsive").html(table);
-    getAllItems("Student");
+        //build Student table
+        var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
+        var table = buildMainTable(headersArr);
+        $("#Students-panel > .table-responsive").html(table);
+        
+        if (_userType == "Admin")
+        {
+            //build Admins table
+            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "Action"];
+            var table = buildMainTable(headersArr);
+            $("#Admins-panel > .table-responsive").html(table);
+            getAllItems("Admin");
+        
+            //build Teachers table
+            $("#Teachers-panel > .table-responsive").html(table);
+            getAllItems("Teacher");
+        
+            //build Graders table
+            $("#Graders-panel > .table-responsive").html(table);
+            getAllItems("Grader");
+        }                 
 }
 
 function buildItemSummaryRow(item, type)
@@ -396,6 +425,12 @@ function checkTypeFunction()
                             $("#type-grader-wrap").remove();
                             $("#type-teacher-wrap").remove();
                             $("#type-student-wrap").prop('checked', true);
+                            /*$(".nav-tabs > li > a[href='#Admins-panel']").parent().remove();
+                            $("#Admins-panel").remove();
+                            $(".nav-tabs > li > a[href='#Teachers-panel']").parent().remove();
+                            $("#Teachers-panel").remove();
+                            $(".nav-tabs > li > a[href='#Graders-panel']").parent().remove();
+                            $("#Graders-panel").remove();*/
                             break;
             case "Grader": $("#create-button").remove();
                             break;

@@ -21,7 +21,7 @@
         $sqlSelectId = "SELECT COUNT(*) as count
                         FROM in_class_exam
                         WHERE exam_id = :exam_id";
-        $data = array(':exam_id' => $exam_id);
+        $data = array(':exam_id' => $examId);
         $sqlResult = sqlExecute($sqlSelectId, $data, true);
 
         if($sqlResult[0]["count"] == 0) {

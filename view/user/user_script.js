@@ -37,7 +37,7 @@ function loadUserInfo(data)
 
 function init()
 {
-    checkTypeFunction();
+        checkTypeFunction();
     
         buildTable();
     

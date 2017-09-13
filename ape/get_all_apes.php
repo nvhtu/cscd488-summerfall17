@@ -15,28 +15,30 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
-
+    $sqlResult = array();
 
     switch ($request)
     {
 
-        case ("get_by_id"): getExamById();
+        case ("get_by_id"): $sqlResult = getExamById();
                             break;
-        case ("get_by_state"): getExamByState();
+        case ("get_by_state"): $sqlResult = getExamByState();
                             break;
-        case ("get_all"): getAllExam($requesterType);
+        case ("get_all"): $sqlResult = getAllExam($requesterType);
                             break;
         default: http_response_code(400);
                 echo "Unrecognized request string.";
     }
+    
+    $final = addRemainingSeats($sqlResult);
+    echo json_encode($final);
 
     function getExamById()
     {
         $sqlSelectExam = "SELECT *
         FROM exam
         WHERE exam_id = :exam_id";
-        $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$_GET["exam_id"]), true);
-        echo json_encode($sqlResult);
+        return $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$_GET["exam_id"]), true);
     }
 
     function getExamByState()
@@ -44,8 +46,7 @@
         $sqlSelectExam = "SELECT *
         FROM exam
         WHERE state = :state";
-        $sqlResult = sqlExecute($sqlSelectExam, array(":state"=>$_GET["state"]), true);
-        echo json_encode($sqlResult);
+        return $sqlResult = sqlExecute($sqlSelectExam, array(":state"=>$_GET["state"]), true);
     }
 
     function getAllExam($requesterType)
@@ -59,15 +60,40 @@
                                 USING (exam_id)
                                 WHERE teacher_id = :teacher_id";
             $data = array(':teacher_id' => $requesterId);
-            $sqlResult = sqlExecute($sqlSelectExams, $data, true);
+            return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
         } else {
-        $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+            return $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
         }
 
-        echo json_encode($sqlResult);
     }
 
+    function addRemainingSeats($exams)
+    {
+        for ($i=0; $i<count($exams); $i++)
+        {
+            $remainingSeats = getMaxSeats($exams[$i]["exam_id"]) - getNumRegistered($exams[$i]["exam_id"]);
+            $exams[$i]["remaining_seats"] = $remainingSeats;
+        }
 
+        return $exams;
+        
+    }
+
+    //Gets the number of seats in the location of exam $exam_id
+	function getMaxSeats($exam_id){
+		$sqlResult = sqlExecute("SELECT seats FROM exam JOIN location ON (exam.location = location.loc_id) WHERE exam_id = :exam",
+					 array(':exam' => $exam_id),
+					 true);
+		return $sqlResult[0]["seats"];
+	}
+
+	//Gets the number of students registered for exam $exam_id
+	function getNumRegistered($exam_id){
+		$sqlResult = sqlExecute("SELECT COUNT(student_id) as count FROM exam_roster WHERE exam_id = :exam",
+					 array(':exam' => $exam_id),
+					 true);
+		return $sqlResult[0]["count"];
+	}
 
     
 	//echo json_encode($sqlResult);

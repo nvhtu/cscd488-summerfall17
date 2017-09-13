@@ -94,7 +94,7 @@ function buildItemSummaryRow(item)
         location: locName
     };
 
-    var row = buildItemRow(summaryData);
+    var row = buildItemRow(summaryData, true);
 
     return row;
 }
@@ -279,7 +279,7 @@ function getAllItems(state)
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
-        request: "get_all",}, 
+        request: "get_all"}, 
         loadTable,
         "json");
 }

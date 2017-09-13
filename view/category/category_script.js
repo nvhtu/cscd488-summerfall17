@@ -38,7 +38,7 @@ function buildItemSummaryRow(item)
         name: item.name,
     };
 
-    var row = buildItemRow(summaryData);
+    var row = buildItemRow(summaryData, true);
 
     return row;
 }

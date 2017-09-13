@@ -165,7 +165,7 @@ function buildItemSummaryRow(item, type)
     }
     
 
-    var row = buildItemRow(summaryData);
+    var row = buildItemRow(summaryData, true);
 
     return row;
 }

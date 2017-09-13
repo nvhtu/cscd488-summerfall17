@@ -26,20 +26,10 @@ function buildMainTable(headersArr)
  * @param {object} summaryData - An javascript object contains data for the row. The number of properties much match the number of the table header
  * @return {object} jQuery object of the row
  */
-function buildItemRow(summaryData)
+function buildItemRow(summaryData, isBasicBttns)
 {
-    //create info button
-    var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + summaryData.id + '" data-toggle="collapse"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
     
-    //create edit button
-    var $bttnEdit = $('<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#detail-modal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
-    $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
-    $bttnEdit.click(onclickEdit);
-
-    //create delete button
-    var $bttnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
-    $bttnDel.attr("data-id", summaryData.id);
-    $bttnDel.click(onclickDelete);
+    
 
     var rowHTML = '<tr class="item-row" data-target="#item-' + summaryData.id + '" aria-expanded="true">';
 
@@ -55,7 +45,28 @@ function buildItemRow(summaryData)
         }
     }
 
-    return $(rowHTML).append($('<td>').append($('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, $bttnDel)));
+    if(isBasicBttns)
+    {
+        //create info button
+        var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + summaryData.id + '" data-toggle="collapse"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
+        
+        //create edit button
+        var $bttnEdit = $('<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#detail-modal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
+        $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
+        $bttnEdit.click(onclickEdit);
+
+        //create delete button
+        var $bttnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
+        $bttnDel.attr("data-id", summaryData.id);
+        $bttnDel.click(onclickDelete);
+
+        return $(rowHTML).append($('<td>').append($('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, $bttnDel)));
+    }
+    else
+    {
+        return $(rowHTML);
+    }
+    
 
 }
 

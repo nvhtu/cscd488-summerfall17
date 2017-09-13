@@ -128,6 +128,22 @@
                         WHERE user_id LIKE :id";
 
         $sqlResult = sqlExecute($sqlGetAccount, array('id'=>$id), True);
+
+        if(strcmp($sqlResult[0]["state"], "Registered") == 0)
+        {
+            $sqlGetRegisteredExam = "SELECT exam_id
+                                    FROM exam_roster
+                                    WHERE student_id LIKE :id";
+            $sqlResultRegisteredExam = sqlExecute($sqlGetRegisteredExam, array('id'=>$id), True);
+
+            $sqlResult[0]["registered_exam"] = array();
+            
+            for ($i=0; $i<count($sqlResultRegisteredExam); $i++)
+            {
+                array_push($sqlResult[0]["registered_exam"], $sqlResultRegisteredExam[$i]["exam_id"]);
+            }   
+
+        }
         $sqlResult[0]["type"] = array("Student");
         
         return json_encode($sqlResult);

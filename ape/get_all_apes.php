@@ -72,7 +72,15 @@
         for ($i=0; $i<count($exams); $i++)
         {
             $remainingSeats = getMaxSeats($exams[$i]["exam_id"]) - getNumRegistered($exams[$i]["exam_id"]);
-            $exams[$i]["remaining_seats"] = $remainingSeats;
+            if($remainingSeats <= 0)
+            {
+                $exams[$i]["remaining_seats"] = "FULL";
+            }
+            else 
+            {
+                $exams[$i]["remaining_seats"] = $remainingSeats;
+            }
+            
         }
 
         return $exams;

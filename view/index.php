@@ -18,6 +18,13 @@
    //$bodyPath = $path . "_table.html";
    //$scriptPath = $path . "_script.js";
    $scriptPath = "$page/" . $page . "_script.js";
+
+   if (strstr($page, 'home'))
+   {
+      $path = $absPath . DIRECTORY_SEPARATOR . "home" . DIRECTORY_SEPARATOR;
+      $scriptPath = "home/" . $page . "_script.js";
+   }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,8 +65,8 @@
           </div>
 
             <?php 
-               if (strcmp($page, "home") === 0) {
-                  require_once $path . ".html";
+               if (strstr($page, 'home')) {
+                  require_once $path . $page . ".html";
                } else {
                   if (isset($tableTabs)) {
                      require_once $tabbedTablePath;

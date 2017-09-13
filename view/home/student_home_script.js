@@ -2,12 +2,13 @@ var _userId = "";
 var _userType = "";
 var _userSessionId = "";
 var _userState = "";
+var _userRegisteredExam = new Array("0");
 
 var _targetModal = "detail-modal";
 var _tableId = "main-table";
 var _formId = "main-form";
 
-var _locData = Array();
+var _locData = new Array(0);
 
 var _selectedTab = "";
 
@@ -23,9 +24,9 @@ function loadUserInfo(data)
     _userId = data.userId;
     _userType = data.userType;
     _userSessionId = data.userSession;
-    _userState = data.userState;
 
-    init();
+    getStudentInfo();
+    
     
     
 }
@@ -140,17 +141,39 @@ function buildItemSummaryRow(item)
 
     var row = buildItemRow(summaryData, false);
     var $bttnRegister = "";
-    
-    if(item.remaining_seats == "FULL")
+
+
+    for(let theExam of _userRegisteredExam)
     {
-        $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full">Register</button>');
-        
+        if(item.exam_id == theExam) //Registered by user
+        {
+            if(item.remaining_seats == "FULL") //Exam full
+            {
+                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+                
+            }
+            else
+            {
+                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn registered" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+            }
+            
+        }
+        else //Not registered
+        {
+            if(item.remaining_seats == "FULL") //Exam full
+            {
+                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full " data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+                
+            }
+            else
+            {
+                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn " data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+            }
+
+            //$bttnRegister = $('<button type="button" class="btn btn-primary register-btn" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+        }
     }
-    else
-    {
-        //create Register button
-        $bttnRegister = $('<button type="button" class="btn btn-primary register-btn" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
-    }
+
 
     return row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnRegister)));
     
@@ -167,7 +190,7 @@ function checkAccountState()
                         $(".register-btn").each(function(i, element){
                             if($(this).hasClass("register-full"))
                             {
-                                $(this).prop("disabled",true);
+                                removeDisableBtnInfo($(this));
                             }
                             else
                             {
@@ -180,29 +203,64 @@ function checkAccountState()
         case "Registered":   $(".msg-box").addClass("alert-warning");
                         $("#msg-box-text").html("You already registered for an exam. You can unregister and register another exam below if available.");
                         $(".register-btn").html("Register");
-                        removeRegisterBtnInfo();
+                        
+                        $(".register-btn").each(function(i, element){
+                            if($(this).hasClass("registered"))
+                            {
+                                $(this).prop("disabled",false);
+                                $(this).html("Unregister");
+                            }
+                            else
+                            {
+                                removeDisableBtnInfo($(this));
+                            }
+                        });
+                        
+                        //removeRegisterBtnInfo();
                         break;
 
         case "Passed":   $(".msg-box").addClass("alert-success");
                         $("#msg-box-text").html("You have passed the APE. View my grade.");
                         $(".register-btn").html("Unavailable");
-                        removeRegisterBtnInfo();
+                        
+                        
+                        removeDisableBtnInfo($(".register-btn"));
                         break;
         
         case "Blocked":   $(".msg-box").addClass("alert-danger");
                         $("#msg-box-text").html("Your account is blocked. Please contact Stu.");
                         $(".register-btn").html("Unavailable");
-                        removeRegisterBtnInfo();
+                        removeDisableBtnInfo($(".register-btn"));
                         break;
     }
 }
 
-function removeRegisterBtnInfo()
+function removeDisableBtnInfo($btn)
 {
 
-        $(".register-btn").removeAttr("data-target");
-        $(".register-btn").prop("disabled",true);
+    $btn.removeAttr("data-target");
+    $btn.prop("disabled",true);
 
+}
+
+function getStudentInfo()
+{
+    $.get("../account/get_account_info.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_own"}, 
+    function(item){
+        _userState = item[0]["state"];
+        
+        if(item[0]["registered_exam"] != undefined)
+        {
+            _userRegisteredExam = item[0]["registered_exam"];
+        }
+        
+        init();
+    },
+    "json");
 }
 
 

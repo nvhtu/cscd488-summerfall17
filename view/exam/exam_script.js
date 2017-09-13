@@ -179,6 +179,7 @@ function createItem()
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
+        request: "get_by_id",
         exam_id: lastInsertId}, 
         function(item){
 
@@ -198,6 +199,7 @@ function updateItem()
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
+        request: "get_by_id",
         exam_id: $("#item-id").val()}, 
         function(item){
             var row = buildItemSummaryRow(item[0]);
@@ -234,6 +236,7 @@ function onclickEdit(e)
     {requester_id: _userId,
     requester_type: _userType,
     requester_session_id: _userSessionId,
+    request: "get_by_id",
     exam_id: itemId}, 
     function(item){
         $.each(item[0], function(name, val){
@@ -275,7 +278,8 @@ function getAllItems(state)
     $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
         requester_type: _userType,
-        requester_session_id: _userSessionId}, 
+        requester_session_id: _userSessionId,
+        request: "get_all",}, 
         loadTable,
         "json");
 }

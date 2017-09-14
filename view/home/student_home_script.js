@@ -16,6 +16,7 @@ $(document).ready(loaded);
 
 function loaded()
 {
+    $("#submit-button").click(onRegister);
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 }
 
@@ -68,11 +69,6 @@ function populateLocation(data)
 {
     $("#ape-loc").empty();
     _locData = data;
-    $.each(data, function(i){
-        $("#ape-loc").append($("<option></option")
-                    .attr("value", data[i]["loc_id"])
-                    .text(data[i]["name"]));
-    });
 
     getUpcomingExam();
 }
@@ -87,7 +83,7 @@ function buildTable()
 
 function getUpcomingExam()
 {
-    $(".table-responsive > ."+_tableId + " tbody").empty();
+    $("."+_tableId + " tbody").empty();
     
     $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
@@ -142,39 +138,38 @@ function buildItemSummaryRow(item)
     var row = buildItemRow(summaryData, false);
     var $bttnRegister = "";
 
-
-    for(let theExam of _userRegisteredExam)
-    {
+    $.each(_userRegisteredExam, function(i,theExam){
         if(item.exam_id == theExam) //Registered by user
         {
             if(item.remaining_seats == "FULL") //Exam full
             {
-                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-id="' + summaryData.id + '">Register</button>');
                 
             }
             else
             {
-                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn registered" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn registered" data-id="' + summaryData.id + '">Register</button>');
             }
             
+            $bttnRegister.click(onclickUnregister);
         }
         else //Not registered
         {
             if(item.remaining_seats == "FULL") //Exam full
             {
-                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full " data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
                 
             }
             else
             {
-                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn " data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
             }
-
-            //$bttnRegister = $('<button type="button" class="btn btn-primary register-btn" data-target="#item-' + summaryData.id + '" data-toggle="modal">Register</button>');
+            
+            $bttnRegister.click(onclickRegister);
         }
-    }
+    });
 
-
+    
     return row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnRegister)));
     
 }
@@ -264,3 +259,73 @@ function getStudentInfo()
 }
 
 
+function onclickRegister(e) 
+{
+    clearForm();
+    var itemId = e.currentTarget.dataset["id"];
+    $("#item-id").val(e.currentTarget.dataset["id"]);
+
+    $.get("../ape/get_all_apes.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_by_id",
+    exam_id: itemId}, 
+    function(item){
+        $.each(item[0], function(name, val){
+            if(name == "location")
+            {
+                $.each(_locData, function(i,locItem){
+                    if(val == locItem.loc_id)
+                    {
+                        val = locItem.name;
+                    }
+                });
+            }
+            if(name == "duration")
+            {
+                val = val + " hours";
+            }
+            var el = $('[name="'+name+'"]');
+            el.val(val);
+        });
+    },
+    "json");
+
+}
+
+function clearForm()
+{
+    $("#" + _formId).find("input[type=text], textarea").val(""); 
+}
+
+function onclickUnregister(e)
+{
+    if(window.confirm("Are you sure you want to unregister from this exam?"))
+    {
+        var itemId = e.currentTarget.dataset["id"];
+        
+        $.post("../ape/unregister.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        student_id: _userId,
+        exam_id: itemId},
+        function(){
+            location.reload();
+        });
+    }
+}
+
+function onRegister()
+{
+    $.post("../ape/register.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    student_id: _userId,
+    exam_id: $("#item-id").val()}, 
+    function(){
+        location.reload();
+    });
+}

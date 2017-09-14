@@ -23,6 +23,7 @@
    {
       $path = $absPath . DIRECTORY_SEPARATOR . "home" . DIRECTORY_SEPARATOR;
       $scriptPath = "home/" . $page . "_script.js";
+      $modalPath = "home/" . $page . "_modal.html";
    }
 
 ?>

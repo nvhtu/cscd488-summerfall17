@@ -17,7 +17,7 @@
     }
 
     $title = "EWU APE Home";
-    $hasModal = false;
+    $hasModal = true;
 
     require_once "../index.php";
 ?>

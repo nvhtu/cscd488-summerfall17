@@ -5,8 +5,8 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
     
     $requesterId = $_POST["requester_id"];

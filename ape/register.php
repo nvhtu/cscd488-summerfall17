@@ -32,6 +32,8 @@
 		sqlExecute("INSERT INTO exam_roster (exam_id, student_id, seat_num) VALUES (:exam, :student, :seat)",
 				array(':exam' => $exam_id, ':student' => $student_id, ':seat' => $seatNum),
 				false);
+		//change student state to "Registered"
+		sqlExecute("UPDATE student SET state = :state", array(':state' => "Registered"), false);
 	}
 
 	else{//No room in exam

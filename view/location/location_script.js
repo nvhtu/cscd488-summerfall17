@@ -39,7 +39,7 @@ function buildItemSummaryRow(item)
         seats: item.seats
     };
 
-    var row = buildItemRow(summaryData);
+    var row = buildItemRow(summaryData, true);
 
     return row;
 }

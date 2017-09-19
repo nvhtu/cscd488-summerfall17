@@ -20,4 +20,7 @@
 	sqlExecute("DELETE FROM exam_roster WHERE exam_id = :exam AND student_id = :student",
 				array(':exam' => $exam_id, ':student' => $student_id),
 				false);
+
+	//change student state to "Ready"
+	sqlExecute("UPDATE student SET state = :state", array(':state' => "Ready"), false);
 ?>

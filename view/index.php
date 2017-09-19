@@ -9,7 +9,8 @@
       $hasModal = false;
    }
 
-   $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . "cscd488-summerfall17" . DIRECTORY_SEPARATOR . "view";
+   $projectDirName = "cscd488-summerfall17";
+   $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view";
    $path = $absPath . DIRECTORY_SEPARATOR . $page . DIRECTORY_SEPARATOR . $page;
    $modalPath = $path . "_modal.html";
    $tablePath = $absPath . DIRECTORY_SEPARATOR . "table.php";
@@ -17,6 +18,14 @@
    //$bodyPath = $path . "_table.html";
    //$scriptPath = $path . "_script.js";
    $scriptPath = "$page/" . $page . "_script.js";
+
+   if (strstr($page, 'home'))
+   {
+      $path = $absPath . DIRECTORY_SEPARATOR . "home" . DIRECTORY_SEPARATOR;
+      $scriptPath = "home/" . $page . "_script.js";
+      $modalPath = "home/" . $page . "_modal.html";
+   }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,8 +66,8 @@
           </div>
 
             <?php 
-               if (strcmp($page, "home") === 0) {
-                  require_once $path . ".html";
+               if (strstr($page, 'home')) {
+                  require_once $path . $page . ".html";
                } else {
                   if (isset($tableTabs)) {
                      require_once $tabbedTablePath;

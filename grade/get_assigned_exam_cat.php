@@ -1,5 +1,9 @@
 <?php
-    //require "../pdoconfig.php";
+/**
+ * Gets relevant info about a grader's assigned exam_cats 
+ * @author: Andrew Robinson
+ * @version: 1.0
+ */
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
     require_once "../util/input_validate.php";

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Get the current settings
+ * @author: Andrew Robinson
+ * @version: 1.0
+ */
     require_once "../auth/user_auth.php";
     require_once "../util/input_validate.php";
     require_once "./init_settings.php";

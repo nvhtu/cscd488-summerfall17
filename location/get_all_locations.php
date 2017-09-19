@@ -1,4 +1,9 @@
 <?php
+/**
+ * Get all locations or one specified by loc_id
+ * @author: Andrew Robinson
+ * @version: 1.0
+ */
 	require_once "../util/sql_exe.php";
 	require_once "../auth/user_auth.php";
 	require_once "../util/input_validate.php";

@@ -1,4 +1,8 @@
-
+/**
+ * Location page script
+ * @author: Andrew Robinson
+ * @version: 1.0
+ */
 $(document).ready(loaded);
 
 function loaded() 

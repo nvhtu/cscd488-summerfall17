@@ -23,6 +23,9 @@ function loaded()
     getAllItems();
 
     buildTable();
+    $(".main-table>thead th").not("th:last-of-type")
+     .click(onClickSort)
+     .mousedown(function(e){ e.preventDefault(); });
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
@@ -55,6 +58,7 @@ function loadTable(data)
 
         $("." + _tableId).append(row);
     });
+    $(".main-table>thead th:nth-of-type(1)").trigger('click');
 }
 
 function submitForm (e)

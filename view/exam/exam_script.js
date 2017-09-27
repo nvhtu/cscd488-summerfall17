@@ -64,8 +64,10 @@ function init()
     getAllLoc();
 
     buildTable();
+    $(".main-table>thead th").not("th:last-of-type")
+     .click(onClickSort)
+     .mousedown(function(e){ e.preventDefault(); });
 
-    
 }
 
 function buildTable()
@@ -132,6 +134,7 @@ function loadTable(data)
         //$("#" + _tableId).append(row);
         //$("#" + _tableId).append(detailRow);
     });
+    $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
 
 

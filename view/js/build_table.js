@@ -14,8 +14,12 @@ function buildMainTable(headersArr)
     var tableHTML = '<table class="table table-condensed main-table"> <thead> <tr>';
     for (header of headersArr)
     {
-        tableHTML += '<th>' + header + '</th>';
-    }
+      if (header === "Action") {
+         tableHTML += '<th>' + header + '</th>';
+      } else {
+         tableHTML += '<th data-asc="true" data-sorted="false">' + header + '<span class="glyphicon glyphicon-triangle-top"></span></th>';
+      }
+   }
     tableHTML += '</tr></thead><tbody></tbody></table>';
 
     return tableHTML;
@@ -31,7 +35,7 @@ function buildItemRow(summaryData, isBasicBttns)
     
     
 
-    var rowHTML = '<tr class="item-row" data-target="#item-' + summaryData.id + '" aria-expanded="true">';
+    var rowHTML = '<tr class="item-row" data-id="item-' + summaryData.id + '" data-target="#item-' + summaryData.id + '" aria-expanded="true">';
 
     for (var property in summaryData) 
     {
@@ -40,7 +44,7 @@ function buildItemRow(summaryData, isBasicBttns)
             //console.log(summaryData[property]);
             if(property != "id")
             {
-                rowHTML += '<td>' + summaryData[property] + '</td>';
+                rowHTML += '<td>' + summaryData[property] + ' </td>';
             }      
         }
     }
@@ -60,7 +64,13 @@ function buildItemRow(summaryData, isBasicBttns)
         $bttnDel.attr("data-id", summaryData.id);
         $bttnDel.click(onclickDelete);
 
-        return $(rowHTML).append($('<td>').append($('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, $bttnDel)));
+        return $(rowHTML).append(
+           $('<td class="btns">').append(
+              $('<div class="btn-group" role="group">').append(
+                 $bttnInfo, $bttnEdit, $bttnDel, ' '
+               )
+            )
+         );
     }
     else
     {
@@ -79,7 +89,7 @@ function buildItemRow(summaryData, isBasicBttns)
 function buildDetailRow(detailData, namesArr)
 {
     var detailRowHTML = '<tr class="item-detail-row" data-id="item-' + detailData.id + '">'
-    + '<td colspan="100%">'
+    + '<td class="details" colspan="100%">'
     + '<div class="collapse" id="item-' + detailData.id + '">'
     + '<table class="table table-condensed">'
     + '<tbody>';
@@ -93,8 +103,8 @@ function buildDetailRow(detailData, namesArr)
             if(detailData[property] != detailData.id)
             {
                 detailRowHTML += '<tr class="active">'
-                                + '<th>' + namesArr[count] + ':</th>'
-                                + '<td>' + detailData[property] + '</td'
+                                + '<th>' + namesArr[count] + ': </th>'
+                                + '<td>' + detailData[property] + ' </td>'
                                 + '</tr>';
                 
                 count++;

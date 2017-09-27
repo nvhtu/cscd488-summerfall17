@@ -40,6 +40,9 @@ function init()
         checkTypeFunction();
     
         buildTable();
+        $(".main-table>thead th").not("th:last-of-type")
+         .click(onClickSort)
+         .mousedown(function(e){ e.preventDefault(); });
     
         buildUploadModal();
     
@@ -121,6 +124,7 @@ function buildTable()
         var table = buildMainTable(headersArr);
         $("#Students-panel > .table-responsive").html(table);
         
+        
         if (_userType == "Admin")
         {
             //build Admins table
@@ -200,6 +204,7 @@ function loadTable(data, type)
         //$("." + _tableId).append(detailRow);
     });
 
+    $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
     $(".btn-group > .btn-danger").remove();
 }
 

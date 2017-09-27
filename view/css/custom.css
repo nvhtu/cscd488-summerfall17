@@ -90,6 +90,17 @@ body > .container {
    padding: 15px;
 }
 
+.table-toolbar>div {
+   position: relative;
+}
+
+#clear-search {
+   cursor: pointer;
+   pointer-events: auto;
+   color: #ccc;
+   display: none;
+}
+
 .panel-default>.panel-heading .panel-title {
    padding-top: 5px;
    font-size: 20px;
@@ -99,8 +110,18 @@ body > .container {
    margin-bottom: 0;
 }
 
-.table>thead:first-child>tr:first-child>th {
+.main-table>thead:first-child>tr:first-child>th {
    border-top: 2px solid #ddd;
+}
+
+.main-table>thead th:not(:last-child) {
+   cursor: pointer;
+}
+
+.main-table>thead .glyphicon-triangle-top, .main-table>thead .glyphicon-triangle-bottom {
+   color: #ccc;
+   margin-left: 5px;
+   font-size: 10px;
 }
 
 .table>tbody>tr>td {

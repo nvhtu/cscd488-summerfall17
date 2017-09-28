@@ -98,7 +98,7 @@ function onClickSort(th) {
       return isAsc ? (comp) : (comp * -1);
    }).each(function(i, row) {
       $table.append(row);
-      var movie_id = $(row).data('movie_id');
-      $table.append($('.detail-row[data-movie_id="' + movie_id + '"]'));
+      var id = $(row).data('id');
+      $table.append($('.item-detail-row[data-id="' + id + '"]'));
    });
 }

@@ -24,7 +24,7 @@
                             break;
         case ("get_by_state"): $sqlResult = getExamByState();
                             break;
-        case ("get_all"): $sqlResult = getAllExam($requesterType);
+        case ("get_all"): $sqlResult = getAllExam($requesterType, $requesterId);
                             break;
         default: http_response_code(400);
                 echo "Unrecognized request string.";
@@ -49,7 +49,7 @@
         return $sqlResult = sqlExecute($sqlSelectExam, array(":state"=>$_GET["state"]), true);
     }
 
-    function getAllExam($requesterType)
+    function getAllExam($requesterType, $requesterId)
     {
         //If teacher, get only their exams
         if(strcmp($requesterType, 'Teacher') == 0)

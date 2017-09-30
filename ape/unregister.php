@@ -27,5 +27,5 @@
 				false);
 
 	//change student state to "Ready"
-	sqlExecute("UPDATE student SET state = :state", array(':state' => "Ready"), false);
+	sqlExecute("UPDATE student SET state = :state WHERE student_id LIKE :id", array(":state" => "Ready", ":id" => $student_id), false);
 ?>

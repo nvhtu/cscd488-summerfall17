@@ -38,7 +38,7 @@
 				array(':exam' => $exam_id, ':student' => $student_id, ':seat' => $seatNum),
 				false);
 		//change student state to "Registered"
-		sqlExecute("UPDATE student SET state = :state", array(':state' => "Registered"), false);
+		sqlExecute("UPDATE student SET state = :state WHERE student_id LIKE :id", array(":state" => "Registered", ":id" => $student_id), false);
 	}
 
 	else{//No room in exam

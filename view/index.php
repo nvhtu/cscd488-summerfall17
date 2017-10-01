@@ -1,4 +1,8 @@
 <?php 
+
+  require_once "../../util/get_cur_user_info.php";
+  $userInfo = getCurUserInfo(false);
+
    if ( !isset($page) ) {
       $page = "home";
    }
@@ -17,7 +21,18 @@
    $tabbedTablePath = $absPath . DIRECTORY_SEPARATOR . "tabbedTable.php";
    //$bodyPath = $path . "_table.html";
    //$scriptPath = $path . "_script.js";
-   $scriptPath = "$page/" . $page . "_script.js";
+
+   $scriptPath = "";
+
+   if(strcmp($userInfo["userType"], "Student") == 0)
+   {
+      $scriptPath = "$page/" . $page . "_student_script.js";
+   }
+   else 
+   {
+      $scriptPath = "$page/" . $page . "_script.js";
+   }
+
 
    if (strstr($page, 'home'))
    {
@@ -61,7 +76,7 @@
          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
           <div class="msg-box alert fade in">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <a href="#" class="close" id="msg-close" data-dismiss="alert">&times;</a>
             <p id="msg-box-text"></p>
           </div>
 

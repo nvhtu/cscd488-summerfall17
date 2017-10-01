@@ -72,9 +72,11 @@ function init()
 
 function buildTable()
 {
-    var headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
+        headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
+
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
+    
 }
 
 function buildItemSummaryRow(item)

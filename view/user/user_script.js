@@ -76,7 +76,7 @@ function init()
         $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader"; $(".students-specific-btn").hide();});
         $("a[href='#Students-panel']").click(function(){_selectedTab = "Student"; $(".students-specific-btn").show()});
     
-        $("#btn-search").click(function(){search($("#search").val())});
+        //$("#btn-search").click(function(){search($("#search").val())});
     
         //show/hide student state select when check/uncheck student type
     

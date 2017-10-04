@@ -1,0 +1,193 @@
+<div class="alert alert-warning alert-dismissible fade in" role="alert">
+   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">×</span>
+   </button>
+   When you login, use the same username and password as your iTech student account (the same credentials you use to log into any network computer on campus)
+</div>
+
+<div class="panel panel-primary">
+   <div class="panel-heading">Upcoming Exams</div>
+
+   <div class="container-fluid table-toolbar">
+            <table class="table table-condensed main-table"> <thead> <tr>
+                  <th>APE Name</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Location</th>
+                  <th>Available Seats</th>
+                  <th>Action</th>
+            </tr></thead><tbody></tbody></table>
+   </div>
+</div>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+   <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingOne">
+         <div class="panel-title">
+            <a class="h4" role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+               Exam Environment
+            </a>
+         </div>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+         <ul class="list-group">
+            <li class="list-group-item">Linux Operating System</li>
+            <li class="list-group-item">Editors
+               <ul>
+                  <li>JGrasp</li>
+                  <li>GEdit</li>
+                  <li>Eclipse</li>
+               </ul>
+            </li>
+            <li class="list-group-item">JDK 8.0 (1.8.x)</li>
+            <li class="list-group-item">Java API documentation</li>
+            <li class="list-group-item">No Internet access</li>
+            <li class="list-group-item">No notes or texts allowed</li>
+            <li class="list-group-item">The exam is now a Test Driven Design Exam where you are writing code based on the provided tests</li>
+         </ul>
+      </div>
+   </div>
+
+   <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingTwo">
+         <div class="panel-title">
+            <a class="h4" role="button" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+               Exam Specifics
+            </a>
+         </div>
+      </div>
+      <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+         <ul class="list-group">
+            <li class="list-group-item"><strong>General Program Design</strong>
+               <ul>
+                  <li>Penalty points can be assessed in this category for grossly inefficient code</li>
+                  <li>File input and output</li>
+                  <li>Exception handling</li>
+                  <li>Order-related manipulations, such as <strong><em>addOrdered</em></strong>, <strong><em>sort</em></strong>,
+                     and <strong><em>search</em></strong></li>
+               </ul>
+            </li>
+            <li class="list-group-item"><strong>Data Abstraction and Class Design</strong>
+               <ul>
+                  <li>Extending a class</li>
+                  <li>Overriding a method, such as <strong><em>toString</em></strong></li>
+                  <li>Creating a class</li>
+                  <li>Accessing super class methods and/or fields</li>
+                  <li>Implementing an interface, such as <strong><em>Comparable</em></strong></li>
+               </ul>
+            </li>
+            <li class="list-group-item"><strong>Linked List Manipulation</strong>
+               <ul>
+                  <li>This will be a non-circular singly-linked list, either with or without a header/sentinel node</li>
+                  <li>Operations will be <strong><em>chosen</em></strong> from the following list
+                     <ul>
+                        <li>Adding a node &mdash; all cases (to an empty list, to a non-empty list, at front, at back, in the middle)
+                        </li>
+                        <li>Remove a node &mdash; all cases (based on index, based on Object equality, from front, from back, from
+                           middle)</li>
+                        <li>Retrieve an item based on index or some other criterion (such as maximum or minimum)</li>
+                        <li>Order-related manipulations, such as addOrdered and sort, may be exemplified within the linked list
+                        </li>
+                        <li>Generate a sublist based on some criterion or criteria.</li>
+                     </ul>
+                  </li>
+               </ul>
+            </li>
+            <li class="list-group-item"><strong>Recursion</strong>
+               <ul>
+                  <li>Simple recursive methods to accomplish a task, which may or may not be list related. Examples would be
+                     printing a linked list in reverse, computation of factorials, and other recursive algorithms at the
+                     level of those covered in Programming Principles I and II and in Data Structures.</li>
+                  <li>An example you probably <em>haven't</em> seen: <a href="http://penguin.ewu.edu/cscd300/Topic/Recursion/AdditiveSquares.java">AdditiveSquares.java</a></li>
+               </ul>
+            </li>
+         </ul>
+      </div>
+   </div>
+
+   <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingThree">
+         <div class="panel-title">
+            <a class="h4" role="button" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+               Problem Areas Identified From Previous Exams
+            </a>
+         </div>
+      </div>
+      <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+         <ul class="list-group">
+            <li class="list-group-item">Not following directions</li>
+            <li class="list-group-item">Not reading the specifications in their entirety &mdash; make sure you read all directions before you begin writing code.&nbsp; A prime example is ignoring specifications related to whether the linked list does or does not have a header/sentinel node</li>
+            <li class="list-group-item">Not placing files in specified location</li>
+            <li class="list-group-item">Not naming files as specified</li>
+            <li class="list-group-item">Modifying files that were to be left alone</li>
+            <li class="list-group-item">Unfamiliarity with keywords in Java required for basic things like inheritance (extends) and interface use (implements)</li>
+            <li class="list-group-item">Spending too much time on one item</li>
+            <li class="list-group-item">Inability to implement simple recursion</li>
+         </ul>
+      </div>
+   </div>
+
+   <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingFour">
+         <div class="panel-title">
+            <a class="h4" role="button" data-toggle="collapse" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+               Basic strategies you should use
+            </a>
+         </div>
+      </div>
+      <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
+         <ul class="list-group">
+            <li class="list-group-item">Stub the methods out that you have to write, then fill them in with useful code when you are ready</li>
+            <li class="list-group-item">Read the directions carefully, then look at the sample input and output before you begin writing code</li>
+            <li class="list-group-item">Comment out items that don't compile so you can test other parts of your solution (this includes methods you can't get to work and method calls that may occur from elsewhere &mdash; like in the main method of the program).&nbsp; Note, however, that your code will be tested using the original driver file, not your edited one</li>
+         </ul>
+      </div>
+   </div>
+
+   <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingFive">
+         <div class="panel-title">
+            <a class="h4" role="button" data-toggle="collapse" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+               Practice Exams
+            </a>
+         </div>
+      </div>
+      <div id="collapseFive" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFive">
+         <ul class="list-group">
+            <li class="list-group-item list-group-item-info">
+               <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+               <span class="sr-only">Info:</span>
+               These are just sample exams &mdash; do not expect the exam you take to be formatted in precisely the same way, with the same number of classes, methods, etc. &mdash; 
+               this is just for practice and to give you an idea of what to expect. The amount of code you are asked to write on these exams is similar to the amount you will have to write on the actual exam. 
+               The topics on this exam are a selection from the list given at the top of this web page; the actual exam you take may have topics not addressed on this exam, but which are a part of the list above.
+            </li>
+            <li class="list-group-item"><a href="http://penguin.ewu.edu/advancement_exam/practice_exams/W11APE.zip">Winter 2011 Student Version</a></li>
+            <li class="list-group-item"><a title="Sample APE Solution" href="http://penguin.ewu.edu/advancement_exam/practice_exams/W11FullAPE.zip">Winter 2011 Solution</a></li>
+            <li class="list-group-item"><a href="http://penguin.ewu.edu/advancement_exam/practice_exams/W12APE.zip">Winter 2012 Student Version</a></li>
+            <li class="list-group-item"><a title="Summer 2013 Student APE" href="http://penguin.ewu.edu/advancement_exam/practice_exams/Summer2013APE.zip"
+                  target="_blank">Summer 2013 Student Version</a></li>
+         </ul>
+      </div>
+   </div>
+   
+   <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingSix">
+         <div class="panel-title">
+            <a class="h4" role="button" data-toggle="collapse" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+               Notes
+            </a>
+         </div>
+      </div>
+      <div id="collapseSix" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingSix">
+         <ul class="list-group">
+            <li class="list-group-item list-group-item-info">
+               <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+               <span class="sr-only">Info:</span>
+               Any student requesting accomodations based on DSS, must send an email to <a href="mailto:tcapaul@ewu.edu">Tom Capaul</a> at least one week prior to the exam</li>
+            <li class="list-group-item">You are allowed to take the APE only three (3) times without passing</li>
+            <li class="list-group-item">It is your responsibility to register for the exam online. If you show up to the exam without registering, you may be turned away</li>
+            <li class="list-group-item">Online registration is done through this page</li>
+         </ul>
+      </div>
+   </div>
+</div>

@@ -11,12 +11,24 @@
 
         if($isDev)
         {
-            $userInfo = array('userId' => '222', 
-            'userType' => 'Teacher', 
+            $userInfo = array('userId' => '111', 
+            'userType' => 'Admin', 
             'userSession' => '111111',
             'userFname' => 'Tu',
             'userLname' => 'Nguyen',
-            'userEmail' => 'abc@xyz.com' );
+            'userEmail' => 'abc@xyz.com' );/*
+            $userInfo = array('userId' => '3333', 
+            'userType' => 'Student', 
+            'userSession' => '111111',
+            'userFname' => 'A333AAA',
+            'userLname' => 'B333',
+            'userEmail' => '1233Abc@xyz.c' );/
+            $userInfo = array('userId' => '2223', 
+            'userType' => 'Grader', 
+            'userSession' => '111111',
+            'userFname' => 'A3AAA',
+            'userLname' => 'B3BBB',
+            'userEmail' => '12Abc@xyz.c' );*/
         }
         else 
         {

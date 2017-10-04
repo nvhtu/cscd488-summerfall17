@@ -17,6 +17,7 @@ $(document).ready(loaded);
 function loaded()
 {
     $("#submit-button").click(onRegister);
+    $("#msg-close").remove();
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 }
 
@@ -176,6 +177,7 @@ function buildItemSummaryRow(item)
 
 function checkAccountState()
 {
+    $examBtn = '<button type="button" class="btn btn-primary pull-right" onclick="window.location.href=\'../view/exam/\'">View My Grades</button>';
     switch(_userState)
     {
         case "Ready":   $(".msg-box").addClass("alert-success");
@@ -215,7 +217,8 @@ function checkAccountState()
                         break;
 
         case "Passed":   $(".msg-box").addClass("alert-success");
-                        $("#msg-box-text").html("You have passed the APE. View my grade.");
+                        $("#msg-box-text").html("Congratulations! You have passed the APE.");
+                        $("#msg-box-text").append($examBtn);
                         $(".register-btn").html("Unavailable");
                         
                         

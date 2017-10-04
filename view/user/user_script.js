@@ -45,16 +45,21 @@ function init()
          .mousedown(function(e){ e.preventDefault(); });
     
         buildUploadModal();
+        buildLookUpModal();
     
         $("input[name='requester_id']").val(_userId);
         $("input[name='requester_type']").val(_userType);
         $("input[name='requester_session']").val(_userSessionId);
     
         //Create import button in Students tab
-        $("#create-button").after('<button type="button" class="btn btn-primary pull-left" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
+        $("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
+        //Create look up button in Students tab
+        $("#import-students-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
         
+
+
         if(_userType == "Admin")
-            $("#import-students-button").hide();
+            $(".students-specific-btn").hide();
         else if(_userType == "Teacher")
                 _selectedTab = "Student"; 
     
@@ -66,18 +71,12 @@ function init()
         $("#create-button").click(onclickCreate);
         $("#submit-button").click(submitForm);
     
-        $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin"; $("#import-students-button").hide();});
-        $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher"; $("#import-students-button").hide();});
-        $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader"; $("#import-students-button").hide();});
-        $("a[href='#Students-panel']").click(function(){
-                                            $("#Students-panel > .table-responsive > ."+_tableId + " tbody").empty(); 
-                                            for(i=0;i<3;i++) {
-                                                $("#search").parent().fadeTo(150, 0.2).fadeTo(150, 1.0);
-                                              }
-                                            _selectedTab = "Student"; 
-                                            $("#import-students-button").show()});
+        $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin"; $(".students-specific-btn").hide();});
+        $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher"; $(".students-specific-btn").hide();});
+        $("a[href='#Graders-panel']").click(function(){getAllItems("Grader"); _selectedTab = "Grader"; $(".students-specific-btn").hide();});
+        $("a[href='#Students-panel']").click(function(){_selectedTab = "Student"; $(".students-specific-btn").show()});
     
-        $("#btn-search").click(function(){search($("input[name='search']").val())});
+        //$("#btn-search").click(function(){search($("#search").val())});
     
         //show/hide student state select when check/uncheck student type
     
@@ -506,6 +505,49 @@ function buildUploadModal()
  $("#upload-button").click(onsubmitUploadForm);
 }
 
+function buildLookUpModal()
+{
+    var modalHTML = '<div class="modal fade" id="lookup-modal" tabindex="-1" role="dialog" aria-hidden="true">' +
+    '<div class="modal-dialog">' +
+       '<div class="modal-content">' +
+          '<div class="modal-header">' +
+             '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+             '<h4 class="modal-title">Look up Students</h4>' +
+          '</div>' +
+
+          '<form id="lookup-form" name="lookup-form">' +
+          '<div class="modal-body form-horizontal">' +
+                
+                                         '<!--' +
+                                         'Hidden input fields for requester id, requester type, requester session, and item id that auto populated ' +
+                                         'so $("#main-form").serialize() will include those values' +
+                                         '!-->' +
+                                         '<input type="hidden" class="form-control" id="requester-id" name="requester_id"/>' +
+                                         '<input type="hidden" class="form-control" id="requester-type" name="requester_type"/>' +
+                                         '<input type="hidden" class="form-control" id="requester-session" name="requester_session"/>' +
+                    '<div class="form-group">' +
+                        '<label for="user_id" class="col-sm-12">Look up a student by student ID, first name, last name, or email:</label>' +
+                        '<div class="col-sm-12">' +
+                    
+                                '<input type="text" name="lookup-string" id="lookup-string">' +
+                            
+                        '</div>' +
+                    '</div>' +
+                
+          '</div>' +
+          '<div class="modal-footer">' +
+             '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+             '<button type="button" data-dismiss="modal" id="lookup-button" class="btn btn-primary">Look up</button>' +
+          '</div>' +
+          '</form>    ' +
+       '</div>' +
+    '</div>' +
+ '</div>';
+
+ $("#detail-modal").after(modalHTML);
+ $("#lookup-button").click(onsubmitLookupForm);
+}
+
 function onsubmitUploadForm(e)
 {
 
@@ -527,4 +569,10 @@ function onsubmitUploadForm(e)
           alert(returndata);
         }
       });
+}
+
+function onsubmitLookupForm(e)
+{
+    search($("#lookup-string").val());
+    e.preventDefault();
 }

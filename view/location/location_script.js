@@ -3,22 +3,48 @@
  * @author: Andrew Robinson
  * @version: 1.0
  */
+
+var _userId = "";
+var _userType = "";
+var _userSessionId = "";
+
+var _targetModal = "detail-modal";
+var _tableId = "main-table";
+var _formId = "main-form";
+
 $(document).ready(loaded);
 
 function loaded() 
 {
-    //Automatic GLOBAL variables
-    _userId = "111"; 
-    _userType = "Admin";
-    _userSessionId = "0";
+    $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
     
-    _targetModal = "detail-modal";
-    _tableId = "main-table";
-    _formId = "main-form";
+    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+        console.log(jqxhr.responseText);
+        $(".msg-box").addClass("alert-danger");
+        $(".msg-box").fadeIn();
+        $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
+    });
 
+    $("#create-button").click(onclickCreate);
+    $("#submit-button").click(submitForm);
+}
+
+function loadUserInfo(data)
+{
+    _userId = data.userId;
+    _userType = data.userType;
+    _userSessionId = data.userSession;
+
+    init();    
+}
+
+function init()
+{
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
+
+    $(".msg-box").hide();
 
     getAllItems();
 
@@ -27,8 +53,6 @@ function loaded()
      .click(onClickSort)
      .mousedown(function(e){ e.preventDefault(); });
 
-    $("#create-button").click(onclickCreate);
-    $("#submit-button").click(submitForm);
 }
 
 function buildTable()
@@ -145,7 +169,7 @@ function onclickEdit(e)
 
 function onclickDelete(e) 
 {
-    if(window.confirm("Are you sure you want to delete this location?"))
+    if(window.confirm("Click 'OK' to confirm deletion of this location:"))
     {
         var itemId = e.currentTarget.dataset["id"];
         $.post("../location/remove_location.php", 

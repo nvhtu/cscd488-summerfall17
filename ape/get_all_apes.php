@@ -10,7 +10,7 @@
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
     $request = $_GET["request"];
-    $allowedType = array("Admin", "Teacher", "Student");
+    $allowedType = array("Admin", "Teacher", "Student", "Grader");
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
@@ -24,7 +24,7 @@
                             break;
         case ("get_by_state"): $sqlResult = getExamByState();
                             break;
-        case ("get_all"): $sqlResult = getAllExam($requesterType);
+        case ("get_all"): $sqlResult = getAllExam($requesterType, $requesterId);
                             break;
         default: http_response_code(400);
                 echo "Unrecognized request string.";
@@ -49,24 +49,21 @@
         return $sqlResult = sqlExecute($sqlSelectExam, array(":state"=>$_GET["state"]), true);
     }
 
-    function getAllExam($requesterType)
+    function getAllExam($requesterType, $requesterId)
     {
-        //If teacher, get only their exams
-        if(strcmp($requesterType, 'Teacher') == 0)
+        switch ($requesterType)
         {
-            $sqlSelectExams = "SELECT exam.*
-                                FROM exam
-                                INNER JOIN in_class_exam
-                                USING (exam_id)
-                                WHERE teacher_id = :teacher_id";
-            $data = array(':teacher_id' => $requesterId);
-            return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
-        } else {
-            return $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+            case "Teacher": return getTeacherExams($requesterType, $requesterId);
+                            break;
+            case "Student": return getStudentExams($requesterId);
+                            break;
+            case "Admin": return $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+                            break;
+        
         }
-
     }
 
+    //Add remaining seats count to each exam
     function addRemainingSeats($exams)
     {
         for ($i=0; $i<count($exams); $i++)
@@ -103,6 +100,51 @@
 		return $sqlResult[0]["count"];
 	}
 
-    
-	//echo json_encode($sqlResult);
+    function getTeacherExams($requesterType, $requesterId)
+    {
+        $sqlSelectExams = "SELECT exam.*
+        FROM exam
+        INNER JOIN in_class_exam
+        USING (exam_id)
+        WHERE teacher_id LIKE :teacher_id";
+        $data = array(':teacher_id' => $requesterId);
+        return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
+    }
+
+    function getStudentExams($requesterId)
+    {
+        $sqlSelectExams = "SELECT exam.exam_id, name, date, start_time, grade, possible_grade, passed
+                            FROM exam JOIN exam_grade ON exam.exam_id = exam_grade.exam_id
+                            WHERE exam_grade.student_id LIKE :student_id";
+
+        $data = array(':student_id' => $requesterId);
+        $sqlResultExams = sqlExecute($sqlSelectExams, $data, true);
+
+        $sqlSelectCats = "SELECT name as cat, grade, exam_id, possible_grade
+                        FROM category_grade AS cg JOIN assigned_grader AS ag ON cg.grader_exam_cat_id = ag.grader_exam_cat_id 
+                        JOIN exam_category AS ec ON ag.exam_cat_id = ec.exam_cat_id
+                        JOIN category as cat ON ec.cat_id = cat.cat_id
+                        WHERE student_id LIKE :student_id";
+        
+
+        $sqlResultCats = sqlExecute($sqlSelectCats, $data, true);
+
+        
+
+        //Add categories grades to each exam
+        for ($theExam=0; $theExam<count($sqlResultExams); $theExam++)
+        {
+            $sqlResultExams[$theExam]["cats"] = array();
+
+            for ($theCat=0; $theCat<count($sqlResultCats); $theCat++)
+            {
+                if($sqlResultCats[$theCat]["exam_id"] == $sqlResultExams[$theExam]["exam_id"])
+                {
+                    $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
+                }
+            }
+        }
+
+        return $sqlResultExams;
+    }
 ?>

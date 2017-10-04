@@ -1,4 +1,8 @@
 <?php 
+
+  require_once "../../util/get_cur_user_info.php";
+  $userInfo = getCurUserInfo(false);
+
    if ( !isset($page) ) {
       $page = "home";
    }
@@ -17,7 +21,18 @@
    $tabbedTablePath = $absPath . DIRECTORY_SEPARATOR . "tabbedTable.php";
    //$bodyPath = $path . "_table.html";
    //$scriptPath = $path . "_script.js";
-   $scriptPath = "$page/" . $page . "_script.js";
+
+   $scriptPath = "";
+
+   if(strcmp($userInfo["userType"], "Student") == 0)
+   {
+      $scriptPath = "$page/" . $page . "_student_script.js";
+   }
+   else 
+   {
+      $scriptPath = "$page/" . $page . "_script.js";
+   }
+
 
    if (strstr($page, 'home'))
    {
@@ -42,6 +57,8 @@
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous">
    <link rel="stylesheet" href="css/custom.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+   
 </head>
 
 <body>
@@ -61,7 +78,7 @@
          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
           <div class="msg-box alert fade in">
-            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <a href="#" class="close" id="msg-close" data-dismiss="alert">&times;</a>
             <p id="msg-box-text"></p>
           </div>
 
@@ -86,6 +103,7 @@
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
    <script src="js/script.js"></script>
    <script src="js/build_table.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
    <script src="<?php echo $scriptPath; ?>"></script>
 </body>
 

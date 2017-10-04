@@ -3,29 +3,60 @@
  * @author: Andrew Robinson
  * @version: 1.0
  */
+
+var _userId = "";
+var _userType = "";
+var _userSessionId = "";
+
+var _targetModal = "detail-modal";
+var _tableId = "main-table";
+var _formId = "main-form";
+
 $(document).ready(loaded);
 
 function loaded() 
 {
-    //Automatic GLOBAL variables
-    _userId = "2223";
-    _userType = "Grader";
-    _userSessionId = "0";
-    
-    _targetModal = "detail-modal";
-    _tableId = "main-table";
-    _formId = "main-form";
-
     $("div .table-toolbar").remove();
 
-    getAllItems();
-
-    buildTable();
+    $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
+    
+    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+        console.log(jqxhr.responseText);
+        $(".msg-box").addClass("alert-danger");
+        $(".msg-box").fadeIn();
+        $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
+    });
 
     $('#detail-modal').on('hidden.bs.modal', function () {
         $(".modal-body").empty();
     });
     $(".submit-button").click(submitForm);
+}
+
+function loadUserInfo(data)
+{
+    _userId = data.userId;
+    _userType = data.userType;
+    _userSessionId = data.userSession;
+
+    init();    
+}
+
+function init()
+{
+    $("#requester-id").val(_userId);
+    $("#requester-type").val(_userType);
+    $("#requester-session").val(_userSessionId);
+
+    $(".msg-box").hide();
+
+    getAllItems();
+
+    buildTable();
+    $(".main-table>thead th").not("th:last-of-type")
+     .click(onClickSort)
+     .mousedown(function(e){ e.preventDefault(); });
+
 }
 
 function buildTable()
@@ -43,7 +74,7 @@ function buildItemSummaryRow(item)
         cat: item.cat_name
     };
 
-    var row = buildItemRow(summaryData);
+    var row = buildItemRow(summaryData, true);
 
     $(row).find(".btn-info").remove();
     $(row).find(".btn-danger").remove();
@@ -65,20 +96,23 @@ function loadTable(data)
 
 function submitForm (e)
 {
-    var btn = $(e.currentTarget);
+    if(window.confirm("Only administrator accounts can change submitted grades.\nClick 'OK' to continue:"))
+    {
+        var btn = $(e.currentTarget);
 
-    var sendData = {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    grader_exam_cat_id: $(".modal-body").attr("data-id"),
-    exam_id: $(".modal-body").attr("exam-id"),
-    seat_num: btn.attr("seat"),
-    grade: btn.parent().find("input").val()
-    };
+        var sendData = {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        grader_exam_cat_id: $(".modal-body").attr("data-id"),
+        exam_id: $(".modal-body").attr("exam-id"),
+        seat_num: btn.attr("seat"),
+        grade: btn.parent().find("input").val()
+        };
 
-    $.post("../grade/add_cat_grade_by_seat.php", sendData, function(){
-        btn.parent().parent().parent().parent().remove();
-    });        
+        $.post("../grade/add_cat_grade_by_seat.php", sendData, function(){
+            btn.parent().parent().parent().parent().remove();
+        });
+    }     
 }
 
 function onclickEdit(e) 
@@ -120,29 +154,39 @@ function getAllItems()
 
 function loadModal(data, graderExamCatId, examId, possibleGrade) 
 {
-    $(".modal-body").attr("data-id", graderExamCatId);
-    $(".modal-body").attr("exam-id", examId);
-    $.each(data, function(i, item) {
-        var form = "<div class='form-horizontal'>" +
-        "<form>" +
-            "<div class='row'>" +
-                "<div class='form-group'>" +
-                    "<label for='name' class='col-sm-4 control-label'>Seat Number " + item.seat_num + " Grade:</label>" +
-                    "<div class='col-sm-3'>" +
-                        "<input type='number' min='0' max='" + possibleGrade + "' class='form-control' name='grade'/>" +
+    if(data.length == 0){
+        $(".modal-body").append(
+        '<div class="msg-box alert-success alert fade in">' +
+            '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+            '<p>You\'ve submitted all grades for this section</p>' +
+        '</div>');
+        $(".alert-success").fadeIn();
+    }
+    else{
+        $(".modal-body").attr("data-id", graderExamCatId);
+        $(".modal-body").attr("exam-id", examId);
+        $.each(data, function(i, item) {
+            var form = "<div class='form-horizontal'>" +
+            "<form>" +
+                "<div class='row'>" +
+                    "<div class='form-group'>" +
+                        "<label for='name' class='col-sm-4 control-label'>Seat Number " + item.seat_num + " Grade:</label>" +
+                        "<div class='col-sm-3'>" +
+                            "<input type='number' min='0' max='" + possibleGrade + "' class='form-control' name='grade'/>" +
+                        "</div>" +
+                        "<button type='button' class='btn btn-primary col-sm-3' name='submit-button' seat='" + item.seat_num + "'>Submit</button>" +
                     "</div>" +
-                    "<button type='button' class='btn btn-primary col-sm-3' name='submit-button' seat='" + item.seat_num + "'>Submit</button>" +
                 "</div>" +
-            "</div>" +
-        "</form>" +
-    "</div>";   
-    $(".modal-body").append(form);
-    });
-    $(".btn-primary").click(submitForm);
-    $(".modal-body input").keyup(function(){
-        if(parseInt(this.value) > possibleGrade)
-            this.value = possibleGrade;
-        if(parseInt(this.value) < 0)
-            this.value = 0;
-    });
+            "</form>" +
+        "</div>";   
+        $(".modal-body").append(form);
+        });
+        $(".btn-primary").click(submitForm);
+        $(".modal-body input").keyup(function(){
+            if(parseInt(this.value) > possibleGrade)
+                this.value = possibleGrade;
+            if(parseInt(this.value) < 0)
+                this.value = 0;
+        });
+    }
 }

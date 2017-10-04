@@ -99,6 +99,8 @@ body > .container {
    pointer-events: auto;
    color: #ccc;
    display: none;
+   right: 40px;
+   z-index: 100
 }
 
 .panel-default>.panel-heading .panel-title {

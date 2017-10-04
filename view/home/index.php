@@ -11,13 +11,14 @@
         case "Teacher": $page = "teacher_home";
                         break;
         case "Grader": $page = "grader_home";
+                        $hasModal = false;
                         break;
         case "Student": $page = "student_home";
+                        $hasModal = true;
                         break;
     }
-
+    
     $title = "EWU APE Home";
-    $hasModal = true;
 
     require_once "../index.php";
 ?>

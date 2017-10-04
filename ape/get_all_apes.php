@@ -10,7 +10,7 @@
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
     $request = $_GET["request"];
-    $allowedType = array("Admin", "Teacher", "Student");
+    $allowedType = array("Admin", "Teacher", "Student", "Grader");
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);

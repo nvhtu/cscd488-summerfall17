@@ -5,7 +5,7 @@ require_once "../../util/get_cur_user_info.php";
 
 $userInfo = getCurUserInfo(False);
 
-if(strcmp($userInfo["userType"], "Admin") == 0 || strcmp($userInfo["userType"], "Teacher") == 0)
+if(strcmp($userInfo["userType"], "Grader") == 0)
 {
     $page = "grade";
     $title = "EWU APE Grading";

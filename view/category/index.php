@@ -10,7 +10,7 @@ if(strcmp($userInfo["userType"], "Admin") == 0 || strcmp($userInfo["userType"], 
     $page = "category";
     $title = "EWU APE Categories";
     $tableTitle = "Categories";
-    $hasModal = true;
+    $modalsArr = array("category");
     require_once "../index.php";
 }
 else 

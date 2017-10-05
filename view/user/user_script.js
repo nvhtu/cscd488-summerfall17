@@ -44,8 +44,8 @@ function init()
          .click(onClickSort)
          .mousedown(function(e){ e.preventDefault(); });
     
-        buildUploadModal();
-        buildLookUpModal();
+        $("#upload-button").click(onsubmitUploadForm);
+        $("#lookup-button").click(onsubmitLookupForm);
     
         $("input[name='requester_id']").val(_userId);
         $("input[name='requester_type']").val(_userType);
@@ -462,91 +462,6 @@ function search(searchStr)
 
 }
 
-function buildUploadModal()
-{
-    var modalHTML = '<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-hidden="true">' +
-    '<div class="modal-dialog">' +
-       '<div class="modal-content">' +
-          '<div class="modal-header">' +
-             '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-             '<h4 class="modal-title">Import Students</h4>' +
-          '</div>' +
-
-          '<form id="upload-form" name="upload-form">' +
-          '<div class="modal-body form-horizontal">' +
-                
-                                         '<!--' +
-                                         'Hidden input fields for requester id, requester type, requester session, and item id that auto populated ' +
-                                         'so $("#main-form").serialize() will include those values' +
-                                         '!-->' +
-                                         '<input type="hidden" class="form-control" id="requester-id" name="requester_id"/>' +
-                                         '<input type="hidden" class="form-control" id="requester-type" name="requester_type"/>' +
-                                         '<input type="hidden" class="form-control" id="requester-session" name="requester_session"/>' +
-                    '<div class="form-group">' +
-                        '<label for="user_id" class="col-sm-12">Select a CSV to upload. The CSV file must contains a header row.</label>' +
-                        '<div class="col-sm-12">' +
-                            '<label class="btn btn-default" for="fileToUpload">' +
-                                '<input type="file" name="fileToUpload" id="fileToUpload" hidden>' +
-                            '</label>' +
-                        '</div>' +
-                    '</div>' +
-                
-          '</div>' +
-          '<div class="modal-footer">' +
-             '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-             '<input type="submit" id="upload-button" class="btn btn-primary" value="Import CSV">' +
-          '</div>' +
-          '</form>    ' +
-       '</div>' +
-    '</div>' +
- '</div>';
-
- $("#detail-modal").after(modalHTML);
- $("#upload-button").click(onsubmitUploadForm);
-}
-
-function buildLookUpModal()
-{
-    var modalHTML = '<div class="modal fade" id="lookup-modal" tabindex="-1" role="dialog" aria-hidden="true">' +
-    '<div class="modal-dialog">' +
-       '<div class="modal-content">' +
-          '<div class="modal-header">' +
-             '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
-             '<h4 class="modal-title">Look up Students</h4>' +
-          '</div>' +
-
-          '<form id="lookup-form" name="lookup-form">' +
-          '<div class="modal-body form-horizontal">' +
-                
-                                         '<!--' +
-                                         'Hidden input fields for requester id, requester type, requester session, and item id that auto populated ' +
-                                         'so $("#main-form").serialize() will include those values' +
-                                         '!-->' +
-                                         '<input type="hidden" class="form-control" id="requester-id" name="requester_id"/>' +
-                                         '<input type="hidden" class="form-control" id="requester-type" name="requester_type"/>' +
-                                         '<input type="hidden" class="form-control" id="requester-session" name="requester_session"/>' +
-                    '<div class="form-group">' +
-                        '<label for="user_id" class="col-sm-12">Look up a student by student ID, first name, last name, or email:</label>' +
-                        '<div class="col-sm-12">' +
-                    
-                                '<input type="text" name="lookup-string" id="lookup-string">' +
-                            
-                        '</div>' +
-                    '</div>' +
-                
-          '</div>' +
-          '<div class="modal-footer">' +
-             '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-             '<button type="button" data-dismiss="modal" id="lookup-button" class="btn btn-primary">Look up</button>' +
-          '</div>' +
-          '</form>    ' +
-       '</div>' +
-    '</div>' +
- '</div>';
-
- $("#detail-modal").after(modalHTML);
- $("#lookup-button").click(onsubmitLookupForm);
-}
 
 function onsubmitUploadForm(e)
 {

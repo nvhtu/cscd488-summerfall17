@@ -72,7 +72,7 @@ function init()
 
 function buildTable()
 {
-        headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
+    headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
@@ -100,6 +100,9 @@ function buildItemSummaryRow(item)
 
     var row = buildItemRow(summaryData, true);
 
+    $addStudentsBtn = $('<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#roster-modal" data-id="' + summaryData.id + '">Exam Roster</button>');
+    $addStudentsBtn.click(onclickRoster);
+    row.children().children().append($addStudentsBtn);
     return row;
 }
 
@@ -287,4 +290,172 @@ function getAllItems(state)
         request: "get_all"}, 
         loadTable,
         "json");
+}
+
+
+function onclickRoster(e)
+{
+    
+    $(".modal-title").html("Exam Roster");
+
+    headersArr = ["Student ID", "First Name", "Last Name", "Seat #", "Action"];
+    var table = buildMainTable(headersArr);
+    $("#roster-table-wrapper").html(table);
+
+    
+
+    var itemId = e.currentTarget.dataset["id"];
+    $("#roster-form > #item-id").val(itemId);
+
+    $("#add-student-btn").click(onclickRegNewStudentBtn);
+
+    $.get("../ape/get_exam_roster.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    exam_id: itemId}, 
+    loadRosterTable,
+    "json");
+
+}
+
+function loadRosterTable(data)
+{
+    $.each(data, function(i, item) 
+    {
+
+            var summaryData = {
+                id: item.student_id,
+                studentid: item.student_id,
+                fname: item.f_name,
+                lname: item.l_name,
+                seatnum: item.seat_num
+            };
+        
+            var row = buildItemRow(summaryData, false);
+
+            var $bttnDel = $('<button type="button" class="btn btn-danger">Unregister</button>');
+            $bttnDel.attr("data-id", summaryData.id);
+            $bttnDel.click(onclickDeleteStudent);
+
+            row.append(
+                $('<td class="btns">').append(
+                   $('<div class="btn-group" role="group">').append($bttnDel, ' ')
+                 )
+              );
+
+            $("#roster-table-wrapper > ." + _tableId).append(row);
+            
+    });
+
+}
+
+function onclickDeleteStudent(e)
+{
+    if(window.confirm("Are you sure you want to remove this student from the exam?"))
+    {
+        var studentId = e.currentTarget.dataset["id"];
+        var examId =  $("#roster-form > #item-id").val();
+
+        
+        
+        $.post("../ape/unregister.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId,
+        student_id: studentId},
+        function(){
+            $("tr[data-target='#item-" + studentId + "']").remove();
+            $("tr[id='item-" + studentId + "']").remove();
+        });
+    }
+}
+
+function onclickRegNewStudentBtn()
+{
+    modifyLookupModal();
+}
+
+function modifyLookupModal()
+{
+    $("#lookup-button").remove();
+    var $newLookupBtn = $("<button type='button' id='lookup-button' class='btn btn-primary'>Look up</button>");
+    $newLookupBtn.click(onclickLookup);
+    $("#lookup-string").after($newLookupBtn);
+
+    $("#lookup-modal-title").html("Look up student");
+    headersArr = ["Student ID", "First Name", "Last Name", "Email", "State", "Action"];
+    table = buildMainTable(headersArr);
+    $("#lookup-table-wrapper").html(table);
+}
+
+function onclickLookup()
+{
+    searchStr = $("#lookup-string").val();
+    if(searchStr != "")
+    {
+        //$("#Students-panel > .table-responsive > ."+_tableId + " tbody").empty();
+        $.get("../account/student_search.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        search_str: searchStr}, 
+        function(data){
+            $.each(data, function(i, item) 
+            {
+                var summaryData = {
+                    id: item.user_id,
+                    ewu_id: item.user_id,
+                    f_name: item.f_name,
+                    l_name: item.l_name,
+                    email: item.email,
+                    state: item.state
+                };
+            
+                var row = buildItemRow(summaryData, false);
+            
+                $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '">Register</button>');
+                $registerBtn.click(onclickRegisterStudent);
+
+                row.append(
+                    $('<td class="btns">').append(
+                       $('<div class="btn-group" role="group">').append($registerBtn, ' ')
+                     )
+                  );
+    
+                $("#lookup-table-wrapper > ." + _tableId).append(row);
+
+                
+            });
+        },
+        "json");
+    }
+}
+
+function onclickRegisterStudent(e)
+{
+    var studentId = e.currentTarget.dataset["id"];
+    var examId =  $("#roster-form > #item-id").val();
+
+    $.post("../ape/register.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    student_id: studentId,
+    exam_id: examId}, 
+    function(){
+        alert("Student has been added to the exam successfully.");
+        $("#lookup-table-wrapper > ."+_tableId + " tbody").empty();
+
+        //reload exam roster table
+        $("#roster-table-wrapper > ."+_tableId + " tbody").empty();
+        $.get("../ape/get_exam_roster.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId}, 
+        loadRosterTable,
+        "json");
+    });
 }

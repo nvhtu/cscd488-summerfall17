@@ -6,7 +6,7 @@
    $tableTitle = "Exams";
    
 
-   $modalsArr = array("exam", "add_student");
+   $modalsArr = array("exam", "roster", "../user/lookup");
 
    if(strcmp($userInfo["userType"], "Student") == 0)
    {

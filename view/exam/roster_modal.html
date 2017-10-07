@@ -1,0 +1,41 @@
+<div class="modal fade" id="roster-modal" tabindex="-1" role="dialog" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">Exam Roster</h4>
+         </div>
+         <div class="modal-body form-horizontal">
+            <form id="roster-form">
+
+               <!--
+               Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
+               so $("#main-form").serialize() will include those values
+               -->
+               <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
+               <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
+               <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
+               <input type="hidden" class="form-control" id="item-id" name="exam_id" />
+
+               <div>
+                    <div class="container-fluid table-toolbar">
+                       <button type="button" class="btn btn-primary pull-left" id="add-student-btn" data-target="#lookup-modal" data-toggle="modal">Register a student</button>
+                       <div class="pull-right">
+                          <input type="text" class="form-control" id="student-search" placeholder="Search">
+                          <span id="clear-search" class="glyphicon glyphicon-remove-circle form-control-feedback"></span>
+                       </div>
+                    </div>
+                    
+                    <div class="table-responsive" id="roster-table-wrapper">
+                            
+                    </div>
+                </div>
+
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+         </div>
+      </div>
+   </div>
+</div>

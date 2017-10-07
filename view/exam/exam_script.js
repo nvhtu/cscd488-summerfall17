@@ -392,6 +392,7 @@ function modifyLookupModal()
 
 function onclickLookup()
 {
+    $("#lookup-table-wrapper > ."+_tableId + " tbody").empty();
     searchStr = $("#lookup-string").val();
     if(searchStr != "")
     {
@@ -414,8 +415,18 @@ function onclickLookup()
                 };
             
                 var row = buildItemRow(summaryData, false);
+
+                var $registerBtn = "";
             
-                $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '">Register</button>');
+                if(item.state != "Ready")
+                {
+                    $registerBtn = $('<button type="button" class="btn btn-primary" disabled>Register</button>');
+                }
+                else
+                {
+                    $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '">Register</button>');
+                }
+                
                 $registerBtn.click(onclickRegisterStudent);
 
                 row.append(
@@ -446,7 +457,9 @@ function onclickRegisterStudent(e)
     exam_id: examId}, 
     function(){
         alert("Student has been added to the exam successfully.");
-        $("#lookup-table-wrapper > ."+_tableId + " tbody").empty();
+
+        $("tr[data-target='#item-" + studentId + "'] > td:nth-child(5)").html("Registered");
+        $("tr[data-target='#item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",true);
 
         //reload exam roster table
         $("#roster-table-wrapper > ."+_tableId + " tbody").empty();

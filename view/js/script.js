@@ -1,3 +1,9 @@
+/**
+ * Global script
+ * @author: Aaron Griffis
+ * @version: 1.0
+ */
+
 $(document).ready(loaded);
 
 function loaded() 

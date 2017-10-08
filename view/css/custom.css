@@ -1,4 +1,10 @@
-html {
+/**
+ * CSS Styling
+ * @author: Aaron Griffis
+ * @version: 1.0
+ */
+ 
+ html {
    position: relative;
    min-height: 100%;
 }
@@ -141,10 +147,6 @@ body > .container {
 .table .btn-group .btn {
    display: inline-block;
    float: none;
-}
-
-.table .btn-group .btn + .btn {
-   margin-left: -5px;
 }
 
 .table .item-detail-row>td {

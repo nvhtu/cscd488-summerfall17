@@ -8,6 +8,8 @@ var _userId = "";
 var _userType = "";
 var _userSessionId = "";
 
+var _settings;
+
 var _targetModal = "detail-modal";
 var _tableId = "main-table";
 var _formId = "main-form";
@@ -22,8 +24,6 @@ function loaded()
 {
 
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
-
-    
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
@@ -43,7 +43,17 @@ function loadUserInfo(data)
 
     init();
     
-    
+    $.get("../settings/get_settings.php", {
+      requester_id: _userId,
+      requester_type: _userType
+      }, loadSettings, "json");
+}
+
+function loadSettings(data) {
+   _settings = data.reduce(function(obj, item) {
+      obj[item.name] = item.value;
+      return obj;
+   }, {});
 }
 
 function init()
@@ -68,6 +78,64 @@ function init()
      .click(onClickSort)
      .mousedown(function(e){ e.preventDefault(); });
 
+     var options={
+      format: 'yyyy-mm-dd',
+      forceParse: false,
+      todayHighlight: true,
+      autoclose: true,
+    };
+    $('input[name="date"]').datepicker(options).on('changeDate', appendQuarter);
+
+    $('input[name="date"]').keydown(function(){
+        return false;
+    });
+}
+
+function appendQuarter(e) {
+   var input = $(this);
+   input.val(input.val() + getQuarter(input.val()));
+}
+
+function getQuarter(date) {
+   var quarter = "",
+   curDate = new Date(date),
+   winterStart = new Date(_settings.winterStart),
+   winterEnd = new Date(_settings.winterEnd),
+   springStart = new Date(_settings.springStart),
+   springEnd = new Date(_settings.springEnd),
+   summerStart = new Date(_settings.summerStart),
+   summerEnd = new Date(_settings.summerEnd),
+   fallStart = new Date(_settings.fallStart),
+   fallEnd = new Date(_settings.fallEnd);
+
+   if (isBetweenDates(curDate, winterStart, winterEnd)) {
+      quarter = "Winter";
+   }
+   else if (isBetweenDates(curDate, springStart, springEnd)) {
+      quarter = "Spring";
+   }
+   else if (isBetweenDates(curDate, summerStart, summerEnd)) {
+      quarter = "Summer";
+   }
+   else if (isBetweenDates(curDate, fallStart, fallEnd)) {
+      quarter = "Fall";
+   }
+
+   if (quarter !== "") {
+      return " (" + quarter + " Quarter)";
+   }
+   else {
+      return "";
+   }
+}
+
+function isBetweenDates(cur, lower, upper) {
+   if (lower < upper) {
+      return lower <= cur && cur <= upper;
+   }
+   else {
+      return cur <= upper || cur >= lower;
+   }
 }
 
 function buildTable()

@@ -14,7 +14,7 @@ var _formId = "main-form";
 
 var _locData = Array();
 
-var _selectedTab = "";
+var _selectedTab = "Open";
 
 $(document).ready(loaded);
 
@@ -295,19 +295,24 @@ function getAllItems(state)
 
 function onclickRoster(e)
 {
-    
-    $(".modal-title").html("Exam Roster");
+    if (_selectedTab != "Open")
+    {
+        $("#add-student-btn").hide();
+    }
+    else
+    {
+        $("#add-student-btn").show();
+        $("#add-student-btn").click(onclickRegNewStudentBtn);
+    }
 
+    $(".modal-title").html("Exam Roster");
+    
     headersArr = ["Student ID", "First Name", "Last Name", "Seat #", "Action"];
     var table = buildMainTable(headersArr);
     $("#roster-table-wrapper").html(table);
-
     
-
     var itemId = e.currentTarget.dataset["id"];
     $("#roster-form > #item-id").val(itemId);
-
-    $("#add-student-btn").click(onclickRegNewStudentBtn);
 
     $.get("../ape/get_exam_roster.php", 
     {requester_id: _userId,
@@ -334,15 +339,37 @@ function loadRosterTable(data)
         
             var row = buildItemRow(summaryData, false);
 
-            var $bttnDel = $('<button type="button" class="btn btn-danger">Unregister</button>');
-            $bttnDel.attr("data-id", summaryData.id);
-            $bttnDel.click(onclickDeleteStudent);
 
-            row.append(
-                $('<td class="btns">').append(
-                   $('<div class="btn-group" role="group">').append($bttnDel, ' ')
-                 )
-              );
+            switch (_selectedTab)
+            {
+                case "Open":    var $bttnDel = $('<button type="button" class="btn btn-danger">Unregister</button>');
+                                $bttnDel.attr("data-id", summaryData.id);
+                                $bttnDel.click(onclickDeleteStudent);
+                    
+                                row.append(
+                                    $('<td class="btns">').append(
+                                    $('<div class="btn-group" role="group">').append($bttnDel, ' ')
+                                    )
+                                );
+                                break;
+                
+                case "In_Progress": $("#roster-table-wrapper > .main-table > thead > tr > th:nth-child(5)").remove();
+                            break;
+                
+                case "Grading":
+                            break;
+
+                case "Archived":
+                            break;
+
+                case "Hidden":
+                            break;
+            }
+
+            if(_selectedTab == "Open")
+            {
+                
+            }
 
             $("#roster-table-wrapper > ." + _tableId).append(row);
             

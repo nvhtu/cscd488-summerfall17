@@ -410,8 +410,6 @@ function getAllItems(type)
         request: "get_by_type",
         type: type}, 
         function(data,asd, xhr){
-            console.log("asfdsf");
-            console.log(xhr);
             loadTable(data, type);
         },
         "json");

@@ -598,9 +598,10 @@ function loadRosterTableHasGrades(item)
 
     //create info button
     var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + summaryData.id + '" data-toggle="collapse"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
-    
+    $bttnInfo.attr("data-id", summaryData.id);
+    $bttnInfo.click(onclickInfoGrade);
     //create edit button
-    var $bttnEdit = $('<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
+    var $bttnEdit = $('<button type="button" class="btn btn-warning" data-target="#item-' + summaryData.id + '" data-toggle="collapse"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
     $bttnEdit.click(onclickEditGrade);
 
@@ -664,4 +665,22 @@ function onclickEditGrade(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $("#item-" + itemId + " .cat-grade-input").prop("disabled", false);
+}
+
+function onclickInfoGrade(e)
+{
+    var itemId = e.currentTarget.dataset["id"];
+    $detailRow =  $("#roster-table-wrapper tr[class='item-detail-row'] div[id='item-" + itemId + "']");
+
+    //Disable Edit button collapse when the detail row has been expanded earlier by Info button
+    if(!$detailRow.hasClass("in"))
+    {
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+    }
+    else
+    {
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+    }
+
+    
 }

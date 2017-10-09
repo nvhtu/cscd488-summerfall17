@@ -428,6 +428,7 @@ function loadRosterTable(data)
                                     $('<div class="btn-group" role="group">').append($bttnDel, ' ')
                                     )
                                 );
+                                $("#roster-table-wrapper > ." + _tableId).append(row);
                                 break;
                 
                 case "In_Progress": $("#roster-table-wrapper > .main-table > thead > tr > th:nth-child(5)").remove();
@@ -568,7 +569,8 @@ function onclickRegisterStudent(e)
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
-        exam_id: examId}, 
+        exam_id: examId,
+        get_grade: getGrade}, 
         loadRosterTable,
         "json");
     });

@@ -44,104 +44,33 @@ function init()
     $(".msg-box").hide();
     
     buildForm();
-    populateForm();
-
-    var options={
-      format: 'yyyy-mm-dd',
-      forceParse: false,
-      todayHighlight: true,
-      autoclose: true,
-    };
-    $('input[name="date"]').datepicker(options);
-
-    $('input[name="date"]').keydown(function(){
-        return false;
-    });
-
-    $('input[name="date"]').on("changeDate", function(){
-        $("#submit-button").prop("disabled", false);
-    });
-
-    $("input").on("input", function(){
-        $("#submit-button").prop("disabled", false);
-    });
-    $("#submit-button").click(submitForm);
 }
 
 function buildForm(){
-    $("div .table-responsive").html(
-        '<form id="main-form">' +
-            '<div class="form-group">' +
-                '<label for="catGraderLimit" class="col-sm-3 control-label">Grader Limit per Category:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" id="catGraderLimit"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="pointDiffRange" class="col-sm-3 control-label">Allowable Score Discrepancy:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" id="pointDiffRange"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="examMaxPoint" class="col-sm-3 control-label">Maximum Points for Exams:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" id="examMaxPoint"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="fallStart" class="col-sm-3 control-label">Fall Quarter Start Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" data-date-format="yyyy-mm-dd" name="date" placeholder="YYYY-MM-DD" id="fallStart"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="fallEnd" class="col-sm-3 control-label">Fall Quarter End Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="fallEnd"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="winterStart" class="col-sm-3 control-label">Winter Quarter Start Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="winterStart"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="winterEnd" class="col-sm-3 control-label">Winter Quarter End Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="winterEnd"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="springStart" class="col-sm-3 control-label">Spring Quarter Start Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="springStart"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="springEnd" class="col-sm-3 control-label">Spring Quarter End Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="springEnd"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="summerStart" class="col-sm-3 control-label">Summer Quarter Start Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="summerStart"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="form-group">' +
-                '<label for="summerEnd" class="col-sm-3 control-label">Summer Quarter End Date:</label>' +
-                '<div class="col-sm-9">' +
-                    '<input type="text" class="form-control" name="date" placeholder="YYYY-MM-DD" id="summerEnd"/>' +
-                '</div>' +
-            '</div>' +
-        '</form>' +
-        '<form>' +
-            '<button type="button" class="btn btn-primary pull-right" disabled="true" id="submit-button" style="margin: 10px 10px 10px 10px">Save Changes</button>' +
-        '</form>'
-    )
+    $("div .table-responsive").load("./settings/settings_form.html", function(){
+        populateForm();
+        
+        var options={
+            format: 'yyyy-mm-dd',
+            forceParse: false,
+            todayHighlight: true,
+            autoclose: true,
+        };
+        $('input[name="date"]').datepicker(options);
+    
+        $('input[name="date"]').keydown(function(){
+            return false;
+        });
+    
+        $('input[name="date"]').on("changeDate", function(){
+            $("#submit-button").prop("disabled", false);
+        });
+    
+        $("input").on("input", function(){
+            $("#submit-button").prop("disabled", false);
+        });
+        $("#submit-button").click(submitForm);
+    });
 }
 
 function populateForm(){

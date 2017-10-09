@@ -11,10 +11,10 @@
         case "Teacher": $page = "teacher_home";
                         break;
         case "Grader": $page = "grader_home";
-                        $hasModal = false;
+                        $modalsArr = array("grader_home");
                         break;
         case "Student": $page = "student_home";
-                        $hasModal = true;
+                        $modalsArr = array("student_home");
                         break;
     }
     

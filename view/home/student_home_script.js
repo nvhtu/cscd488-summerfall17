@@ -151,7 +151,7 @@ function buildItemSummaryRow(item)
             {
                 $bttnRegister = $('<button type="button" class="btn btn-primary register-btn registered" data-id="' + summaryData.id + '">Register</button>');
             }
-            
+            row.css("font-weight", "bold");
             $bttnRegister.click(onclickUnregister);
         }
         else //Not registered

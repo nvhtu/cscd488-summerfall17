@@ -9,14 +9,12 @@
    if ( !isset($title) ) {
       $title = "EWU Advancement Programming Exam";
    }
-   if ( !isset($hasModal) ) {
-      $hasModal = false;
-   }
+
 
    $projectDirName = "cscd488-summerfall17";
    $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view";
    $path = $absPath . DIRECTORY_SEPARATOR . $page . DIRECTORY_SEPARATOR . $page;
-   $modalPath = $path . "_modal.html";
+   //$modalPath = $path . "_modal.html";
    $tablePath = $absPath . DIRECTORY_SEPARATOR . "table.php";
    $tabbedTablePath = $absPath . DIRECTORY_SEPARATOR . "tabbedTable.php";
    //$bodyPath = $path . "_table.html";
@@ -38,7 +36,7 @@
    {
       $path = $absPath . DIRECTORY_SEPARATOR . "home" . DIRECTORY_SEPARATOR;
       $scriptPath = "home/" . $page . "_script.js";
-      $modalPath = "home/" . $page . "_modal.html";
+      //$modalPath = "home/" . $page . "_modal.html";
    }
 
 ?>
@@ -63,7 +61,21 @@
 
 <body>
    <?php 
-      if ($hasModal) {require_once $modalPath;}
+      if (isset($modalsArr))
+      {
+        foreach($modalsArr as $theModal)
+        {
+          if (strstr($page, 'home'))
+          {
+            require_once "home/" . $theModal . "_modal.html";
+          }
+          else
+          {
+            require_once $theModal . "_modal.html";
+          }
+          
+        }  
+      }
       require_once $absPath . '/includes/navbar.html';
    ?>
    

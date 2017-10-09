@@ -5,7 +5,8 @@
    $title = "EWU APE Exams";
    $tableTitle = "Exams";
    
-   $hasModal = true;
+
+   $modalsArr = array("exam", "roster", "../user/lookup");
 
    if(strcmp($userInfo["userType"], "Student") == 0)
    {
@@ -17,7 +18,6 @@
     $title = "EWU APE Exams";
     $tableTitle = "Exams";
     $tableTabs = array("Open", "In Progress", "Grading", "Archived", "Hidden");
-    $hasModal = true;
    }
 
    

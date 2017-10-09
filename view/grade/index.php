@@ -10,7 +10,7 @@ if(strcmp($userInfo["userType"], "Grader") == 0)
     $page = "grade";
     $title = "EWU APE Grading";
     $tableTitle = "Assigned APE Sections";
-    $hasModal = true;
+    $modalsArr = array("grade");
     require_once "../index.php";
 }
 else 

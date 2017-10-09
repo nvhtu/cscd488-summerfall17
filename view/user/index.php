@@ -9,7 +9,7 @@
     $title = "";
     $tableTitle = "";
     $tableTabs = array();
-    $hasModal = true;
+    $modalsArr = array("user", "upload", "lookup");
 
     switch ($userInfo["userType"])
     {
@@ -17,14 +17,12 @@
                         $title = "EWU APE Users";
                         $tableTitle = "Users";
                         $tableTabs = array("Admins", "Teachers", "Graders", "Students");
-                        $hasModal = true;
                         break;
 
         case "Teacher": 
                         $title = "EWU APE Students";
                         $tableTitle = "Students";
                         $tableTabs = array("Students");
-                        $hasModal = true;
                         break;
         
         default:    die("Unauthorized access");

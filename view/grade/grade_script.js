@@ -79,6 +79,8 @@ function buildGradeButton(item){
     var bttnGrade = $('<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#detail-modal">Grade<span class="sr-only">Grade</span></button>');
     bttnGrade.attr("data-id", item.grader_exam_cat_id); //add unique ID from item as a data tag
     bttnGrade.attr("exam-id", item.exam_id);
+    bttnGrade.attr("exam-name", item.exam_name);
+    bttnGrade.attr("cat-name", item.cat_name);
 
     bttnGrade.click(onclickGrade);
     return $('<td class="btns">').append($('<div class="btn-group" style="width:100%" role="group">').append(bttnGrade));
@@ -142,12 +144,20 @@ function submitSingleGrade(btn)
 
 function onclickGrade(e) 
 {
-    var graderExamCatId = e.currentTarget.dataset["id"];
+    var btn = e.currentTarget;
 
     //hide grade forms for other exams/categories from the modal
-    $("[name='submit-button']:not([grader-exam-cat-id='" + graderExamCatId + "'])").closest(".form-horizontal").hide();
+    $("[name='submit-button']:not([grader-exam-cat-id='" + btn.dataset["id"] + "'])").closest(".form-horizontal").hide();
     //make sure grade forms for this exam_cat are shown in the modal
-    $("[name='submit-button'][grader-exam-cat-id='" + graderExamCatId + "']").closest(".form-horizontal").show();
+    var currentForms = $("[name='submit-button'][grader-exam-cat-id='" + btn.dataset["id"] + "']").closest(".form-horizontal");
+    currentForms.show();
+
+    $('#detail-modal').on('shown.bs.modal', function() {
+        currentForms.first().find("input").focus();
+    });    
+    
+    //change modal title
+    $(".modal-title").html("Grading " + $(btn).attr("exam-name") + ": " + $(btn).attr("cat-name"));
 }
 
 function getAllItems()
@@ -202,7 +212,7 @@ function buildModalForm(ungradedSeats, graderExamCat)
                             "<div class='form-group'>" +
                                 "<label for='name' class='col-sm-4 control-label'>Seat Number " + sNum + " Grade:</label>" +
                                 "<div class='col-sm-3'>" +
-                                    "<input type='text' class='form-control' name='grade'/>" +
+                                    "<input type='text' class='form-control' name='grade'></input>" +
                                 "</div>" +
                                 "<button type='button' class='btn btn-primary col-sm-3' name='submit-button' seat='" + sNum + 
                                 "' grader-exam-cat-id='" + gecid + "' exam-id='" + exam + "'>Submit</button>" +

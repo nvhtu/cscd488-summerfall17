@@ -11,7 +11,7 @@
         case "Teacher": $page = "teacher_home";
                         break;
         case "Grader": $page = "grader_home";
-                        $modalsArr = array("grader_home");
+                        //$modalsArr = array("grader_home");
                         break;
         case "Student": $page = "student_home";
                         $modalsArr = array("student_home");

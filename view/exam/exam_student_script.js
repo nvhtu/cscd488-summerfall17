@@ -86,8 +86,9 @@ function buildTable()
 
     headersArr = ["Name", "Date", "Start Time", "Overall Grade", "Result", "Action"];
     var table = buildMainTable(headersArr);
-    $(".table-responsive").html(table);
     
+    $(".panel .table-responsive").attr("id", "exams-student-table-wrapper");
+    $("#exams-student-table-wrapper").html(table);
 }
 
 function buildItemSummaryRow(item)
@@ -159,8 +160,8 @@ function loadTable(data)
 
         var detailRow = buildItemDetailRow(item);
 
-        $(".table-responsive > ." + _tableId).append(row);
-        $(".table-responsive > ." + _tableId).append(detailRow);
+        $("#exams-student-table-wrapper > ." + _tableId).append(row);
+        $("#exams-student-table-wrapper > ." + _tableId).append(detailRow);
         //console.log(detailExamRow);
 
         //$("#" + _tableId).append(row);

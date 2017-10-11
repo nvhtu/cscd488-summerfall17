@@ -1,103 +1,219 @@
 <div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-hidden="true">
-   <div class="modal-dialog">
+   <div class="modal-dialog modal-lg">
       <div class="modal-content">
          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
             <h4 class="modal-title">Create an Exam</h4>
          </div>
-         <div class="modal-body form-horizontal">
-            <form id="main-form">
+         <div class="modal-body form-horizontal row">
+            <div class="col-md-6" id="col-left">
+               <form id="main-form">
 
-               <!--
-               Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
-               so $("#main-form").serialize() will include those values
-               -->
-               <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
-               <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
-               <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
-               <input type="hidden" class="form-control" id="item-id" name="exam_id" />
+                  <!--
+                  Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
+                  so $("#main-form").serialize() will include those values
+                  -->
+                  <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
+                  <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
+                  <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
+                  <input type="hidden" class="form-control" id="item-id" name="exam_id" />
 
-               <div class="form-group">
-                  <label for="name" class="col-sm-4 control-label">Exam Name:</label>
-                  <div class="col-sm-8">
-                     <input type="text" class="form-control" name="name" />
-                  </div>
-               </div>
-
-               <div class="form-group">
-                  <label for="date" class="col-sm-4 control-label">Date:</label>
-                  <div class="col-sm-8">
-                     <input type="text" class="form-control" name="date" />
-                  </div>
-               </div>
-
-               <div class="form-group">
-                  <label for="start-time" class="col-sm-4 control-label">Start Time:</label>
-                  <div class="col-sm-8">
-                     <input type="text" class="form-control" name="start_time" />
-                  </div>
-               </div>
-
-               <div class="form-group">
-                  <label for="duration" class="col-sm-4 control-label">Duration:</label>
-                  <div class="col-sm-8">
-                     <div class="input-group">
-                        <input type="text" class="form-control" name="duration" />
-                        <span class="input-group-addon">Hours</span>
+                  <div class="form-group">
+                     <label for="name" class="col-sm-4 control-label">Exam Name:</label>
+                     <div class="col-sm-8">
+                        <input type="text" class="form-control" name="name" />
                      </div>
                   </div>
-               </div>
 
-               <div class="form-group">
-                  <label for="cutoff" class="col-sm-4 control-label">Registration Cutoff:</label>
-                  <div class="col-sm-8">
-                     <div class="input-group">
-                        <input type="text" class="form-control" name="cutoff" />
-                        <span class="input-group-addon">Hours</span>
+                  <div class="form-group">
+                     <label for="date" class="col-sm-4 control-label">Date:</label>
+                     <div class="col-sm-8">
+                        <input type="text" class="form-control" name="date" />
                      </div>
                   </div>
-               </div>
 
-               <div class="form-group">
-                  <label for="location" class="col-sm-4 control-label">Location:</label>
-                  <div class="col-sm-8">
-                     <select type="text" class="form-control" name="location" id="ape-loc"></select>
+                  <div class="form-group">
+                     <label class="col-sm-4 control-label">Quarter:</label>
+                     <div class="col-sm-8">
+                        <p class="form-control-static" id="quarter">(Select valid date)</p>
+                        <input type="hidden" class="form-control" name="quarter" />
+                     </div>
                   </div>
-               </div>
 
-               <div class="form-group">
-                  <label for="state" class="col-sm-4 control-label">State:</label>
-                  <div class="col-sm-8">
-                     <select type="text" class="form-control" name="state" />
-                     <option value="Open">Open</option>
-                     <option value="In_Progress">In progress</option>
-                     <option value="Grading">Grading</option>
-                     <option value="Archived">Archived</option>
-                     <option value="Hidden">Hidden</option>
-                     </select>
+                  <div class="form-group">
+                     <label for="start-time" class="col-sm-4 control-label">Start Time:</label>
+                     <div class="col-sm-8">
+                        <input type="text" class="form-control" name="start_time" />
+                     </div>
                   </div>
-               </div>
 
-               <div class="form-group">
-                  <label for="passing-grade" class="col-sm-4 control-label">Passing Grade:</label>
-                  <div class="col-sm-8">
-                     <input type="text" class="form-control" name="passing_grade" />
+                  <div class="form-group">
+                     <label for="duration" class="col-sm-4 control-label">Duration:</label>
+                     <div class="col-sm-8">
+                        <div class="input-group">
+                           <input type="text" class="form-control" name="duration" />
+                           <span class="input-group-addon">Hours</span>
+                        </div>
+                     </div>
                   </div>
-               </div>
 
-               <div class="form-group">
-                  <label for="categories" class="col-sm-4 control-label">Categories:</label>
-                  <div class="col-sm-4">
-                     <select type="text" class="form-control" name="category" />
-
-                     <input type="text" class="form-control" name="category-grade" />
-
-                     <button type="button" class="btn btn-default" class="add-cat-bttn">Add Category</button>
+                  <div class="form-group">
+                     <label for="cutoff" class="col-sm-4 control-label">Register Deadline:</label>
+                     <div class="col-sm-8">
+                        <div class="input-group">
+                           <input type="text" class="form-control" name="cutoff" />
+                           <span class="input-group-addon">Hours</span>
+                        </div>
+                     </div>
                   </div>
-               </div>
 
-            </form>
+                  <div class="form-group">
+                     <label for="location" class="col-sm-4 control-label">Location:</label>
+                     <div class="col-sm-8">
+                        <select class="form-control" name="location" id="ape-loc"></select>
+                     </div>
+                  </div>
+
+                  <div class="form-group">
+                     <label for="state" class="col-sm-4 control-label">State:</label>
+                     <div class="col-sm-8">
+                        <select class="form-control" name="state">
+                           <option value="Open">Open</option>
+                           <option value="In_Progress">In progress</option>
+                           <option value="Grading">Grading</option>
+                           <option value="Archived">Archived</option>
+                           <option value="Hidden">Hidden</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div class="form-group">
+                     <label for="passing-grade" class="col-sm-4 control-label">Passing Grade:</label>
+                     <div class="col-sm-8">
+                        <input type="text" class="form-control" name="passing_grade" />
+                     </div>
+                  </div>
+               </form>
+               <hr class="separator hidden-md hidden-lg">
+            </div>
+
+            <div class="col-md-6" id="col-right">
+               <div class="panel panel-default">
+                  <div class="panel-heading clearfix">
+                     <h4 class="panel-title pull-left">Categories:</h4>
+                     <button type="button" class="btn btn-primary pull-right" id="add-cat-btn">Add Category</button>
+                  </div>
+                  
+                  <table class="table table-condensed">
+                     <thead>
+                        <tr>
+                           <th>Name</th>
+                           <th>Max Score</th>
+                           <th>Actions</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr class="cat-row" data-id="cat-1" data-target="#cat-1" aria-expanded="true">
+                           <td>
+                              <select class="form-control" name="category">
+                                 <option value="Data Abstraction">Data Abstraction</option>
+                                 <option value="General">General</option>
+                                 <option value="Linked List" selected>Linked List</option>
+                                 <option value="Recursion">Recursion</option>
+                              </select>
+                           </td>
+                           <td>
+                              <input type="text" class="form-control" name="max-score">
+                           </td>
+                           <td>
+                              <div class="btn-group" role="group">
+                                 <button type="button" class="btn btn-info" data-target="#cat-1" data-toggle="collapse">Graders</button>
+                                 <button type="button" class="btn btn-danger" data-id="1">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    <span class="sr-only">Delete</span>
+                                 </button>
+                              </div>
+                           </td>
+                        </tr>
+                        <tr class="cat-grader-row" data-id="cat-1">
+                           <td class="graders" colspan="100%">
+                              <div class="collapse" id="cat-1">
+                                 <table class="table table-condensed">
+                                    <tbody>
+                                       <tr class="active">
+                                          <td>
+                                             <button type="button" class="btn btn-primary">Add Grader</button>
+                                          </td>
+                                          <td>
+                                             <select class="form-control">
+                                                <option value="Tom Capaul" selected>Tom Capaul</option>
+                                                <option value="Stu Steiner">Stu Steiner</option>
+                                                <option value="Grader">Grader</option>
+                                             </select>
+                                          </td>
+                                          <td>
+                                             <select class="form-control">
+                                                <option value="Tom Capaul">Tom Capaul</option>
+                                                <option value="Stu Steiner" selected>Stu Steiner</option>
+                                                <option value="Grader">Grader</option>
+                                             </select>
+                                          </td>
+                                          <td>
+                                             <select class="form-control">
+                                                <option value="Tom">Tom</option>
+                                                <option value="Stu">Stu</option>
+                                                <option value="Grader" selected>Grader</option>
+                                             </select>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </td>
+                        </tr>
+                        <tr class="cat-row" data-id="cat-2" data-target="#cat-2" aria-expanded="true">
+                           <td>
+                              <select class="form-control" name="category">
+                                 <option value="Data Abstraction">Data Abstraction</option>
+                                 <option value="General">General</option>
+                                 <option value="Linked List">Linked List</option>
+                                 <option value="Recursion" selected>Recursion</option>
+                              </select>
+                           </td>
+                           <td>
+                              <input type="text" class="form-control" name="max-score">
+                           </td>
+                           <td>
+                              <div class="btn-group" role="group">
+                                 <button type="button" class="btn btn-info" data-target="#cat-2" data-toggle="collapse">Graders</button>
+                                 <button type="button" class="btn btn-danger" data-id="2">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    <span class="sr-only">Delete</span>
+                                 </button>
+                              </div>
+                           </td>
+                        </tr>
+                        <tr class="cat-grader-row" data-id="cat-2">
+                           <td class="graders" colspan="100%">
+                              <div class="collapse" id="cat-2">
+                                    <table class="table table-condensed">
+                                       <tbody>
+                                          <tr class="active">
+                                             <td>
+                                                <button type="button" class="btn btn-primary">Add Grader</button>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                              </div>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
          </div>
+
          <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button" data-action="create">Create</button>

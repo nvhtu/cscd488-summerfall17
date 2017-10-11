@@ -50,6 +50,7 @@ function loadUserInfo(data)
 }
 
 function loadSettings(data) {
+    //console.log(data);
    _settings = data.reduce(function(obj, item) {
       obj[item.name] = item.value;
       return obj;
@@ -575,7 +576,7 @@ function onclickRegisterStudent(e)
 function loadRosterTableHasGrades(item)
 {
     var passedResult = "";
-    if(item.passed = 1)
+    if(item.passed == 1)
     {
         passedResult = "Passed";
     }
@@ -595,13 +596,13 @@ function loadRosterTableHasGrades(item)
     var summaryRow = buildItemRow(summaryData, false);
 
     //create info button
-    var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + summaryData.id + '" data-toggle="collapse"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
+    var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
     $bttnInfo.attr("data-id", summaryData.id);
     $bttnInfo.click(onclickInfoGrade);
     //create edit button
-    var $bttnEdit = $('<button type="button" class="btn btn-warning" data-target="#item-' + summaryData.id + '" data-toggle="collapse"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
+    var $bttnEdit = $('<button type="button" class="btn btn-warning" data-action="edit-grade" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
-    $bttnEdit.click(onclickEditGrade);
+    $bttnEdit.click(onclickEditBtn);
 
     summaryRow.append(
         $('<td class="btns">').append(
@@ -639,13 +640,13 @@ function buildGradeDetailRow(detailData, namesArr)
 
     for (var property in detailData) 
     {
-        if (detailData.hasOwnProperty(property) && !property.includes("Max")) 
+        if (detailData.hasOwnProperty(property) && !property.includes("Max") && !property.includes("ID")) 
         {
             if(detailData[property] != detailData.id)
             {
                 detailRowHTML += '<tr class="active">'
                                 + '<th>' + property + ': </th>'
-                                + '<td> <input type="number" class="cat-grade-input" disabled value="' + detailData[property] + '">' + ' / ' + detailData[property + " Max"] + '</td>'
+                                + '<td> <input type="number" class="cat-grade-input" disabled value="' + detailData[property] + '" data-id="' + detailData[property + " ID"] + '"' + ' min="0" max="' + detailData[property + " Max"] + '">' + ' / ' + detailData[property + " Max"] + '</td>'
                                 + '</tr>';
                 
                 
@@ -659,16 +660,35 @@ function buildGradeDetailRow(detailData, namesArr)
     return detailRowHTML;
 }
 
-function onclickEditGrade(e)
+function onclickEditBtn(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $("#item-" + itemId + " .cat-grade-input").prop("disabled", false);
+    
+    if(e.currentTarget.dataset["action"] == "edit-grade")
+    {
+        //console.log("edit");
+        toggleSaveBtn(true, itemId);
+        
+    }
+    else
+        if(e.currentTarget.dataset["action"] == "save-grade")
+        {
+            //console.log("save");
+
+            onSaveGrade(e);
+
+            toggleSaveBtn(false, itemId);
+            
+        }
 }
 
 function onclickInfoGrade(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $detailRow =  $("#roster-table-wrapper tr[class='item-detail-row'] div[id='item-" + itemId + "']");
+
+    toggleSaveBtn(false, itemId)
 
     //Disable Edit button collapse when the detail row has been expanded earlier by Info button
     if(!$detailRow.hasClass("in"))
@@ -681,4 +701,79 @@ function onclickInfoGrade(e)
     }
 
     
+}
+
+function toggleSaveBtn(isSave, itemId)
+{
+    if(isSave)
+    {
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").removeClass("glyphicon-pencil");
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").addClass("glyphicon-floppy-disk");
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-action", "save-grade");
+    }
+    else
+    {
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").removeClass("glyphicon-floppy-disk");
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").addClass("glyphicon-pencil");
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-action", "edit-grade");
+    }
+}
+
+function onSaveGrade(e)
+{
+    var studentId = e.currentTarget.dataset["id"];
+    var examId = e.currentTarget.dataset["examId"];
+    
+    var catArrs = $("#roster-table-wrapper tr[class='item-detail-row'][data-id='item-" + studentId + "'] .cat-grade-input"); 
+    var totalGrade = 0;
+
+    $.each(catArrs, function(i, theCat){
+
+        $.post("../grade/update_cat_grade.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        grader_exam_cat_id: theCat.dataset["id"],
+        grade: theCat.value,
+        student_id: studentId});
+
+        totalGrade += parseInt(theCat.value);
+    });
+
+    //Get and parse the max total grade 
+    var row = $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + studentId + "']").children();
+    var maxGrade = parseInt(((row[4].innerText).split("/"))[1]);
+ 
+    row[4].innerText = totalGrade + "/" + maxGrade;
+
+    $("#item-" + studentId + " .cat-grade-input").prop("disabled", true);
+
+    var passingGrade = parseInt(e.currentTarget.dataset["passingGrade"]);
+
+    if(totalGrade >= passingGrade)
+    {
+        row[5].innerText = "Passed";
+
+        $.post("../grade/update_exam_grade.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId,
+        grade: totalGrade,
+        passed: 1,
+        student_id: studentId});
+    }
+    else
+    {
+        row[5].innerText = "Fail";
+
+        $.post("../grade/update_exam_grade.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId,
+        grade: totalGrade,
+        passed: 0,
+        student_id: studentId});
+    }
 }

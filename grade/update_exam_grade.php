@@ -17,6 +17,7 @@
     $examId = $_POST["exam_id"];
     $studentId = $_POST["student_id"];
     $grade = $_POST["grade"];
+    $passed = $_POST["passed"];
 
 
     //User authentication
@@ -31,10 +32,10 @@
 
     //Update student exam grade
     $sqlUpdateExamGrade = "UPDATE exam_grade
-                        SET grade = :grade
-                        WHERE student_id = :student_id";
+                        SET grade = :grade, passed = :passed
+                        WHERE student_id LIKE :student_id AND exam_id = :exam_id";
     
-    sqlExecute($sqlUpdateExamGrade, array('grade'=>$grade, 'student_id'=>$studentId), False);
+    sqlExecute($sqlUpdateExamGrade, array('grade'=>$grade, 'passed'=>$passed, 'student_id'=>$studentId, 'exam_id'=>$examId), False);
 
 
 ?>    

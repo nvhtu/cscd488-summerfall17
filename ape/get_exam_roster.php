@@ -37,7 +37,7 @@
         {
             $studentId = $sqlStudentsResult[$i]["student_id"];
 
-            $sqlSelectExams = "SELECT grade, possible_grade, passed
+            $sqlSelectExams = "SELECT grade, possible_grade, passing_grade, passed, exam.exam_id
             FROM exam JOIN exam_grade ON exam.exam_id = exam_grade.exam_id
             WHERE exam_grade.student_id LIKE :student_id AND exam_grade.exam_id = :exam_id";
 
@@ -52,7 +52,7 @@
                 }
     
     
-                $sqlSelectCats = "SELECT name as cat, grade, exam_id, possible_grade
+                $sqlSelectCats = "SELECT name as cat, grade, exam_id, possible_grade, cg.grader_exam_cat_id
                 FROM category_grade AS cg JOIN assigned_grader AS ag ON cg.grader_exam_cat_id = ag.grader_exam_cat_id 
                 JOIN exam_category AS ec ON ag.exam_cat_id = ec.exam_cat_id
                 JOIN category as cat ON ec.cat_id = cat.cat_id
@@ -68,6 +68,7 @@
                 {
                     $sqlStudentsResult[$i]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["grade"];
                     $sqlStudentsResult[$i]["cats"][$sqlResultCats[$theCat]["cat"] . " Max"] = $sqlResultCats[$theCat]["possible_grade"];
+                    $sqlStudentsResult[$i]["cats"][$sqlResultCats[$theCat]["cat"] . " ID"] = $sqlResultCats[$theCat]["grader_exam_cat_id"];
                 }
             }
             

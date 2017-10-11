@@ -13,6 +13,7 @@
     $requesterType = $_POST["requester_type"];
     $allowedType = array("Admin", "Teacher");
 
+    $graderExamCatId = $_POST["grader_exam_cat_id"];
     $studentId = $_POST["student_id"];
     $grade = $_POST["grade"];
 
@@ -28,7 +29,7 @@
     //Add student category grade
     $sqlUpdateCatGrade = "UPDATE category_grade
                         SET grade = :grade
-                        WHERE student_id = :student_id";
+                        WHERE student_id LIKE :student_id AND grader_exam_cat_id = :grader_exam_cat_id";
     
-    sqlExecute($sqlUpdateCatGrade, array('grade'=>$grade, 'student_id'=>$studentId), False);
+    sqlExecute($sqlUpdateCatGrade, array('grade'=>$grade, 'student_id'=>$studentId, 'grader_exam_cat_id'=>$graderExamCatId), False);
 ?>    

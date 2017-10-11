@@ -84,20 +84,21 @@ function init()
       todayHighlight: true,
       autoclose: true,
     };
-    $('input[name="date"]').datepicker(options).on('changeDate', appendQuarter);
+    $('input[name="date"]').datepicker(options).on('changeDate', autofillQuarter);
 
     $('input[name="date"]').keydown(function(){
         return false;
     });
 }
 
-function appendQuarter(e) {
-   var input = $(this);
-   input.val(input.val() + getQuarter(input.val()));
+function autofillQuarter() {
+   var quarter = getQuarter( $(this).val() );
+   $("#quarter").text(quarter);
+   $('input[name="quarter"]').val(quarter);
 }
 
 function getQuarter(date) {
-   var quarter = "",
+   var quarter = "(Select valid date)",
    curDate = new Date(date),
    winterStart = new Date(_settings.winterStart),
    winterEnd = new Date(_settings.winterEnd),
@@ -121,12 +122,7 @@ function getQuarter(date) {
       quarter = "Fall";
    }
 
-   if (quarter !== "") {
-      return " (" + quarter + " Quarter)";
-   }
-   else {
-      return "";
-   }
+   return quarter;
 }
 
 function isBetweenDates(cur, lower, upper) {

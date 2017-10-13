@@ -18,6 +18,8 @@ var _locData = Array();
 
 var _selectedTab = "Open";
 
+var _isEditing = false;
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -437,9 +439,11 @@ function loadRosterTable(data)
                                 break;
 
                 case "Archived":
+                                loadRosterTableHasGrades(item);
                             break;
 
                 case "Hidden":
+                loadRosterTableHasGrades(item);
                             break;
             }
 
@@ -602,13 +606,26 @@ function loadRosterTableHasGrades(item)
     //create edit button
     var $bttnEdit = $('<button type="button" class="btn btn-warning" data-action="edit-grade" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
-    $bttnEdit.click(onclickEditBtn);
+    $bttnEdit.click(onclickEditGrade);
 
-    summaryRow.append(
-        $('<td class="btns">').append(
-        $('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, ' ')
-        )
-    );
+    if(_selectedTab == "Grading")
+    {
+        summaryRow.append(
+            $('<td class="btns">').append(
+            $('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, ' ')
+            )
+        );
+    }
+    else if(_selectedTab == "Archived" || _selectedTab == "Hidden")
+    {
+        summaryRow.append(
+            $('<td class="btns">').append(
+            $('<div class="btn-group" role="group">').append($bttnInfo, ' ')
+            )
+        );
+    }
+
+    
     
     var detailData = {
         id: item.student_id
@@ -660,7 +677,7 @@ function buildGradeDetailRow(detailData, namesArr)
     return detailRowHTML;
 }
 
-function onclickEditBtn(e)
+function onclickEditGrade(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $("#item-" + itemId + " .cat-grade-input").prop("disabled", false);
@@ -668,7 +685,8 @@ function onclickEditBtn(e)
     if(e.currentTarget.dataset["action"] == "edit-grade")
     {
         //console.log("edit");
-        toggleSaveBtn(true, itemId);
+        _isEditing = true;
+        toggleSaveGradeBtn(true, itemId);
         
     }
     else
@@ -678,7 +696,8 @@ function onclickEditBtn(e)
 
             onSaveGrade(e);
 
-            toggleSaveBtn(false, itemId);
+            toggleSaveGradeBtn(false, itemId);
+            _isEditing = false;
             
         }
 }
@@ -688,22 +707,53 @@ function onclickInfoGrade(e)
     var itemId = e.currentTarget.dataset["id"];
     $detailRow =  $("#roster-table-wrapper tr[class='item-detail-row'] div[id='item-" + itemId + "']");
 
-    toggleSaveBtn(false, itemId)
-
-    //Disable Edit button collapse when the detail row has been expanded earlier by Info button
-    if(!$detailRow.hasClass("in"))
+    if(_isEditing)
     {
-        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+        if (confirm("Are you sure you want to discard unsaved changes?"))
+        {
+            $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
+            
+                toggleSaveGradeBtn(false, itemId)
+            
+                //Disable Edit button collapse when the detail row has been expanded earlier by Info button
+                if(!$detailRow.hasClass("in"))
+                {
+                    $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+                }
+                else
+                {
+                    $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+                }
+            _isEditing = false;
+        }
+        else
+        {
+            e.stopPropagation();
+        }
     }
     else
     {
-        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+        $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
+        
+            toggleSaveGradeBtn(false, itemId)
+        
+            //Disable Edit button collapse when the detail row has been expanded earlier by Info button
+            if(!$detailRow.hasClass("in"))
+            {
+                $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+            }
+            else
+            {
+                $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+            }
     }
+
+    
 
     
 }
 
-function toggleSaveBtn(isSave, itemId)
+function toggleSaveGradeBtn(isSave, itemId)
 {
     if(isSave)
     {

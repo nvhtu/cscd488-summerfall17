@@ -22,14 +22,14 @@ $_SESSION['loggedIn'] = true;
 //Array includes: "UserType", "Email", "FirstName", "Ewuid", "LastName"
 $userAttr = phpCAS::getAttributes();
 $_SESSION['ewuid'] = $userAttr["Ewuid"];
-echo $_SESSION['ewuid'];
-echo $_SESSION["phpCAS"]["attributes"]["UserType"];
+//echo $_SESSION['ewuid'];
+//echo $_SESSION["phpCAS"]["attributes"]["UserType"];
 
 if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
 {
     if(checkStudentExists($_SESSION['ewuid']))
     {
-        echo "login success. Go home";
+        header('Location: ../view/');
     }
     else 
     {
@@ -39,7 +39,33 @@ if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
 }
 else 
 {
+    $_SESSION["phpCAS"]["attributes"]["UserType"] = checkFacultyTypes();
+    header('Location: ../view/');
+}
+
+function checkFacultyTypes()
+{
+    $userId = $_SESSION['ewuid'];
+    $userTypes = Array();
+
+    $sqlCheckFaculty = "SELECT type 
+                        FROM faculty
+                        WHERE faculty_id = :faculty_id";
     
+    $sqlResult = sqlExecute($sqlCheckFaculty, array('faculty_id'=>$userId), True);
+    if(count($sqlResult) == 0)
+    {
+        
+    }
+    else 
+    {
+        foreach($sqlResult as $theType)
+        {
+            array_push($userTypes, $theType["type"]);
+        }
+    }
+
+    return $userTypes;
 }
 
 ?>

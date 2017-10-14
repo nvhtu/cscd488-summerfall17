@@ -75,14 +75,14 @@
         //Delete all records that matching with the account id in account table
         //=> Delete all roles and add those from the request
 
-        $sqlDeleteAllRoles = "DELETE FROM account WHERE account_id LIKE :id";
+        $sqlDeleteAllRoles = "DELETE FROM faculty WHERE faculty_id LIKE :id";
         sqlExecute($sqlDeleteAllRoles, array(':id'=>$id), False);
         
 
         foreach ($type as $theType)
         {
 
-            $sqlAddAccount = "INSERT INTO account(account_id, type)
+            $sqlAddAccount = "INSERT INTO faculty(faculty_id, type)
                             VALUES (:id, :type)";
 
             sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$theType), False);

@@ -56,9 +56,9 @@
     function checkNotStudentExists($accountId)
     {
         $sqlCheckExists = "SELECT COUNT(*) as count
-                                FROM account
-                                WHERE account_id = :account_id";
-        $sqlResult = sqlExecute($sqlCheckExists, array('account_id'=>$accountId), TRUE);
+                                FROM faculty
+                                WHERE faculty_id = :faculty_id";
+        $sqlResult = sqlExecute($sqlCheckExists, array('faculty_id'=>$accountId), TRUE);
 
         if($sqlResult[0]["count"] == 0)
         {

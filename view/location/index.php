@@ -5,7 +5,7 @@ require_once "../../util/get_cur_user_info.php";
 
 $userInfo = getCurUserInfo(False);
 
-if(strcmp($userInfo["userType"], "Admin") == 0 || strcmp($userInfo["userType"], "Teacher") == 0)
+if(in_array("Admin", $userInfo["userType"]) || in_array("Teacher", $userInfo["userType"]))
 {
     $page = "location";
     $title = "EWU APE Locations";
@@ -15,6 +15,8 @@ if(strcmp($userInfo["userType"], "Admin") == 0 || strcmp($userInfo["userType"], 
 }
 else 
 {
-    die("Unauthorized access");
+    require_once "../includes/error_handler.php";
+    loadErrorPage("401");
+    die();
 }
 ?>

@@ -4,20 +4,24 @@
     $userInfo = getCurUserInfo(False);
     $page = "";
 
-    switch ($userInfo["userType"])
+    if(in_array("Admin", $userInfo["userType"]))
     {
-        case "Admin": $page = "admin_home";
-                        break;
-        case "Teacher": $page = "teacher_home";
-                        break;
-        case "Grader": $page = "grader_home";
-                        //$modalsArr = array("grader_home");
-                        break;
-        case "Student": $page = "student_home";
-                        $modalsArr = array("student_home");
-                        break;
+        $page = "admin_home";
     }
-    
+    else if(in_array("Teacher", $userInfo["userType"]))
+        {
+            $page = "teacher_home";
+        }
+        else if(in_array("Grader", $userInfo["userType"]))
+            {
+                $page = "grader_home";
+            }
+            else if(in_array("Student", $userInfo["userType"]))
+                {
+                    $page = "student_home";
+                    $modalsArr = array("student_home");
+                }
+
     $title = "EWU APE Home";
 
     require_once "../index.php";

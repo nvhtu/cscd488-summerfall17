@@ -5,7 +5,7 @@ require_once "../../util/get_cur_user_info.php";
 
 $userInfo = getCurUserInfo(False);
 
-if(strcmp($userInfo["userType"], "Grader") == 0)
+if(in_array("Grader", $userInfo["userType"]))
 {
     $page = "grade";
     $title = "EWU APE Grading";
@@ -15,6 +15,8 @@ if(strcmp($userInfo["userType"], "Grader") == 0)
 }
 else 
 {
-    die("Unauthorized access");
+    require_once "../includes/error_handler.php";
+    loadErrorPage("401");
+    die();
 }
 ?>

@@ -16,6 +16,42 @@ function loaded()
    });
 }
 
+function loadUserInfo(data)
+{
+    _userId = data.userId;
+    _userType = data.userType;
+    _userSessionId = data.userSession;
+
+    //Check all types of the user
+    //_userType variable is used for authentication only. On each operation that requires
+    //different type other than the one set in _userType, programmer needs to set requester_id parameter manually on an Ajax request
+    
+    //"Admin" type supercedes all other type therefore _userType gets "Admin"
+    //"Teacher" supercedes "Grader"
+    //"Student" type never has other type in data.userType array
+    if(data.userType.indexOf("Admin") != -1)
+    {
+        _userType = "Admin";
+    }
+    else 
+        if(data.userType.indexOf("Teacher") != -1)
+        {
+            _userType = "Teacher";
+        }
+        else
+            if(data.userType.indexOf("Grader") != -1)
+            {
+                _userType = "Grader";
+            }
+            else
+                if(data.userType.indexOf("Student") != -1)
+                {
+                    _userType = "Student";
+                }
+
+    init();    
+}
+
 function onClickSearch(e) {
    if (typeof e !== "undefined" && e.keyCode == 27) {
       $("#clear-search").trigger('click');

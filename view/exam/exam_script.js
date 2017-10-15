@@ -37,19 +37,6 @@ function loaded()
     $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
 }
 
-function loadUserInfo(data)
-{
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    init();
-    
-    $.get("../settings/get_settings.php", {
-      requester_id: _userId,
-      requester_type: _userType
-      }, loadSettings, "json");
-}
 
 function loadSettings(data) {
     //console.log(data);
@@ -61,6 +48,11 @@ function loadSettings(data) {
 
 function init()
 {
+    $.get("../settings/get_settings.php", {
+        requester_id: _userId,
+        requester_type: _userType
+        }, loadSettings, "json");
+
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);

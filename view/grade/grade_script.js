@@ -32,14 +32,6 @@ function loaded()
     $("[name='submit-graded-button'").click(function(e){submitForm(e, true);});
 }
 
-function loadUserInfo(data)
-{
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    init();    
-}
 
 function init()
 {
@@ -122,7 +114,7 @@ function submitSingleGrade(btn)
     var gecid = btn.attr("grader-exam-cat-id");
     
     var sendData = {requester_id: _userId,
-    requester_type: _userType,
+    requester_type: "Grader",
     requester_session_id: _userSessionId,
     grader_exam_cat_id: gecid,
     exam_id: btn.attr("exam-id"),
@@ -166,7 +158,7 @@ function getAllItems()
     
     $.get("../grade/get_assigned_exam_cat.php", 
         {requester_id: _userId,
-        requester_type: _userType,
+        requester_type: "Grader",
         requester_session_id: _userSessionId}, 
         function(data){
             loadTable(data);
@@ -182,7 +174,7 @@ function loadModal(assignedExamCats)
     $.each(assignedExamCats, function(i, graderExamCat){
         $.get("../grade/get_ungraded_seats.php", 
         {requester_id: _userId,
-        requester_type: _userType,
+        requester_type: "Grader",
         requester_session_id: _userSessionId,
         grader_exam_cat_id: graderExamCat.grader_exam_cat_id,
         exam_id: graderExamCat.exam_id}, 

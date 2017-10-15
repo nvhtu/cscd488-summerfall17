@@ -26,15 +26,6 @@ function loaded()
     });
 }
 
-function loadUserInfo(data)
-{
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    init();    
-}
-
 function init()
 {
     $("#requester-id").val(_userId);

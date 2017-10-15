@@ -21,20 +21,11 @@ function loaded()
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 }
 
-function loadUserInfo(data)
-{
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    getStudentInfo();
-    
-    
-    
-}
 
 function init()
 {
+    getStudentInfo();
+
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
@@ -50,9 +41,7 @@ function init()
             $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
     });
 
-    getAllLoc();
-
-    buildTable();
+    
 
     
 }
@@ -256,7 +245,9 @@ function getStudentInfo()
             _userRegisteredExam = item[0]["registered_exam"];
         }
         
-        init();
+        getAllLoc();
+        
+        buildTable();
     },
     "json");
 }

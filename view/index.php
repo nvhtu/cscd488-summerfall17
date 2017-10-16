@@ -136,6 +136,9 @@
    <script src="js/build_table.js"></script>
    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
    <script src="<?php echo $scriptPath; ?>"></script>
+   <?php if (strstr($page, 'exam')): ?>
+      <script src="exam/exam_modal_script.js"></script>
+   <?php endif ?>
 </body>
 
 </html>

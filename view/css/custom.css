@@ -220,3 +220,11 @@ body > .container {
 .footer li a {
    color: white;
 }
+
+.empty-panel-fix {
+   border-bottom: unset;
+}
+
+#cat-table .graders>select:not(:last-of-type) {
+   margin-bottom: 5px;   
+}

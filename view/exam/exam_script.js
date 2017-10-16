@@ -15,6 +15,8 @@ var _tableId = "main-table";
 var _formId = "main-form";
 
 var _locData = Array();
+var _catData = Array();
+var _graderData = Array();
 
 var _selectedTab = "Open";
 
@@ -39,7 +41,6 @@ function loaded()
 
 
 function loadSettings(data) {
-    //console.log(data);
    _settings = data.reduce(function(obj, item) {
       obj[item.name] = item.value;
       return obj;
@@ -67,6 +68,8 @@ function init()
     });
 
     getAllLoc();
+    getAllCat();
+    getAllGraders();
 
     buildTable();
     $(".main-table>thead th").not("th:last-of-type")
@@ -84,49 +87,8 @@ function init()
     $('input[name="date"]').keydown(function(){
         return false;
     });
-}
 
-function autofillQuarter() {
-   var quarter = getQuarter( $(this).val() );
-   $("#quarter").text(quarter);
-   $('input[name="quarter"]').val(quarter);
-}
-
-function getQuarter(date) {
-   var quarter = "(Select valid date)",
-   curDate = new Date(date),
-   winterStart = new Date(_settings.winterStart),
-   winterEnd = new Date(_settings.winterEnd),
-   springStart = new Date(_settings.springStart),
-   springEnd = new Date(_settings.springEnd),
-   summerStart = new Date(_settings.summerStart),
-   summerEnd = new Date(_settings.summerEnd),
-   fallStart = new Date(_settings.fallStart),
-   fallEnd = new Date(_settings.fallEnd);
-
-   if (isBetweenDates(curDate, winterStart, winterEnd)) {
-      quarter = "Winter";
-   }
-   else if (isBetweenDates(curDate, springStart, springEnd)) {
-      quarter = "Spring";
-   }
-   else if (isBetweenDates(curDate, summerStart, summerEnd)) {
-      quarter = "Summer";
-   }
-   else if (isBetweenDates(curDate, fallStart, fallEnd)) {
-      quarter = "Fall";
-   }
-
-   return quarter;
-}
-
-function isBetweenDates(cur, lower, upper) {
-   if (lower < upper) {
-      return lower <= cur && cur <= upper;
-   }
-   else {
-      return cur <= upper || cur >= lower;
-   }
+    $('#add-cat-btn').click(onclickAddCat);
 }
 
 function buildTable()
@@ -135,7 +97,6 @@ function buildTable()
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
-    
 }
 
 function buildItemSummaryRow(item)
@@ -182,46 +143,14 @@ function buildItemDetailRow(item)
 
 function loadTable(data) 
 {
-    //console.log(data);
     $.each(data, function(i, item) {
-
-        //console.log(item.state);
-
         var row = buildItemSummaryRow(item);
-
         var detailRow = buildItemDetailRow(item);
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
-        //console.log(detailExamRow);
-
-        //$("#" + _tableId).append(row);
-        //$("#" + _tableId).append(detailRow);
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
-}
-
-
-function getAllLoc()
-{
-    $.get("../location/get_all_locations.php",{
-                                requester_id: _userId,
-                                requester_type: _userType,
-                                requester_session_id: _userSessionId
-                                }, populateLocation, "json");
-}
-
-function populateLocation(data)
-{
-    $("#ape-loc").empty();
-    _locData = data;
-    $.each(data, function(i){
-        $("#ape-loc").append($("<option></option")
-                    .attr("value", data[i]["loc_id"])
-                    .text(data[i]["name"]));
-    });
-
-    getAllItems();
 }
 
 function submitForm (e)
@@ -284,7 +213,6 @@ function updateItem()
 function onclickCreate()
 {
     clearForm();
-    //getAllLoc();
     $(".modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");

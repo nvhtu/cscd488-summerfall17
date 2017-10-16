@@ -22,16 +22,7 @@
             $title = "EWU APE Exams";
             $tableTitle = "Exams";
             $tableTabs = array();
-
-            if(in_array("Teacher", $userInfo["userType"]) && in_array("Admin", $userInfo["userType"]))
-            {
-                $tableTabs = array("Open", "In-class", "In Progress", "Grading", "Archived", "Hidden");
-            }
-            else 
-            {
-                $tableTabs = array("Open", "In Progress", "Grading", "Archived", "Hidden");
-            }
-            
+            $tableTabs = array("Open", "In Progress", "Grading", "Archived", "Hidden");
         }
         else
         {

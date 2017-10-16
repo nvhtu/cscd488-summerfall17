@@ -20,6 +20,7 @@
                 if(in_array("Admin", $userInfo["userType"]) && in_array("Teacher", $userInfo["userType"]))
                 {
                     adminType();
+                    teacherType();
                 }
             
                 if(in_array("Admin", $userInfo["userType"]) && in_array("Grader", $userInfo["userType"]))
@@ -37,6 +38,7 @@
 
         case 3: 
                 adminType();
+                teacherType();
                 graderType();
                 break;
     }
@@ -55,7 +57,7 @@
     function teacherType()
     {
         echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/?page=teacher_home">Teacher Home<span class="sr-only">(current)</span></a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php">Exams</a></li>
+        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php">In-class Exams</a></li>
         <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/user/index.php">Students</a></li>';
     }
 

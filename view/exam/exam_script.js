@@ -97,6 +97,8 @@ function buildTable()
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
+
+    getAllItems("Open");
 }
 
 function buildItemSummaryRow(item)
@@ -263,7 +265,10 @@ function onclickDelete(e)
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], textarea").val(""); 
+    $("#" + _formId).find("input[type=text], textarea").val("");
+    $("#quarter").html("(Select valid date)");
+    $("#cat-table > tbody").html("");
+    $("#cat-table").hide();
 }
 
 function getAllItems(state)

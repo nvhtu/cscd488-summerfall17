@@ -150,9 +150,10 @@ function buildItemDetailRow(item)
     return detailRow;
 }
 
-function onclickReport(item){
-
-    //use exam id and date along with roster info to build .csv
+function onclickReport(item)
+{
+    var downloadBtn = $("#report-modal").find("#submit-button");
+    //downloadBtn.prop("disabled", true);
     $.get("../ape/get_exam_roster.php", 
     {requester_id: _userId,
     requester_type: _userType,
@@ -160,8 +161,8 @@ function onclickReport(item){
     exam_id: item.exam_id,
     get_grade: 1}, 
     function(rosterData){
-        $("#report-modal").find("#submit-button").off("click");
-        $("#report-modal").find("#submit-button").click(function(){
+        downloadBtn.off("click");
+        downloadBtn.click(function(){
             onclickDownload(rosterData, item);
         });
     },
@@ -170,58 +171,57 @@ function onclickReport(item){
 
 function onclickDownload(rosterData, examData){
     var csvContent = "data:text/csv;charset=utf-8,";
+    
+    var i;
+    for(i = 0; _locData[i].loc_id != examData.location; i++);
+    var locName = _locData[i].name;
 
+    var csvHeader = [examData.name + " " + examData.quarter + " quarter " + examData.date + " " +
+        examData.start_time + " " + locName];
     var csvData = [];
-    csvData.push(selectExamData(examData));
+    csvData.push(csvHeader);
     csvData.push([]);
-    csvData.push(selectStudentData(rosterData));
+    csvData = selectStudentData(rosterData, examData.possible_grade, csvData);
     
     csvData.forEach(function(infoArray, index){
         dataString = infoArray.join(",");
         csvContent += index < csvData.length ? dataString + "\n" : dataString;
     }); 
 
-    console.log($("#download-link"));
     var encodedUri = encodeURI(csvContent);
     var link = $("#download-link");
     link.attr("href", encodedUri);
     link.attr("download", $("[name='file-name']").val() + ".csv");
 
-    link[0].click(); // This will download the data file named "my_data.csv".
+    link[0].click();
 }
 
-function selectExamData(examData){
-    examArr = [];
-    if($("#exam-name-checkbox").prop("checked")){
-        examArr.push("Exam Name:");
-        examArr.push(examData.name);
-    }
-    if($("#exam-loc-checkbox").prop("checked")){
-        examArr.push("Location:");
-        examArr.push(examData.location);
-    }
-    if($("#exam-date-checkbox").prop("checked")){
-        examArr.push("Date:");
-        examArr.push(examData.date);
-    }
-    if($("#exam-qtr-checkbox").prop("checked")){
-        examArr.push("Quarter:");
-        examArr.push(examData.quarter);
-    }
-    if($("#exam-time-checkbox").prop("checked")){
-        examArr.push("Starting Time:");
-        examArr.push(examData.start_time);
-    }
-    if($("#exam-passing-checkbox").prop("checked")){
-        examArr.push("Passing Score:");
-        examArr.push(examData.passing_grade);
-    }
-    //add max grade//
-    return examArr;
-}
+function selectStudentData(rosterData, possibleGrade, csvData){
+    console.log(rosterData);
+    var studentHeaders = [];
 
-function selectStudentData(rosterData){
-    return ["student shit"];
+    if($("#student-name-checkbox").prop('checked'))
+        studentHeaders.push("First Name", "Last Name");
+    if($("#student-id-checkbox").prop('checked'))
+        studentHeaders.push("EWU ID");
+    if($("#student-email-checkbox").prop('checked'))
+        studentHeaders.push("Email");
+    if($("#student-cat-grade-checkbox").prop('checked'))
+        //loop through categories
+    if($("#student-exam-grade-checkbox").prop('checked'))
+        studentHeaders.push("Final Score");
+    if($("#student-result-checkbox").prop('checked'))
+        studentHeaders.push("Pass/Fail");
+    if($("#student-seat-checkbox").prop('checked'))
+        studentHeaders.push("Seat Number");
+    if($("#student-state-checkbox").prop('checked'))
+        studentHeaders.push("State");
+
+    csvData.push(studentHeaders);
+    /*$.each(rosterData, function(index, student){
+
+    })*/
+    return csvData;
 }
 
 function loadTable(data) 

@@ -265,8 +265,9 @@ function onclickDelete(e)
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], textarea").val("");
+    $("#" + _formId).find("input[type=text], input[type=hidden], textarea").val("");
     $("#quarter").html("(Select valid date)");
+    $("#possible-grade").html("(Sum of categories)");
     $("#cat-table > tbody").empty();
     $("#cat-table").hide();
     $('#add-cat-btn').prop("disabled",false);

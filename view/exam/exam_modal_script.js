@@ -171,15 +171,9 @@ function onclickDeleteGrader(e) {
 }
 
 function buildCatRow() {
-   var rowHTML = '<tr class="cat-row" data-id="cat-' + _catCount + '" data-target="#cat-' + _catCount + '" aria-expanded="true">';
-
-   rowHTML += '<td>' +
-                 '<select class="form-control" name="category">' +
-                    _catOptions +
-                 '</select>' +
-              '</td>';
-
-   rowHTML += '<td><input type="text" class="form-control" name="max-score"></td>';
+   //create max score input
+   var $maxScore = $('<input type="text" class="form-control" name="max-score">');
+   $maxScore.focusout(calcPossibleGrade);
 
    //create grader button
    var $btnGraders = $('<button type="button" class="btn btn-info" data-target="#cat-' + _catCount + '" data-toggle="collapse">Graders</button>');   
@@ -189,13 +183,21 @@ function buildCatRow() {
    $btnDel.attr("data-id", _catCount);
    $btnDel.click(onclickDeleteCat);
 
-   return $(rowHTML).append(
-      $('<td>').append(
-         $('<div class="btn-group" role="group">').append(
-            $btnGraders, $btnDel, ' '
+   return $('<tr class="cat-row" aria-expanded="true">').attr("data-id", "cat-" + _catCount).attr("data-target", "#cat-" + _catCount).append(
+         $('<td>').append(
+            $('<select class="form-control" name="category">').append(
+               _catOptions
+            )
+         ),
+         $('<td>').append(
+            $maxScore
+         ),
+         $('<td>').append(
+            $('<div class="btn-group" role="group">').append(
+               $btnGraders, $btnDel, ' '
+            )
          )
-      )
-   );
+      );
 }
 
 function buildCatGraderRow() {
@@ -268,4 +270,17 @@ function autofillQuarter() {
    var quarter = getQuarter( $(this).val() );
    $("#quarter").text(quarter);
    $('input[name="quarter"]').val(quarter);
+}
+
+function calcPossibleGrade() {
+   var possibleGrade = 0;
+   $('#cat-table input[name="max-score"]').each(function(i, item) {
+      var score = parseInt(item.value, 10)
+      if (!isNaN(score)) {
+         possibleGrade += parseInt(item.value, 10);
+      }
+   });
+
+   $('#possible-grade').text(possibleGrade);
+   $('input[name="possible_grade"]').val(possibleGrade);
 }

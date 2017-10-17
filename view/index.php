@@ -1,5 +1,6 @@
 <?php 
 
+  $projectDirName = "cscd488-summerfall17";
   require_once "../../util/get_cur_user_info.php";
   $userInfo = getCurUserInfo(false);
 
@@ -11,7 +12,7 @@
    }
 
 
-   $projectDirName = "cscd488-summerfall17";
+   
    $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view";
    $path = $absPath . DIRECTORY_SEPARATOR . $page . DIRECTORY_SEPARATOR . $page;
    //$modalPath = $path . "_modal.html";
@@ -22,7 +23,7 @@
 
    $scriptPath = "";
 
-   if(strcmp($userInfo["userType"], "Student") == 0)
+   if(in_array("Student", $userInfo["userType"]))
    {
       $scriptPath = "$page/" . $page . "_student_script.js";
    }
@@ -95,12 +96,30 @@
           </div>
 
             <?php 
-               if (strstr($page, 'home')) {
-                  require_once $path . $page . ".html";
-               } else {
-                  if (isset($tableTabs)) {
+               if (strstr($page, 'home')) 
+               {
+                 if(isset($isError) && $isError)
+                 {
+                   ?><div class="error-page-msg"><?php echo $errorMsg?></div><?php
+                 }
+                 else 
+                 {
+                    if(isset($_GET["page"]))
+                    {
+                      $page = $_GET["page"];
+                    }
+                    require_once $path . $page . ".html";
+                 }
+                  
+               } 
+               else 
+               {
+                  if (isset($tableTabs)) 
+                  {
                      require_once $tabbedTablePath;
-                  } else {
+                  } 
+                  else 
+                  {
                      require_once $tablePath;
                   }
                }
@@ -117,6 +136,9 @@
    <script src="js/build_table.js"></script>
    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
    <script src="<?php echo $scriptPath; ?>"></script>
+   <?php if (strstr($page, 'exam')): ?>
+      <script src="exam/exam_modal_script.js"></script>
+   <?php endif ?>
 </body>
 
 </html>

@@ -70,7 +70,7 @@
                   <div class="form-group">
                      <label for="location" class="col-sm-4 control-label">Location:</label>
                      <div class="col-sm-8">
-                        <select class="form-control" name="location" id="ape-loc"></select>
+                        <select class="form-control" name="location"></select>
                      </div>
                   </div>
 
@@ -78,6 +78,7 @@
                      <label for="state" class="col-sm-4 control-label">State:</label>
                      <div class="col-sm-8">
                         <select class="form-control" name="state">
+                           <option hidden disabled selected value>Choose a state</option>
                            <option value="Open">Open</option>
                            <option value="In_Progress">In progress</option>
                            <option value="Grading">Grading</option>
@@ -99,12 +100,12 @@
 
             <div class="col-md-6" id="col-right">
                <div class="panel panel-default">
-                  <div class="panel-heading clearfix">
+                  <div class="panel-heading clearfix empty-panel-fix" id="cat-heading">
                      <h4 class="panel-title pull-left">Categories:</h4>
                      <button type="button" class="btn btn-primary pull-right" id="add-cat-btn">Add Category</button>
                   </div>
                   
-                  <table class="table table-condensed">
+                  <table class="table table-condensed" id="cat-table" style="display: none;">
                      <thead>
                         <tr>
                            <th>Name</th>
@@ -113,101 +114,6 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <tr class="cat-row" data-id="cat-1" data-target="#cat-1" aria-expanded="true">
-                           <td>
-                              <select class="form-control" name="category">
-                                 <option value="Data Abstraction">Data Abstraction</option>
-                                 <option value="General">General</option>
-                                 <option value="Linked List" selected>Linked List</option>
-                                 <option value="Recursion">Recursion</option>
-                              </select>
-                           </td>
-                           <td>
-                              <input type="text" class="form-control" name="max-score">
-                           </td>
-                           <td>
-                              <div class="btn-group" role="group">
-                                 <button type="button" class="btn btn-info" data-target="#cat-1" data-toggle="collapse">Graders</button>
-                                 <button type="button" class="btn btn-danger" data-id="1">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    <span class="sr-only">Delete</span>
-                                 </button>
-                              </div>
-                           </td>
-                        </tr>
-                        <tr class="cat-grader-row" data-id="cat-1">
-                           <td class="graders" colspan="100%">
-                              <div class="collapse" id="cat-1">
-                                 <table class="table table-condensed">
-                                    <tbody>
-                                       <tr class="active">
-                                          <td>
-                                             <button type="button" class="btn btn-primary">Add Grader</button>
-                                          </td>
-                                          <td>
-                                             <select class="form-control">
-                                                <option value="Tom Capaul" selected>Tom Capaul</option>
-                                                <option value="Stu Steiner">Stu Steiner</option>
-                                                <option value="Grader">Grader</option>
-                                             </select>
-                                          </td>
-                                          <td>
-                                             <select class="form-control">
-                                                <option value="Tom Capaul">Tom Capaul</option>
-                                                <option value="Stu Steiner" selected>Stu Steiner</option>
-                                                <option value="Grader">Grader</option>
-                                             </select>
-                                          </td>
-                                          <td>
-                                             <select class="form-control">
-                                                <option value="Tom">Tom</option>
-                                                <option value="Stu">Stu</option>
-                                                <option value="Grader" selected>Grader</option>
-                                             </select>
-                                          </td>
-                                       </tr>
-                                    </tbody>
-                                 </table>
-                              </div>
-                           </td>
-                        </tr>
-                        <tr class="cat-row" data-id="cat-2" data-target="#cat-2" aria-expanded="true">
-                           <td>
-                              <select class="form-control" name="category">
-                                 <option value="Data Abstraction">Data Abstraction</option>
-                                 <option value="General">General</option>
-                                 <option value="Linked List">Linked List</option>
-                                 <option value="Recursion" selected>Recursion</option>
-                              </select>
-                           </td>
-                           <td>
-                              <input type="text" class="form-control" name="max-score">
-                           </td>
-                           <td>
-                              <div class="btn-group" role="group">
-                                 <button type="button" class="btn btn-info" data-target="#cat-2" data-toggle="collapse">Graders</button>
-                                 <button type="button" class="btn btn-danger" data-id="2">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    <span class="sr-only">Delete</span>
-                                 </button>
-                              </div>
-                           </td>
-                        </tr>
-                        <tr class="cat-grader-row" data-id="cat-2">
-                           <td class="graders" colspan="100%">
-                              <div class="collapse" id="cat-2">
-                                    <table class="table table-condensed">
-                                       <tbody>
-                                          <tr class="active">
-                                             <td>
-                                                <button type="button" class="btn btn-primary">Add Grader</button>
-                                             </td>
-                                          </tr>
-                                       </tbody>
-                                    </table>
-                              </div>
-                           </td>
-                        </tr>
                      </tbody>
                   </table>
                </div>

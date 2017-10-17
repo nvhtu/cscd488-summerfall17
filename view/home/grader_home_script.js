@@ -21,12 +21,8 @@ function loaded()
     $(".msg-box").hide();
 }
 
-function loadUserInfo(data)
+function init()
 {
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession; 
-    
     loadGradingProgress();
 }
 

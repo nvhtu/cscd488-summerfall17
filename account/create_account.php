@@ -57,7 +57,7 @@
         foreach ($type as $theType)
         {
 
-            $sqlAddAccount = "INSERT INTO account(account_id, type)
+            $sqlAddAccount = "INSERT INTO faculty(faculty_id, type)
                             VALUES (:id, :type)";
 
             sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$theType), False);

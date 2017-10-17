@@ -15,7 +15,7 @@
 
 	$requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
-    $allowedType = array("Admin");
+    $allowedType = array("Admin", "Teacher", "Grader", "Student");
 	
 	//Sanitize the input
 	$requesterId = sanitize_input($requesterId);

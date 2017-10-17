@@ -15,8 +15,12 @@ var _tableId = "main-table";
 var _formId = "main-form";
 
 var _locData = Array();
+var _catData = Array();
+var _graderData = Array();
 
 var _selectedTab = "Open";
+
+var _isEditing = false;
 
 $(document).ready(loaded);
 
@@ -35,22 +39,8 @@ function loaded()
     $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
 }
 
-function loadUserInfo(data)
-{
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    init();
-    
-    $.get("../settings/get_settings.php", {
-      requester_id: _userId,
-      requester_type: _userType
-      }, loadSettings, "json");
-}
 
 function loadSettings(data) {
-    //console.log(data);
    _settings = data.reduce(function(obj, item) {
       obj[item.name] = item.value;
       return obj;
@@ -59,6 +49,11 @@ function loadSettings(data) {
 
 function init()
 {
+    $.get("../settings/get_settings.php", {
+        requester_id: _userId,
+        requester_type: _userType
+        }, loadSettings, "json");
+
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
@@ -73,6 +68,8 @@ function init()
     });
 
     getAllLoc();
+    getAllCat();
+    getAllGraders();
 
     buildTable();
     $(".main-table>thead th").not("th:last-of-type")
@@ -90,49 +87,8 @@ function init()
     $('input[name="date"]').keydown(function(){
         return false;
     });
-}
 
-function autofillQuarter() {
-   var quarter = getQuarter( $(this).val() );
-   $("#quarter").text(quarter);
-   $('input[name="quarter"]').val(quarter);
-}
-
-function getQuarter(date) {
-   var quarter = "(Select valid date)",
-   curDate = new Date(date),
-   winterStart = new Date(_settings.winterStart),
-   winterEnd = new Date(_settings.winterEnd),
-   springStart = new Date(_settings.springStart),
-   springEnd = new Date(_settings.springEnd),
-   summerStart = new Date(_settings.summerStart),
-   summerEnd = new Date(_settings.summerEnd),
-   fallStart = new Date(_settings.fallStart),
-   fallEnd = new Date(_settings.fallEnd);
-
-   if (isBetweenDates(curDate, winterStart, winterEnd)) {
-      quarter = "Winter";
-   }
-   else if (isBetweenDates(curDate, springStart, springEnd)) {
-      quarter = "Spring";
-   }
-   else if (isBetweenDates(curDate, summerStart, summerEnd)) {
-      quarter = "Summer";
-   }
-   else if (isBetweenDates(curDate, fallStart, fallEnd)) {
-      quarter = "Fall";
-   }
-
-   return quarter;
-}
-
-function isBetweenDates(cur, lower, upper) {
-   if (lower < upper) {
-      return lower <= cur && cur <= upper;
-   }
-   else {
-      return cur <= upper || cur >= lower;
-   }
+    $('#add-cat-btn').click(onclickAddCat);
 }
 
 function buildTable()
@@ -141,7 +97,8 @@ function buildTable()
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
-    
+
+    getAllItems("Open");
 }
 
 function buildItemSummaryRow(item)
@@ -181,53 +138,115 @@ function buildItemDetailRow(item)
     };
 
     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+
+    if(_selectedTab == "Archived" && item.state == "Archived"){
+        var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
+        detailData.report = reportBtn;
+        namesArr.push("Report");
+    }
+
     var detailRow = buildDetailRow(detailData, namesArr);
 
     return detailRow;
 }
 
+function onclickReport(item){
+
+    //use exam id and date along with roster info to build .csv
+    $.get("../ape/get_exam_roster.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    exam_id: item.exam_id,
+    get_grade: 1}, 
+    function(rosterData){
+        $("#report-modal").find("#submit-button").off("click");
+        $("#report-modal").find("#submit-button").click(function(){
+            onclickDownload(rosterData, item);
+        });
+    },
+    "json");
+}
+
+function onclickDownload(rosterData, examData){
+    var csvContent = "data:text/csv;charset=utf-8,";
+
+    var csvData = [];
+    csvData.push(selectExamData(examData));
+    csvData.push([]);
+    csvData.push(selectStudentData(rosterData));
+    
+    csvData.forEach(function(infoArray, index){
+        dataString = infoArray.join(",");
+        csvContent += index < csvData.length ? dataString + "\n" : dataString;
+    }); 
+
+    console.log($("#download-link"));
+    var encodedUri = encodeURI(csvContent);
+    var link = $("#download-link");
+    link.attr("href", encodedUri);
+    link.attr("download", $("[name='file-name']").val() + ".csv");
+
+    link[0].click(); // This will download the data file named "my_data.csv".
+}
+
+function selectExamData(examData){
+    examArr = [];
+    if($("#exam-name-checkbox").prop("checked")){
+        examArr.push("Exam Name:");
+        examArr.push(examData.name);
+    }
+    if($("#exam-loc-checkbox").prop("checked")){
+        examArr.push("Location:");
+        examArr.push(examData.location);
+    }
+    if($("#exam-date-checkbox").prop("checked")){
+        examArr.push("Date:");
+        examArr.push(examData.date);
+    }
+    if($("#exam-qtr-checkbox").prop("checked")){
+        examArr.push("Quarter:");
+        examArr.push(examData.quarter);
+    }
+    if($("#exam-time-checkbox").prop("checked")){
+        examArr.push("Starting Time:");
+        examArr.push(examData.start_time);
+    }
+    if($("#exam-passing-checkbox").prop("checked")){
+        examArr.push("Passing Score:");
+        examArr.push(examData.passing_grade);
+    }
+    //add max grade//
+    return examArr;
+}
+
+function selectStudentData(rosterData){
+    return ["student shit"];
+}
+
 function loadTable(data) 
 {
-    //console.log(data);
     $.each(data, function(i, item) {
-
-        //console.log(item.state);
-
         var row = buildItemSummaryRow(item);
-
         var detailRow = buildItemDetailRow(item);
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
+<<<<<<< HEAD
+        
+        if(_selectedTab == "Archived" && item.state == "Archived"){
+            $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
+                onclickReport(item);
+            });
+        }
         //console.log(detailExamRow);
 
         //$("#" + _tableId).append(row);
         //$("#" + _tableId).append(detailRow);
+=======
+>>>>>>> 59040acfdc12047c8f25c3e1763d79c71dd847ca
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
-}
-
-
-function getAllLoc()
-{
-    $.get("../location/get_all_locations.php",{
-                                requester_id: _userId,
-                                requester_type: _userType,
-                                requester_session_id: _userSessionId
-                                }, populateLocation, "json");
-}
-
-function populateLocation(data)
-{
-    $("#ape-loc").empty();
-    _locData = data;
-    $.each(data, function(i){
-        $("#ape-loc").append($("<option></option")
-                    .attr("value", data[i]["loc_id"])
-                    .text(data[i]["name"]));
-    });
-
-    getAllItems();
 }
 
 function submitForm (e)
@@ -290,7 +309,6 @@ function updateItem()
 function onclickCreate()
 {
     clearForm();
-    //getAllLoc();
     $(".modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
@@ -341,7 +359,10 @@ function onclickDelete(e)
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], textarea").val(""); 
+    $("#" + _formId).find("input[type=text], textarea").val("");
+    $("#quarter").html("(Select valid date)");
+    $("#cat-table > tbody").html("");
+    $("#cat-table").hide();
 }
 
 function getAllItems(state)
@@ -437,9 +458,11 @@ function loadRosterTable(data)
                                 break;
 
                 case "Archived":
+                                loadRosterTableHasGrades(item);
                             break;
 
                 case "Hidden":
+                loadRosterTableHasGrades(item);
                             break;
             }
 
@@ -602,13 +625,26 @@ function loadRosterTableHasGrades(item)
     //create edit button
     var $bttnEdit = $('<button type="button" class="btn btn-warning" data-action="edit-grade" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
-    $bttnEdit.click(onclickEditBtn);
+    $bttnEdit.click(onclickEditGrade);
 
-    summaryRow.append(
-        $('<td class="btns">').append(
-        $('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, ' ')
-        )
-    );
+    if(_selectedTab == "Grading")
+    {
+        summaryRow.append(
+            $('<td class="btns">').append(
+            $('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, ' ')
+            )
+        );
+    }
+    else if(_selectedTab == "Archived" || _selectedTab == "Hidden")
+    {
+        summaryRow.append(
+            $('<td class="btns">').append(
+            $('<div class="btn-group" role="group">').append($bttnInfo, ' ')
+            )
+        );
+    }
+
+    
     
     var detailData = {
         id: item.student_id
@@ -660,7 +696,7 @@ function buildGradeDetailRow(detailData, namesArr)
     return detailRowHTML;
 }
 
-function onclickEditBtn(e)
+function onclickEditGrade(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $("#item-" + itemId + " .cat-grade-input").prop("disabled", false);
@@ -668,7 +704,8 @@ function onclickEditBtn(e)
     if(e.currentTarget.dataset["action"] == "edit-grade")
     {
         //console.log("edit");
-        toggleSaveBtn(true, itemId);
+        _isEditing = true;
+        toggleSaveGradeBtn(true, itemId);
         
     }
     else
@@ -678,7 +715,8 @@ function onclickEditBtn(e)
 
             onSaveGrade(e);
 
-            toggleSaveBtn(false, itemId);
+            toggleSaveGradeBtn(false, itemId);
+            _isEditing = false;
             
         }
 }
@@ -688,22 +726,53 @@ function onclickInfoGrade(e)
     var itemId = e.currentTarget.dataset["id"];
     $detailRow =  $("#roster-table-wrapper tr[class='item-detail-row'] div[id='item-" + itemId + "']");
 
-    toggleSaveBtn(false, itemId)
-
-    //Disable Edit button collapse when the detail row has been expanded earlier by Info button
-    if(!$detailRow.hasClass("in"))
+    if(_isEditing)
     {
-        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+        if (confirm("Are you sure you want to discard unsaved changes?"))
+        {
+            $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
+            
+                toggleSaveGradeBtn(false, itemId)
+            
+                //Disable Edit button collapse when the detail row has been expanded earlier by Info button
+                if(!$detailRow.hasClass("in"))
+                {
+                    $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+                }
+                else
+                {
+                    $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+                }
+            _isEditing = false;
+        }
+        else
+        {
+            e.stopPropagation();
+        }
     }
     else
     {
-        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+        $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
+        
+            toggleSaveGradeBtn(false, itemId)
+        
+            //Disable Edit button collapse when the detail row has been expanded earlier by Info button
+            if(!$detailRow.hasClass("in"))
+            {
+                $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").removeAttr("data-toggle");
+            }
+            else
+            {
+                $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-toggle", "collapse");
+            }
     }
+
+    
 
     
 }
 
-function toggleSaveBtn(isSave, itemId)
+function toggleSaveGradeBtn(isSave, itemId)
 {
     if(isSave)
     {

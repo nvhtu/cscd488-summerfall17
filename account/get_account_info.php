@@ -109,8 +109,8 @@
         else 
         {
             $sqlGetAllNonStudents = "SELECT user_id, f_name, l_name, email
-                                    FROM account JOIN user ON account_id = user_id
-                                    WHERE account.type LIKE :type";
+                                    FROM faculty JOIN user ON faculty_id = user_id
+                                    WHERE faculty.type LIKE :type";
             $sqlResult = sqlExecute($sqlGetAllNonStudents, array('type'=>$type), True);
         }
 
@@ -168,8 +168,8 @@
            
         //get account type
         $sqlGetType = "SELECT type
-                        FROM account
-                        WHERE account_id = :id";
+                        FROM faculty
+                        WHERE faculty_id = :id";
         $sqlResultType = sqlExecute($sqlGetType, array('id'=>$id), True);
 
         //type is stored as an array

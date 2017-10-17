@@ -39,8 +39,8 @@
             else //Admin, Grader, Teacher account
             {
                 $sqlSelectAccount = "SELECT type
-                                    FROM account
-                                    WHERE account_id = :requester_id";
+                                    FROM faculty
+                                    WHERE faculty_id = :requester_id";
 
                 $sqlResult = sqlExecute($sqlSelectAccount, array(':requester_id'=>$requesterId), True);
 

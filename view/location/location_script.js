@@ -29,14 +29,6 @@ function loaded()
     $("#submit-button").click(submitForm);
 }
 
-function loadUserInfo(data)
-{
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    init();    
-}
 
 function init()
 {

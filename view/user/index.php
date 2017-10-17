@@ -11,21 +11,34 @@
     $tableTabs = array();
     $modalsArr = array("user", "upload", "lookup");
 
-    switch ($userInfo["userType"])
+    if(in_array("Grader", $userInfo["userType"]) && count($userInfo["userType"]) == 1)
     {
-        case "Admin": 
-                        $title = "EWU APE Users";
-                        $tableTitle = "Users";
-                        $tableTabs = array("Admins", "Teachers", "Graders", "Students");
-                        break;
-
-        case "Teacher": 
-                        $title = "EWU APE Students";
-                        $tableTitle = "Students";
-                        $tableTabs = array("Students");
-                        break;
+        require_once "../includes/error_handler.php";
+        loadErrorPage("401");
+        die();
+    }
+    
+    if(in_array("Teacher", $userInfo["userType"]) && in_array("Admin", $userInfo["userType"]))
+    {
+        $title = "EWU APE Users";
+        $tableTitle = "Users";
+        $tableTabs = array("Admins", "Teachers", "Graders", "Students");
+    }
+    else 
+    {
+        if(in_array("Teacher", $userInfo["userType"]))
+        {
+            $title = "EWU APE Students";
+            $tableTitle = "Students";
+            $tableTabs = array("Students");
+        }
+        else
+        {
+            $title = "EWU APE Users";
+            $tableTitle = "Users";
+            $tableTabs = array("Admins", "Teachers", "Graders", "Students");
+        }
         
-        default:    die("Unauthorized access");
     }
 
    require_once "../index.php";

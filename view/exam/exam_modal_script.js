@@ -120,7 +120,7 @@ function onclickDeleteCat(e) {
       $('#add-cat-btn').prop("disabled",false);
    }
 
-   if (rowCount <= 0) {
+   if (rowCount == 0) {
       $('#cat-table').hide();
       $('#cat-heading').toggleClass('empty-panel-fix', true);
    }
@@ -130,19 +130,43 @@ function onclickAddGrader(e) {
    var catId = e.currentTarget.dataset["id"],
    $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
 
+   var $btnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
+   $btnDel.attr("data-id", catId);
+   $btnDel.click(onclickDeleteGrader);
+
    $curRow.find('td.graders').append(
-      $('<select class="form-control" name="grader">').append(
-         _graderOptions
+      $('<div class="input-group">').append(
+         $('<select class="form-control" name="grader">').append(
+            _graderOptions
+         ),
+         $('<span class="input-group-btn">').append(
+            $btnDel
+         )
       )
    );
 
-   var graderCount = $curRow.find('td.graders>select').length;
-   if (graderCount == 1) {
-      $curRow.find('tr').show();
+   var graderCount = $curRow.find('td.graders select').length;
+   if (graderCount > 0) {
+      $curRow.find('td.graders').show();
    }
    
    if (graderCount >= _graderData.length) {
-      $curRow.find('button').prop("disabled",true);
+      $curRow.find('button.btn-primary').prop("disabled",true);
+   }
+}
+
+function onclickDeleteGrader(e) {
+   var catId = e.currentTarget.dataset["id"];
+   $(e.currentTarget).parent().parent().remove();
+   
+   $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
+   var graderCount = $curRow.find('td.graders select').length;
+   if (graderCount == 0) {
+      $curRow.find('td.graders').hide();
+   }
+   
+   if (graderCount < _graderData.length) {
+      $curRow.find('button').prop("disabled",false);
    }
 }
 
@@ -191,8 +215,8 @@ function buildCatGraderRow() {
                         )
                      ),
                      $('<tr class="active">').append(
-                        $('<td class="graders">')
-                     ).hide()
+                        $('<td class="graders">').hide()
+                     )
                   )
                )
             )

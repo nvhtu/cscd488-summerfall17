@@ -267,8 +267,10 @@ function clearForm()
 {
     $("#" + _formId).find("input[type=text], textarea").val("");
     $("#quarter").html("(Select valid date)");
-    $("#cat-table > tbody").html("");
+    $("#cat-table > tbody").empty();
     $("#cat-table").hide();
+    $('#add-cat-btn').prop("disabled",false);
+    $('#cat-heading').toggleClass('empty-panel-fix', true);
 }
 
 function getAllItems(state)

@@ -232,7 +232,6 @@ function loadTable(data)
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
-<<<<<<< HEAD
         
         if(_selectedTab == "Archived" && item.state == "Archived"){
             $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
@@ -243,8 +242,6 @@ function loadTable(data)
 
         //$("#" + _tableId).append(row);
         //$("#" + _tableId).append(detailRow);
-=======
->>>>>>> 59040acfdc12047c8f25c3e1763d79c71dd847ca
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }

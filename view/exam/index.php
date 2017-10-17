@@ -6,13 +6,9 @@
    $tableTitle = "Exams";
    
 
-<<<<<<< HEAD
+
+  
    $modalsArr = array("exam", "roster", "report", "../user/lookup");
-=======
->>>>>>> 59040acfdc12047c8f25c3e1763d79c71dd847ca
-
-
-    $modalsArr = array("exam", "roster", "../user/lookup");
 
     if(in_array("Student", $userInfo["userType"]))
     {

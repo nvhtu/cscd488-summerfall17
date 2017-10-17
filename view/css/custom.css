@@ -225,6 +225,6 @@ body > .container {
    border-bottom: unset;
 }
 
-#cat-table .graders>select:not(:last-of-type) {
-   margin-bottom: 5px;   
+#cat-table .graders .input-group:not(:last-of-type) {
+   margin-bottom: 5px;
 }

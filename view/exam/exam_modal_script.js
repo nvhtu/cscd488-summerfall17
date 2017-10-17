@@ -120,7 +120,7 @@ function onclickDeleteCat(e) {
       $('#add-cat-btn').prop("disabled",false);
    }
 
-   if (rowCount <= 0) {
+   if (rowCount == 0) {
       $('#cat-table').hide();
       $('#cat-heading').toggleClass('empty-panel-fix', true);
    }
@@ -130,32 +130,50 @@ function onclickAddGrader(e) {
    var catId = e.currentTarget.dataset["id"],
    $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
 
+   var $btnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
+   $btnDel.attr("data-id", catId);
+   $btnDel.click(onclickDeleteGrader);
+
    $curRow.find('td.graders').append(
-      $('<select class="form-control" name="grader">').append(
-         _graderOptions
+      $('<div class="input-group">').append(
+         $('<select class="form-control" name="grader">').append(
+            _graderOptions
+         ),
+         $('<span class="input-group-btn">').append(
+            $btnDel
+         )
       )
    );
 
-   var graderCount = $curRow.find('td.graders>select').length;
-   if (graderCount == 1) {
-      $curRow.find('tr').show();
+   var graderCount = $curRow.find('td.graders select').length;
+   if (graderCount > 0) {
+      $curRow.find('td.graders').show();
    }
    
    if (graderCount >= _graderData.length) {
-      $curRow.find('button').prop("disabled",true);
+      $curRow.find('button.btn-primary').prop("disabled",true);
+   }
+}
+
+function onclickDeleteGrader(e) {
+   var catId = e.currentTarget.dataset["id"];
+   $(e.currentTarget).parent().parent().remove();
+   
+   $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
+   var graderCount = $curRow.find('td.graders select').length;
+   if (graderCount == 0) {
+      $curRow.find('td.graders').hide();
+   }
+   
+   if (graderCount < _graderData.length) {
+      $curRow.find('button').prop("disabled",false);
    }
 }
 
 function buildCatRow() {
-   var rowHTML = '<tr class="cat-row" data-id="cat-' + _catCount + '" data-target="#cat-' + _catCount + '" aria-expanded="true">';
-
-   rowHTML += '<td>' +
-                 '<select class="form-control" name="category">' +
-                    _catOptions +
-                 '</select>' +
-              '</td>';
-
-   rowHTML += '<td><input type="text" class="form-control" name="max-score"></td>';
+   //create max score input
+   var $maxScore = $('<input type="text" class="form-control" name="max-score">');
+   $maxScore.focusout(calcPossibleGrade);
 
    //create grader button
    var $btnGraders = $('<button type="button" class="btn btn-info" data-target="#cat-' + _catCount + '" data-toggle="collapse">Graders</button>');   
@@ -165,13 +183,21 @@ function buildCatRow() {
    $btnDel.attr("data-id", _catCount);
    $btnDel.click(onclickDeleteCat);
 
-   return $(rowHTML).append(
-      $('<td>').append(
-         $('<div class="btn-group" role="group">').append(
-            $btnGraders, $btnDel, ' '
+   return $('<tr class="cat-row" aria-expanded="true">').attr("data-id", "cat-" + _catCount).attr("data-target", "#cat-" + _catCount).append(
+         $('<td>').append(
+            $('<select class="form-control" name="category">').append(
+               _catOptions
+            )
+         ),
+         $('<td>').append(
+            $maxScore
+         ),
+         $('<td>').append(
+            $('<div class="btn-group" role="group">').append(
+               $btnGraders, $btnDel, ' '
+            )
          )
-      )
-   );
+      );
 }
 
 function buildCatGraderRow() {
@@ -191,8 +217,8 @@ function buildCatGraderRow() {
                         )
                      ),
                      $('<tr class="active">').append(
-                        $('<td class="graders">')
-                     ).hide()
+                        $('<td class="graders">').hide()
+                     )
                   )
                )
             )
@@ -244,4 +270,17 @@ function autofillQuarter() {
    var quarter = getQuarter( $(this).val() );
    $("#quarter").text(quarter);
    $('input[name="quarter"]').val(quarter);
+}
+
+function calcPossibleGrade() {
+   var possibleGrade = 0;
+   $('#cat-table input[name="max-score"]').each(function(i, item) {
+      var score = parseInt(item.value, 10)
+      if (!isNaN(score)) {
+         possibleGrade += parseInt(item.value, 10);
+      }
+   });
+
+   $('#possible-grade').text(possibleGrade);
+   $('input[name="possible_grade"]').val(possibleGrade);
 }

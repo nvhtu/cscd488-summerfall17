@@ -27,7 +27,7 @@
     }
     else 
     {
-        $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num
+        $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num, email
         FROM exam_roster JOIN user ON exam_roster.student_id = user.user_id
         WHERE exam_id = :exam_id";
     

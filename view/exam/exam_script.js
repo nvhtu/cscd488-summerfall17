@@ -89,6 +89,10 @@ function init()
     });
 
     $('#add-cat-btn').click(onclickAddCat);
+
+    $('#report-modal').on('hidden.bs.modal', function () {
+        $("#report-modal").find("input[type='checkbox']").prop("checked", false);
+    })
 }
 
 function buildTable()
@@ -139,11 +143,11 @@ function buildItemDetailRow(item)
 
     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
 
-    if(_selectedTab == "Archived" && item.state == "Archived"){
-        var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
-        detailData.report = reportBtn;
-        namesArr.push("Report");
-    }
+    
+    var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
+    detailData.report = reportBtn;
+    namesArr.push("Report");
+
 
     var detailRow = buildDetailRow(detailData, namesArr);
 
@@ -152,8 +156,12 @@ function buildItemDetailRow(item)
 
 function onclickReport(item)
 {
-    var downloadBtn = $("#report-modal").find("#submit-button");
-    //downloadBtn.prop("disabled", true);
+    if(_selectedTab == "Archived")
+        $("#report-modal").find(".archived-only").show();
+    else
+        $("#report-modal").find(".archived-only").hide();
+    var downloadBtn = $("#report-modal").find("#download-button");
+    
     $.get("../ape/get_exam_roster.php", 
     {requester_id: _userId,
     requester_type: _userType,
@@ -167,6 +175,8 @@ function onclickReport(item)
         });
     },
     "json");
+
+    $("#report-modal").find("#file-name").val(item.name.split(' ').join('_'));
 }
 
 function onclickDownload(rosterData, examData){
@@ -176,12 +186,12 @@ function onclickDownload(rosterData, examData){
     for(i = 0; _locData[i].loc_id != examData.location; i++);
     var locName = _locData[i].name;
 
-    var csvHeader = [examData.name + " " + examData.quarter + " quarter " + examData.date + " " +
+    var csvHeader = [examData.name + ": " + examData.quarter + " Quarter " + examData.date + " " +
         examData.start_time + " " + locName];
     var csvData = [];
     csvData.push(csvHeader);
     csvData.push([]);
-    csvData = selectStudentData(rosterData, examData.possible_grade, csvData);
+    csvData = selectStudentData(rosterData, csvData);
     
     csvData.forEach(function(infoArray, index){
         dataString = infoArray.join(",");
@@ -196,31 +206,66 @@ function onclickDownload(rosterData, examData){
     link[0].click();
 }
 
-function selectStudentData(rosterData, possibleGrade, csvData){
+function selectStudentData(rosterData, csvData){
     console.log(rosterData);
     var studentHeaders = [];
+    var rosterProps = [];
 
-    if($("#student-name-checkbox").prop('checked'))
+    if($("#student-name-checkbox").prop('checked')){
+        rosterProps.push("f_name", "l_name");
         studentHeaders.push("First Name", "Last Name");
-    if($("#student-id-checkbox").prop('checked'))
+    }
+    if($("#student-id-checkbox").prop('checked')){
+        rosterProps.push("student_id");
         studentHeaders.push("EWU ID");
-    if($("#student-email-checkbox").prop('checked'))
+    }
+    if($("#student-email-checkbox").prop('checked')){
+        rosterProps.push("email");
         studentHeaders.push("Email");
-    if($("#student-cat-grade-checkbox").prop('checked'))
-        //loop through categories
-    if($("#student-exam-grade-checkbox").prop('checked'))
+    }
+    if($("#student-cat-grade-checkbox").prop('checked')){
+        $.each(_catData, function(index, cat){
+            var catName = cat.name;
+            if(typeof rosterData[0].cats[catName] != "undefined"){
+                rosterProps.push("cats");
+                rosterProps.push(catName);
+                studentHeaders.push(catName);
+            }
+        });
+    }
+    if($("#student-exam-grade-checkbox").prop('checked')){
+        rosterProps.push("grade");
         studentHeaders.push("Final Score");
-    if($("#student-result-checkbox").prop('checked'))
+    }
+    if($("#student-result-checkbox").prop('checked')){
+        rosterProps.push("passed");
         studentHeaders.push("Pass/Fail");
-    if($("#student-seat-checkbox").prop('checked'))
+    }
+    if($("#student-seat-checkbox").prop('checked')){
+        rosterProps.push("seat_num");
         studentHeaders.push("Seat Number");
-    if($("#student-state-checkbox").prop('checked'))
-        studentHeaders.push("State");
+    }
 
     csvData.push(studentHeaders);
-    /*$.each(rosterData, function(index, student){
-
-    })*/
+    $.each(rosterData, function(index, student){
+        var studentData = [];
+        for(var i = 0; i < rosterProps.length; i++){
+            if(rosterProps[i] == "cats"){
+                i++;
+                studentData.push(student.cats[rosterProps[i]] + " out of " + student.cats[rosterProps[i] + " Max"]);
+            }
+            else if(rosterProps[i] == "grade"){
+                studentData.push(student.grade + " out of " + student.possible_grade);
+            }
+            else if(rosterProps[i] == "passed"){
+                studentData.push(student.passed == "1" ? "Pass" : "Fail");
+            }
+            else{
+                studentData.push(student[rosterProps[i]]);
+            }
+        }
+        csvData.push(studentData);
+    })
     return csvData;
 }
 
@@ -233,15 +278,11 @@ function loadTable(data)
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
         
-        if(_selectedTab == "Archived" && item.state == "Archived"){
-            $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
-                onclickReport(item);
-            });
-        }
-        //console.log(detailExamRow);
-
-        //$("#" + _tableId).append(row);
-        //$("#" + _tableId).append(detailRow);
+        
+        $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
+            onclickReport(item);
+        });
+        
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }

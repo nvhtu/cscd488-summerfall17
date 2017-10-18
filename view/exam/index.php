@@ -1,18 +1,19 @@
 <?php 
-   require_once "../../util/get_cur_user_info.php";
-   $userInfo = getCurUserInfo(false);
-   $page = "exam";
-   $title = "EWU APE Exams";
-   $tableTitle = "Exams";
-   
+    require_once "../../util/get_cur_user_info.php";
+    $userInfo = getCurUserInfo(false);
+    $page = "exam";
+    $title = "EWU APE Exams";
+    $tableTitle = "Exams";
+    //Strings in $modalsArr are the modal HTML file names minus "_modal.html" E.g. "roster_modal.html" -> "roster"
+    $modalsArr = array("exam", "roster", "../user/lookup");
+    //Strings in $jsArr are the JS file names minus "_script.js" E.g. "exam_student_script.js" -> "exam_student"
+    $jsArr = array();
 
-
-  
-   $modalsArr = array("exam", "roster", "report", "../user/lookup");
 
     if(in_array("Student", $userInfo["userType"]))
     {
         $tableTitle = "Exams History";
+        $jsArr = array("exam_student");
     }
     else
     {
@@ -23,6 +24,7 @@
             $tableTitle = "Exams";
             $tableTabs = array();
             $tableTabs = array("Open", "In Progress", "Grading", "Archived", "Hidden");
+            $jsArr = array("exam", "exam_modal");
         }
         else
         {

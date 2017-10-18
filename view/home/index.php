@@ -3,6 +3,7 @@
     require_once "../../util/get_cur_user_info.php";
     $userInfo = getCurUserInfo(False);
     $page = "";
+    $jsArr = array();
 
     if(in_array("Admin", $userInfo["userType"]))
     {

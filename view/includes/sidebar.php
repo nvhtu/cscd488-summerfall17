@@ -56,7 +56,7 @@
 
     function teacherType()
     {
-        echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/?page=teacher_home">Teacher Home<span class="sr-only">(current)</span></a></li>
+        echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/index.php?page=teacher_home">Teacher Home<span class="sr-only">(current)</span></a></li>
         <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php">In-class Exams</a></li>
         <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/user/index.php">Students</a></li>';
     }

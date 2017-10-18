@@ -10,7 +10,10 @@ if(in_array("Admin", $userInfo["userType"]) || in_array("Teacher", $userInfo["us
     $page = "location";
     $title = "EWU APE Locations";
     $tableTitle = "Locations";
+    //Strings in $modalsArr are the modal HTML file names minus "_modal.html" E.g. "roster_modal.html" -> "roster"
     $modalsArr = array("location");
+    //Strings in $jsArr are the JS file names minus "_script.js" E.g. "exam_student_script.js" -> "exam_student"
+    $jsArr = array("location");
     require_once "../index.php";
 }
 else 

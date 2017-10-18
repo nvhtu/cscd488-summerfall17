@@ -19,25 +19,12 @@
    $tablePath = $absPath . DIRECTORY_SEPARATOR . "table.php";
    $tabbedTablePath = $absPath . DIRECTORY_SEPARATOR . "tabbedTable.php";
    //$bodyPath = $path . "_table.html";
-   //$scriptPath = $path . "_script.js";
 
-   $scriptPath = "";
-
-   if(in_array("Student", $userInfo["userType"]))
-   {
-      $scriptPath = "$page/" . $page . "_student_script.js";
-   }
-   else 
-   {
-      $scriptPath = "$page/" . $page . "_script.js";
-   }
 
 
    if (strstr($page, 'home'))
    {
       $path = $absPath . DIRECTORY_SEPARATOR . "home" . DIRECTORY_SEPARATOR;
-      $scriptPath = "home/" . $page . "_script.js";
-      //$modalPath = "home/" . $page . "_modal.html";
    }
 
 ?>
@@ -135,10 +122,23 @@
    <script src="js/script.js"></script>
    <script src="js/build_table.js"></script>
    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-   <script src="<?php echo $scriptPath; ?>"></script>
-   <?php if (strstr($page, 'exam')): ?>
-      <script src="exam/exam_modal_script.js"></script>
-   <?php endif ?>
+   
+   
+   <?php 
+   if (isset($jsArr))
+   {
+        if (strstr($page, 'home'))
+        {
+          ?> <script src="<?php echo "home/" . $page . "_script.js";?>"></script> 
+        <?php
+        }
+        foreach($jsArr as $theScript)
+        {
+          ?> <script src="<?php echo $page . "/" . $theScript . "_script.js";?>"></script>
+        <?php
+        }
+    }  
+   ?>
 </body>
 
 </html>

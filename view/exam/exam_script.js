@@ -138,9 +138,90 @@ function buildItemDetailRow(item)
     };
 
     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+
+    if(_selectedTab == "Archived" && item.state == "Archived"){
+        var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
+        detailData.report = reportBtn;
+        namesArr.push("Report");
+    }
+
     var detailRow = buildDetailRow(detailData, namesArr);
 
     return detailRow;
+}
+
+function onclickReport(item)
+{
+    var downloadBtn = $("#report-modal").find("#submit-button");
+    //downloadBtn.prop("disabled", true);
+    $.get("../ape/get_exam_roster.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    exam_id: item.exam_id,
+    get_grade: 1}, 
+    function(rosterData){
+        downloadBtn.off("click");
+        downloadBtn.click(function(){
+            onclickDownload(rosterData, item);
+        });
+    },
+    "json");
+}
+
+function onclickDownload(rosterData, examData){
+    var csvContent = "data:text/csv;charset=utf-8,";
+    
+    var i;
+    for(i = 0; _locData[i].loc_id != examData.location; i++);
+    var locName = _locData[i].name;
+
+    var csvHeader = [examData.name + " " + examData.quarter + " quarter " + examData.date + " " +
+        examData.start_time + " " + locName];
+    var csvData = [];
+    csvData.push(csvHeader);
+    csvData.push([]);
+    csvData = selectStudentData(rosterData, examData.possible_grade, csvData);
+    
+    csvData.forEach(function(infoArray, index){
+        dataString = infoArray.join(",");
+        csvContent += index < csvData.length ? dataString + "\n" : dataString;
+    }); 
+
+    var encodedUri = encodeURI(csvContent);
+    var link = $("#download-link");
+    link.attr("href", encodedUri);
+    link.attr("download", $("[name='file-name']").val() + ".csv");
+
+    link[0].click();
+}
+
+function selectStudentData(rosterData, possibleGrade, csvData){
+    console.log(rosterData);
+    var studentHeaders = [];
+
+    if($("#student-name-checkbox").prop('checked'))
+        studentHeaders.push("First Name", "Last Name");
+    if($("#student-id-checkbox").prop('checked'))
+        studentHeaders.push("EWU ID");
+    if($("#student-email-checkbox").prop('checked'))
+        studentHeaders.push("Email");
+    if($("#student-cat-grade-checkbox").prop('checked'))
+        //loop through categories
+    if($("#student-exam-grade-checkbox").prop('checked'))
+        studentHeaders.push("Final Score");
+    if($("#student-result-checkbox").prop('checked'))
+        studentHeaders.push("Pass/Fail");
+    if($("#student-seat-checkbox").prop('checked'))
+        studentHeaders.push("Seat Number");
+    if($("#student-state-checkbox").prop('checked'))
+        studentHeaders.push("State");
+
+    csvData.push(studentHeaders);
+    /*$.each(rosterData, function(index, student){
+
+    })*/
+    return csvData;
 }
 
 function loadTable(data) 
@@ -151,6 +232,16 @@ function loadTable(data)
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
+        
+        if(_selectedTab == "Archived" && item.state == "Archived"){
+            $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
+                onclickReport(item);
+            });
+        }
+        //console.log(detailExamRow);
+
+        //$("#" + _tableId).append(row);
+        //$("#" + _tableId).append(detailRow);
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
@@ -265,10 +356,13 @@ function onclickDelete(e)
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], textarea").val("");
+    $("#" + _formId).find("input[type=text], input[type=hidden], textarea").val("");
     $("#quarter").html("(Select valid date)");
-    $("#cat-table > tbody").html("");
+    $("#possible-grade").html("(Sum of categories)");
+    $("#cat-table > tbody").empty();
     $("#cat-table").hide();
+    $('#add-cat-btn').prop("disabled",false);
+    $('#cat-heading').toggleClass('empty-panel-fix', true);
 }
 
 function getAllItems(state)

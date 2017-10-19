@@ -32,7 +32,7 @@
     //Add student exam grade
     $sqlUpdatePassed = "UPDATE exam_grade
                         SET passed = :passed
-                        WHERE student_id = :student_id";
+                        WHERE student_id LIKE :student_id";
     
     sqlExecute($sqlUpdatePassed, array('passed'=>$passed, 'student_id'=>$studentId), False);
 

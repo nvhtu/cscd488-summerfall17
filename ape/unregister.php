@@ -22,7 +22,7 @@
 	$allowedType = array("Student");
 	user_auth($student_id, "Student", $allowedType);
 	
-	sqlExecute("DELETE FROM exam_roster WHERE exam_id = :exam AND student_id = :student",
+	sqlExecute("DELETE FROM exam_roster WHERE exam_id = :exam AND student_id LIKE :student",
 				array(':exam' => $exam_id, ':student' => $student_id),
 				false);
 

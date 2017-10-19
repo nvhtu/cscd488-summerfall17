@@ -5,7 +5,7 @@
     $title = "EWU APE Exams";
     $tableTitle = "Exams";
     //Strings in $modalsArr are the modal HTML file names minus "_modal.html" E.g. "roster_modal.html" -> "roster"
-    $modalsArr = array("exam", "roster", "../user/lookup");
+    $modalsArr = array("exam", "roster", "report", "../user/lookup");
     //Strings in $jsArr are the JS file names minus "_script.js" E.g. "exam_student_script.js" -> "exam_student"
     $jsArr = array();
 

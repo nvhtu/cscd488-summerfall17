@@ -77,7 +77,7 @@ function getCatInfo(examInfo, ungradedSeats, item){
 
 function generateProgressBar(catInfo, examInfo, ungradedSeats, item){
     var num_graded = item.num_student - ungradedSeats.length;
-    var percent = (num_graded / item.num_student) * 100;
+    var percent = ((num_graded / item.num_student) * 100).toFixed(2);
     var infohtml =  "<div class='row' style='margin-top:15px'>" +
                         "<div class='col-sm-4'><strong>Grading Progress for " + catInfo[0].name + ":</strong></div>" +
                         "<div class='progress' style='margin-right:10px'>" +

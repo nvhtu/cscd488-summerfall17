@@ -19,7 +19,7 @@
     if($getGrade == 0)
     {
         $sqlGetRoster = "SELECT student_id, f_name, l_name, seat_num
-        FROM exam_roster JOIN user ON exam_roster.student_id = user.user_id
+        FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
         WHERE exam_id = :exam_id";
     
         $sqlResult = sqlExecute($sqlGetRoster, array(":exam_id"=>$examId), true);
@@ -27,8 +27,8 @@
     }
     else 
     {
-        $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num
-        FROM exam_roster JOIN user ON exam_roster.student_id = user.user_id
+        $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num, email
+        FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
         WHERE exam_id = :exam_id";
     
         $sqlStudentsResult = sqlExecute($sqlGetRosterStudents, array(":exam_id"=>$examId), true);

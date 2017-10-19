@@ -23,7 +23,7 @@
     {
         $sqlCheckExists = "SELECT COUNT(*) as count
                                 FROM student
-                                WHERE student_id = :student_id";
+                                WHERE student_id LIKE :student_id";
         $sqlResult = sqlExecute($sqlCheckExists, array('student_id'=>$studentId), TRUE);
 
         if($sqlResult[0]["count"] == 0)
@@ -40,7 +40,7 @@
     {
         $sqlCheckExists = "SELECT COUNT(*) as count
                                 FROM user
-                                WHERE user_id = :user_id";
+                                WHERE user_id LIKE :user_id";
         $sqlResult = sqlExecute($sqlCheckExists, array('user_id'=>$accountId), TRUE);
 
         if($sqlResult[0]["count"] == 0)
@@ -57,7 +57,7 @@
     {
         $sqlCheckExists = "SELECT COUNT(*) as count
                                 FROM faculty
-                                WHERE faculty_id = :faculty_id";
+                                WHERE faculty_id LIKE :faculty_id";
         $sqlResult = sqlExecute($sqlCheckExists, array('faculty_id'=>$accountId), TRUE);
 
         if($sqlResult[0]["count"] == 0)

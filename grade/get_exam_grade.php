@@ -35,8 +35,8 @@
 
     //Get student exam grade
     $sqlGetExamGrade = "SELECT student_id, f_name, l_name, grade, passed
-                        FROM exam_grade JOIN user ON exam_grade.student_id = user.user_id
-                        WHERE student_id = :student_id";
+                        FROM exam_grade JOIN user ON exam_grade.student_id LIKE user.user_id
+                        WHERE student_id LIKE :student_id";
     
     $sqlResult = sqlExecute($sqlGetExamGrade, array('student_id'=>$studentId), True);
     

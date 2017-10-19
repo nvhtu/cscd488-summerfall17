@@ -28,9 +28,9 @@
     user_auth($requesterId, $requesterType, $allowedType);
 
     
-    $sql = "SELECT exam.name AS exam_name, category.name AS cat_name, exam_id, possible_grade, grader_exam_cat_id
-            FROM assigned_grader NATURAL JOIN exam_category NATURAL JOIN exam JOIN category USING (cat_id)
-            WHERE user_id = :id AND exam.state = 'grading'";
+    $sql = "SELECT exam.name AS exam_name, category.name AS cat_name, exam_id, exam_category.possible_grade, grader_exam_cat_id
+            FROM assigned_grader NATURAL JOIN exam_category JOIN exam USING (exam_id) JOIN category USING (cat_id)
+            WHERE user_id LIKE :id AND exam.state = 'grading'";
     
     $sqlResult = sqlExecute($sql, array(':id' => $requesterId), true);
 

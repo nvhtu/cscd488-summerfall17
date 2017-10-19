@@ -100,7 +100,7 @@
 
         $sqlUpdateUser = "UPDATE user
                         SET f_name = :fname, l_name = :lname, email = :email
-                        WHERE user_id = :id";
+                        WHERE user_id LIKE :id";
         
         sqlExecute($sqlUpdateUser, array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':id'=>$id), False);
     }
@@ -112,7 +112,7 @@
 
         $sqlUpdateStudent = "UPDATE student
                             SET state = :state
-                            WHERE student_id = :id";
+                            WHERE student_id LIKE :id";
 
         sqlExecute($sqlUpdateStudent, array(':state'=>$state, ':id'=>$id), False);
     }

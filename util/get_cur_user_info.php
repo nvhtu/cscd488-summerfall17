@@ -25,17 +25,17 @@
             
             
             /*$userInfo = array('userId' => '3333', 
-            'userType' => 'Student', 
+            'userType' => array('Student'), 
             'userSession' => '111111',
             'userFname' => 'A333AAA',
             'userLname' => 'B333',
-            'userEmail' => '1233Abc@xyz.c' );
-            /*$userInfo = array('userId' => '2223', 
-            'userType' => 'Grader', 
+            'userEmail' => '1233Abc@xyz.c' );/
+            $userInfo = array('userId' => '2223', 
+            'userType' => array('Grader'), 
             'userSession' => '111111',
             'userFname' => 'A3AAA',
             'userLname' => 'B3BBB',
-            'userEmail' => '12Abc@xyz.c' )*/;
+            'userEmail' => '12Abc@xyz.c' );*/
         }
         else 
         {

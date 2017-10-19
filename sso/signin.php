@@ -50,7 +50,7 @@ function checkFacultyTypes()
 
     $sqlCheckFaculty = "SELECT type 
                         FROM faculty
-                        WHERE faculty_id = :faculty_id";
+                        WHERE faculty_id LIKE :faculty_id";
     
     $sqlResult = sqlExecute($sqlCheckFaculty, array('faculty_id'=>$userId), True);
     if(count($sqlResult) == 0)

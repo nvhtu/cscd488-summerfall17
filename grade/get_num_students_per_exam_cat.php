@@ -27,8 +27,8 @@
     $sql = "SELECT grader_exam_cat_id, exam_id, cat_id, (SELECT COUNT(student_id)
                                                  FROM exam_roster ER
                                                  WHERE ER.exam_id = E.exam_id) num_student
-            FROM assigned_grader NATURAL JOIN exam_category NATURAL JOIN exam E
-            WHERE user_id = :requester_id AND E.state = 'grading'";
+            FROM assigned_grader NATURAL JOIN exam_category JOIN exam E USING (exam_id)
+            WHERE user_id LIKE :requester_id AND E.state = 'Grading'";
     
     $sqlResult = sqlExecute($sql, array(':requester_id' => $requesterId), true);
 

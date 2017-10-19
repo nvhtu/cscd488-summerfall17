@@ -25,7 +25,7 @@
             {
                 $sqlCountStudent = "SELECT COUNT(student_id) as count
                                     FROM student
-                                    WHERE student_id = :requester_id";
+                                    WHERE student_id LIKE :requester_id";
 
                 $sqlResult = sqlExecute($sqlCountStudent, array(':requester_id'=>$requesterId), True, False);
 
@@ -40,7 +40,7 @@
             {
                 $sqlSelectAccount = "SELECT type
                                     FROM faculty
-                                    WHERE faculty_id = :requester_id";
+                                    WHERE faculty_id LIKE :requester_id";
 
                 $sqlResult = sqlExecute($sqlSelectAccount, array(':requester_id'=>$requesterId), True);
 

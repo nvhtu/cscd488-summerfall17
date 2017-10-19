@@ -77,7 +77,7 @@
 
         $sqlCountStudent = "SELECT COUNT(student_id) as count
                                     FROM student
-                                    WHERE student_id = :id";
+                                    WHERE student_id LIKE :id";
 
         $sqlResult = sqlExecute($sqlCountStudent, array(':id'=>$id), True);
 
@@ -102,14 +102,14 @@
 
         if(strcmp($type, "Student") == 0)
         {
-            $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state FROM student JOIN user ON student_id = user_id";
+            $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state FROM student JOIN user ON student_id LIKE user_id";
             $sqlResult = sqlExecute($sqlGetAllStudents, null, True);
 
         }
         else 
         {
             $sqlGetAllNonStudents = "SELECT user_id, f_name, l_name, email
-                                    FROM faculty JOIN user ON faculty_id = user_id
+                                    FROM faculty JOIN user ON faculty_id LIKE user_id
                                     WHERE faculty.type LIKE :type";
             $sqlResult = sqlExecute($sqlGetAllNonStudents, array('type'=>$type), True);
         }
@@ -124,7 +124,7 @@
     function getStudentInfo($id)
     {
         $sqlGetAccount = "SELECT user_id, f_name, l_name, email, state
-                        FROM student JOIN user ON student_id = user_id
+                        FROM student JOIN user ON student_id LIKE user_id
                         WHERE user_id LIKE :id";
 
         $sqlResult = sqlExecute($sqlGetAccount, array('id'=>$id), True);
@@ -157,7 +157,7 @@
     {
         $sqlGetAccount = "SELECT *
                          FROM user
-                         WHERE user_id = :id";
+                         WHERE user_id LIKE :id";
 
         $sqlResult = sqlExecute($sqlGetAccount, array('id'=>$id), True);
 
@@ -169,7 +169,7 @@
         //get account type
         $sqlGetType = "SELECT type
                         FROM faculty
-                        WHERE faculty_id = :id";
+                        WHERE faculty_id LIKE :id";
         $sqlResultType = sqlExecute($sqlGetType, array('id'=>$id), True);
 
         //type is stored as an array

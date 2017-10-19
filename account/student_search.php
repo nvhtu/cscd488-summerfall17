@@ -36,7 +36,7 @@
     if(count($searchStr) == 1)
     {
         $sqlSearchUser = "SELECT user_id, f_name, l_name, email, state 
-        FROM `user` JOIN student ON user_id = student_id 
+        FROM `user` JOIN student ON user_id LIKE student_id 
         WHERE user_id LIKE :search OR f_name LIKE :search OR l_name LIKE :search OR email LIKE :search";
         $result = sqlExecute($sqlSearchUser, array(':search'=>$searchStr[0]), True);
         echo json_encode($result);
@@ -44,7 +44,7 @@
     else 
     {
         $sqlSearchUser = "SELECT user_id, f_name, l_name, email, state 
-        FROM `user` JOIN student ON user_id = student_id 
+        FROM `user` JOIN student ON user_id LIKE student_id 
         WHERE f_name LIKE :searchFname OR l_name LIKE :searchLName";
         $result = sqlExecute($sqlSearchUser, array(':searchFname'=>$searchStr[0], ':searchLName'=>$searchStr[1]), True);
         echo json_encode($result);

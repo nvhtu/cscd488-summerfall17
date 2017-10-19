@@ -4,6 +4,18 @@ var _userSessionId = "";
 
 var _formId = "main-form";
 
+var _settings;
+
+var _targetModal = "detail-modal";
+var _tableId = "main-table";
+var _formId = "main-form";
+
+var _locData = Array();
+var _catData = Array();
+var _graderData = Array();
+
+var _isEditing = false;
+
 $(document).ready(loaded);
 
 function loaded()
@@ -19,13 +31,129 @@ function loaded()
 
     $(".msg-box").hide();
 
-    _userType = "Grader";
-    _userId = "2223";
+
 }
 
 function init()
 {
+    $.get("../settings/get_settings.php", {
+        requester_id: _userId,
+        requester_type: _userType
+        }, loadSettings, "json");
+        
+    getAllLoc();
+    getAllCat();        
+    getAllGraders();
+    
+    buildTable();
+
+    loadUpcomingExams();
     loadGradingProgress();
+}
+
+function loadSettings(data) 
+{
+    _settings = data.reduce(function(obj, item) {
+       obj[item.name] = item.value;
+       return obj;
+    }, {});
+
+}
+
+function loadUpcomingExams()
+{
+    
+}
+
+function buildTable()
+{
+    headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats"];
+
+    var table = buildMainTable(headersArr);
+    $(".table-responsive").html(table);
+
+    getOpenExams();
+}
+
+function getOpenExams()
+{
+    $(".table-responsive > ."+_tableId + " tbody").empty();
+    
+    $.get("../ape/get_all_apes.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        request: "get_by_state",
+        state: "Open"}, 
+        loadTable,
+        "json");
+}
+
+function loadTable(data) 
+{
+    $.each(data, function(i, item) {
+        var row = buildItemSummaryRow(item);
+
+        $("." + _tableId).append(row);
+
+
+    });
+
+}
+
+function buildItemSummaryRow(item)
+{
+    var locName = "";
+    var locSeats = 0;
+
+    $.each(_locData, function(i,locItem){
+        if(item.location == locItem.loc_id)
+        {
+            locName = locItem.name;
+            locSeats = locItem.seats;
+        }
+    });
+
+    var summaryData = {
+        id: item.exam_id,
+        name: item.name,
+        date: item.date,
+        start_time: item.start_time,
+        location: locName,
+        registered_seats: item.remaining_seats + "/" + locSeats
+    };
+
+    var row = buildItemRow(summaryData, false);
+
+    $bttnDetail = $('<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detail-modal" data-id="' + summaryData.id + '">Detail</button>');
+    $bttnDetail.click(onclickDetail);
+    row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnDetail)));
+
+    return row;
+}
+
+function onclickDetail(e) 
+{
+    var itemId = e.currentTarget.dataset["id"];
+    $("#item-id").val(e.currentTarget.dataset["id"]);
+    $(".modal-title").html("Exam Detail");
+    $("#submit-button").attr("data-action", "update");
+    $("#submit-button").html("Save changes");
+
+    $.get("../ape/get_all_apes.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_by_id",
+    exam_id: itemId}, 
+    function(item){
+        $.each(item[0], function(name, val){
+            var el = $('[name="'+name+'"]');
+            el.val(val);
+        });
+    },
+    "json");
+
 }
 
 function loadGradingProgress(){

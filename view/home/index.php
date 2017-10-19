@@ -8,6 +8,8 @@
     if(in_array("Admin", $userInfo["userType"]))
     {
         $page = "admin_home";
+        $modalsArr = array("../exam/exam", "../exam/report", "../exam/roster");
+        $jsArr = array("../exam/exam_modal");
     }
     else if(in_array("Teacher", $userInfo["userType"]))
         {

@@ -23,7 +23,7 @@
     $examId = sanitize_input($examId);
 
 	//Ensure input is well-formed
-    validate_only_numbers($requesterId);
+    validate_numbers_letters($requesterId);
     validate_only_numbers($seatNum);
     validate_only_numbers($examId);
     

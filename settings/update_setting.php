@@ -28,7 +28,7 @@
 	$value = sanitize_input($value);
 
 	//Ensure input is well-formed
-	validate_only_numbers($requesterId);
+	validate_numbers_letters($requesterId);
     if(strpos($name, "Start") !== false || strpos($name, "End") !== false){
         validate_date($value);
     }

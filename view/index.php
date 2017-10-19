@@ -53,15 +53,7 @@
       {
         foreach($modalsArr as $theModal)
         {
-          if (strstr($page, 'home'))
-          {
-            require_once "home/" . $theModal . "_modal.html";
-          }
-          else
-          {
             require_once $theModal . "_modal.html";
-          }
-          
         }  
       }
       require_once $absPath . '/includes/navbar.html';

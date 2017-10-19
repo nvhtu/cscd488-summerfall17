@@ -16,8 +16,8 @@
 
         if($isDev)
         {
-            $userInfo = array('userId' => '111', 
-                            'userType' => array('Admin','Grader'), 
+            $userInfo = array('userId' => '2226', 
+                            'userType' => array("Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Tu',
                             'userLname' => 'Nguyen',

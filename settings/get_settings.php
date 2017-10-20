@@ -22,7 +22,7 @@
 	$requesterType = sanitize_input($requesterType);
 
 	//Ensure input is well-formed
-	validate_only_numbers($requesterId);
+	validate_numbers_letters($requesterId);
 
 	//User authentication
     user_auth($requesterId, $requesterType, $allowedType);

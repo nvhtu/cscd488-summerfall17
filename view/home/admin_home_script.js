@@ -45,10 +45,10 @@ function init()
     getAllCat();        
     getAllGraders();
     
-    buildTable();
+    
 
     loadUpcomingExams();
-    loadGradingProgress();
+    loadGradingExams();
 }
 
 function loadSettings(data) 
@@ -62,10 +62,10 @@ function loadSettings(data)
 
 function loadUpcomingExams()
 {
-    
+    buildExamsTable();
 }
 
-function buildTable()
+function buildExamsTable()
 {
     headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats"];
 
@@ -85,11 +85,11 @@ function getOpenExams()
         requester_session_id: _userSessionId,
         request: "get_by_state",
         state: "Open"}, 
-        loadTable,
+        loadExamsTable,
         "json");
 }
 
-function loadTable(data) 
+function loadExamsTable(data) 
 {
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
@@ -100,6 +100,7 @@ function loadTable(data)
     });
 
 }
+
 
 function buildItemSummaryRow(item)
 {
@@ -156,60 +157,81 @@ function onclickDetail(e)
 
 }
 
-function loadGradingProgress(){
-    $.get("../grade/get_num_students_per_exam_cat.php",
-        {requester_id: _userId,
-        requester_type: _userType},
-        getUngradedSeats,
-        "json");
+function loadGradingExams()
+{
+     //get grading exams
+     $.get("../ape/get_all_apes.php", 
+     {requester_id: _userId,
+     requester_type: _userType,
+     requester_session_id: _userSessionId,
+     request: "get_by_state",
+     state: "Grading"}, 
+     getExamRoster,
+     "json");    
 }
 
-function getUngradedSeats(data){
-    $.each(data, function(i, item){
-        $.get("../grade/get_ungraded_seats.php",
+function getExamRoster(exams)
+{
+    $.each(exams, function (i, theExam){
+        $.get("../ape/get_exam_roster.php",
+        {
+            requester_id: _userId,
+            requester_type: _userType,
+            exam_id: theExam.exam_id,
+            get_grade: 0
+        },
+        function(examRoster){
+            getGradersPerExam(theExam, examRoster.length);
+        },
+        "json");
+    });
+    
+}
+
+function getGradersPerExam(theExam, studentsNum)
+{
+    //console.log(exams);
+    
+        $.get("../grade/get_graders.php",
             {requester_id: _userId,
             requester_type: _userType,
-            grader_exam_cat_id: item.grader_exam_cat_id,
-            exam_id: item.exam_id},
-            function(ungradedSeats){
-                getExamInfo(ungradedSeats, item);
+            request: "get_by_exam_id",
+            exam_id: theExam.exam_id},
+            function(graders){
+                getGradedSeats(graders, theExam, studentsNum);
             },
-            "json"
-        );   
+            "json");
+
+}
+
+function getGradedSeats(graders, theExam, studentsNum)
+{
+    //console.log(theExam.exam_id);
+    $.each(graders, function (i, theGrader){
+        $.get("../grade/get_graded_seats_per_grader.php",
+        {requester_id: _userId,
+        requester_type: _userType,
+        grader_exam_cat_ids: theGrader["grader_exam_cat_id"]},
+        function(gradedSeats){
+            generateProgressBar(theExam, theGrader, gradedSeats, studentsNum);
+        },
+        "json");
     });
 }
 
-function getExamInfo(ungradedSeats, item){
-    $.get("../ape/get_all_apes.php",
-        {requester_id: _userId,
-        requester_type: _userType,
-        request: "get_by_id",
-        exam_id: item.exam_id},
-        function(examInfo){
-            console.log(examInfo);
-            getCatInfo(examInfo, ungradedSeats, item);
-        },
-        "json"
-    ); 
-}
 
-function getCatInfo(examInfo, ungradedSeats, item){
-    $.get("../category/get_all_categories.php",
-    {requester_id: _userId,
-    requester_type: _userType,
-    cat_id: item.cat_id},
-    function(catInfo){
-        generateProgressBar(catInfo, examInfo, ungradedSeats, item);
-    },
-    "json"
-); 
-}
 
-function generateProgressBar(catInfo, examInfo, ungradedSeats, item){
-    var num_graded = item.num_student - ungradedSeats.length;
-    var percent = (num_graded / item.num_student) * 100;
+
+function generateProgressBar(theExam, theGrader, gradedSeats, studentsNum)
+{
+    
+    //takenSeats = total number of students who took the exam = the location capacity
+    var totalStudentsNum = studentsNum * theGrader["assigned_cat_num"];
+    var percent = ((gradedSeats.length / totalStudentsNum) * 100).toFixed(2);
+
+    
     var infohtml =  "<div class='row' style='margin-top:15px'>" +
-                        "<div class='col-sm-4'><strong>Grading Progress for " + catInfo[0].name + ":</strong></div>" +
+                        "<div class='col-sm-4'><strong>" + theGrader.f_name + " " + theGrader.l_name + ":</strong></div>" +
                         "<div class='progress' style='margin-right:10px'>" +
                             "<div class='progress-bar progress-bar-striped' role='progressbar' aria-valuenow='" + percent +
                             "' aria-valuemin='0' aria-valuemax='100' style='width:" + percent + "%'>" +
@@ -217,22 +239,26 @@ function generateProgressBar(catInfo, examInfo, ungradedSeats, item){
                             "</div>" +
                         "</div>" +
                     "</div>";
-    if($("#" + examInfo[0].exam_id).length !== 0){
-        $("#" + examInfo[0].exam_id).append(infohtml);
+    
+    if($("#" + theExam.exam_id).length !== 0)
+    {
+        $("#" + theExam.exam_id).append(infohtml);
     }
-    else{
+    else
+    {
         var html =  "<div class='panel panel-default'>" +
-                        "<div class='panel-heading'>" +
-                            "<h3 class='panel-title'>" + examInfo[0].name + "</h3>" +
+                    "<div class='panel-heading'>" +
+                        "<h3 class='panel-title'>" + theExam.name + "</h3>" +
+                    "</div>" +
+                    "<div class='panel-body' id='" + theExam.exam_id + "'>" + 
+                        "<div class='row'>" +
+                            "<div class='col-sm-4'><strong>Date: </strong>" + theExam.date + "</div>" +
+                            "<div class='col-sm-4'><strong>Start Time: </strong>" + theExam.start_time + "</div>" +
                         "</div>" +
-                        "<div class='panel-body' id='" + examInfo[0].exam_id + "'>" + 
-                            "<div class='row'>" +
-                                "<div class='col-sm-4'><strong>Date: </strong>" + examInfo[0].date + "</div>" +
-                                "<div class='col-sm-4'><strong>Time: </strong>" + examInfo[0].start_time + "</div>" +
-                            "</div>" +
-                            infohtml +
-                        "</div>" +
-                    "</div>";
-        $("#main-grading-panel").append(html);
+                        infohtml +
+                    "</div>" +
+                "</div>";
+                    
+    $("#main-grading-panel").append(html);
     }
 }

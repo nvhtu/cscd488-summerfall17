@@ -19,19 +19,21 @@
     $date = $_POST["date"];
     $location = $_POST["location"];
     $state = $_POST["state"];
+    $possible_grade = $_POST["possible_grade"];
     $passing_grade = $_POST["passing_grade"];
     $duration = $_POST["duration"];
     $start_time = $_POST["start_time"];
     $cutoff = $_POST["cutoff"];
 
-    $sqlInsertExam = "INSERT INTO exam (name, quarter, date, location, state, passing_grade, duration, start_time, cutoff)
-                                   VALUES (:name, :quarter, :exam_date, :location, :state, :passing_grade, :duration, :start_time, :cutoff)";
+    $sqlInsertExam = "INSERT INTO exam (name, quarter, date, location, state, possible_grade, passing_grade, duration, start_time, cutoff)
+                                   VALUES (:name, :quarter, :exam_date, :location, :state, :possible_grade, :passing_grade, :duration, :start_time, :cutoff)";
     $data = array(
         ':name' => $name,
         ':quarter' => $quarter,
         ':exam_date' => $date,
         ':location' => $location,
         ':state' => $state,
+        ':possible_grade' => $possible_grade,
         ':passing_grade' => $passing_grade,
         ':duration' => $duration,
         ':start_time' => $start_time,

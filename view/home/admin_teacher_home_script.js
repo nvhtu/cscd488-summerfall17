@@ -22,6 +22,8 @@ function loaded()
 {
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 
+    
+
     $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
         console.log(jqxhr.responseText);
         $(".msg-box").addClass("alert-danger");
@@ -36,6 +38,20 @@ function loaded()
 
 function init()
 {
+
+    var URLPage = getURLParameter("page");
+    if(URLPage == "teacher_home")
+    {
+        _userType = "Teacher";
+        $("#grading-panel").remove();
+        $("#dashboard-title").html("Teacher Dashboard");
+    }
+    else if(URLPage == "admin_home")
+    {
+        _userType = "Admin";
+        $("#dashboard-title").html("Admin Dashboard");
+    }
+
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
         requester_type: _userType
@@ -44,11 +60,17 @@ function init()
     getAllLoc();
     getAllCat();        
     getAllGraders();
-    
-    
 
     loadUpcomingExams();
-    loadGradingExams();
+    
+    if (_userType == "Admin")
+    {
+        loadGradingExams();
+    }
+    
+
+    
+    
 }
 
 function loadSettings(data) 

@@ -29,6 +29,15 @@ function loaded()
 
 function init()
 {
+    var URLPage = getURLParameter("page");
+    if(URLPage == "teacher_user")
+    {
+        _userType = "Teacher";
+    }
+    else if(URLPage == "admin_user")
+    {
+        _userType = "Admin";
+    }
         checkTypeFunction();
     
         buildTable();

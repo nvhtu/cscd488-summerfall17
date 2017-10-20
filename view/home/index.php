@@ -5,16 +5,12 @@
     $page = "";
     $jsArr = array();
 
-    if(in_array("Admin", $userInfo["userType"]))
+    if(in_array("Admin", $userInfo["userType"]) || in_array("Teacher", $userInfo["userType"]))
     {
-        $page = "admin_home";
+        $page = "admin_teacher_home";
         $modalsArr = array("../exam/exam", "../exam/report", "../exam/roster");
         $jsArr = array("../exam/exam_modal");
     }
-    else if(in_array("Teacher", $userInfo["userType"]))
-        {
-            $page = "teacher_home";
-        }
         else if(in_array("Grader", $userInfo["userType"]))
             {
                 $page = "grader_home";

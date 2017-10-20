@@ -330,6 +330,42 @@ function createItem()
             loadTable(item);
         },
         "json");
+
+        addExamCats(lastInsertId);        
+    });
+}
+
+function addExamCats(examId)
+{
+    $(".cat-row").each(function(){
+        var catId = $(this).find("select").val();//returns null if none selected
+        var possibleGrade = $(this).find("input").val();//returns "" if none selected
+        var dataId = $(this).attr("data-id");
+
+        $.post("../ape/add_exam_cat.php",
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId,
+        cat_id: catId,
+        possible_grade: possibleGrade},
+        function(lastInsertId){
+            addGraders(lastInsertId, dataId);
+        });
+    });
+}
+
+function addGraders(examCatId, dataId)
+{
+    $(".cat-grader-row[data-id='" + dataId + "']").find("select").each(function(){
+        var graderId = $(this).val();
+
+        $.post("../ape/assign_grader.php",
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_cat_id: examCatId,
+        user_id: graderId});
     });
 }
 
@@ -410,7 +446,7 @@ function onclickDelete(e)
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], input[type=hidden], textarea").val("");
+    $("#" + _formId).find("input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
     $("#quarter").html("(Select valid date)");
     $("#possible-grade").html("(Sum of categories)");
     $("#cat-table > tbody").empty();

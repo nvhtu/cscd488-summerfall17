@@ -1,80 +1,65 @@
-<div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title">Create a User</h4>
-         </div>
-         <div class="modal-body form-horizontal">
-                <form id="main-form">
-                        
-                                        <!--
-                                        Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
-                                        so $("#main-form").serialize() will include those values
-                                        !-->
-                                        <input type="hidden" class="form-control" id="requester-id" name="requester_id"/>
-                                        <input type="hidden" class="form-control" id="requester-type" name="requester_type"/>
-                                        <input type="hidden" class="form-control" id="requester-session" name="requester_session"/>
-                                        <input type="hidden" class="form-control" id="item-id" name="user_id"/>
+<div class="modal-body">
+   <form id="main-form" class="form-horizontal">
 
-                <div class="form-group">
-                <label for="user_id" class="col-sm-3 control-label">EWU ID:</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="ewu-id" name="user_id" disabled="disabled"/>
-                </div>
-                </div>
-                
-                <div class="form-group">
-                <label for="f_name" class="col-sm-3 control-label">First Name:</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" name="f_name"/>
-                </div>
-                </div>
-                
-                <div class="form-group">
-                <label for="l_name" class="col-sm-3 control-label">Last Name:</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" name="l_name"/>
-                </div>
-                </div>
-                
-                <div class="form-group">
-                <label for="email" class="col-sm-3 control-label">Email:</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" name="email"/>
-                </div>
-                </div>
+      <!--
+         Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
+         so $("#main-form").serialize() will include those values
+         !-->
+      <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
+      <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
+      <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
+      <input type="hidden" class="form-control" id="item-id" name="user_id" />
 
-                <div class="form-group" id="type-form-group">
-                    <label for="type" class="col-sm-3 control-label">Type:</label>
-                    <div class="col-sm-9">
-                        <label id="type-admin-wrap" class="type-nonstudent-wrap"><input type="checkbox"  id="type-admin-checkbox" class="form-control type-checkbox type-nonstudent-checkbox" name="type" value="Admin"/>Admin</label>
-                        <label id="type-teacher-wrap" class="type-nonstudent-wrap"><input type="checkbox" id="type-teacher-checkbox" class="form-control type-checkbox type-nonstudent-checkbox" name="type" value="Teacher"/>Teacher</label>
-                        <label id="type-grader-wrap" class="type-nonstudent-wrap"><input type="checkbox" id="type-grader-checkbox" class="form-control type-checkbox type-nonstudent-checkbox" name="type" value="Grader"/>Grader</label>
-                        <label id="type-student-wrap" class="type-student-wrap"><input type="checkbox" id="type-student-checkbox" class="form-control type-checkbox" name="type" value="Student"/>Student</label>
-                    </div>
-                    <input type="hidden" class="form-control" id="type" name="type"/>
-                </div>
-
-                <div class="form-group" id="state-form-group">
-                        <label for="type" class="col-sm-3 control-label">Student State:</label>
-                        <div class="col-sm-9">
-                                <select type="text" class="form-control" name="state" />
-                                <option value="Ready">Ready to Register</option>
-                                <option value="Registered">Registered</option>
-                                <option value="Blocked">Blocked</option>
-                                <option value="Passed">Passed</option>
-                                </select>
-                             </div>
-                        <input type="hidden" class="form-control" id="type" name="type"/>
-                </div>
-            </form>    
-
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button">Create</button>
+      <div class="form-group">
+         <label class="col-sm-3 control-label">EWU ID:</label>
+         <div class="col-sm-9">
+            <input type="text" class="form-control" id="ewu-id" name="ewu_id" disabled="disabled" />
          </div>
       </div>
-   </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">First Name:</label>
+         <div class="col-sm-9">
+            <input type="text" class="form-control" name="f_name" />
+         </div>
+      </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Last Name:</label>
+         <div class="col-sm-9">
+            <input type="text" class="form-control" name="l_name" />
+         </div>
+      </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Email:</label>
+         <div class="col-sm-9">
+            <input type="text" class="form-control" name="email" />
+         </div>
+      </div>
+
+      <div class="form-group" id="type-form-group">
+         <label class="col-sm-3 control-label">Type:</label>
+         <div class="col-sm-9">
+            <label id="type-admin-wrap" class="type-nonstudent-wrap"><input type="checkbox" id="type-admin-checkbox" class="form-control type-checkbox type-nonstudent-checkbox" name="type" value="Admin" />Admin</label>
+            <label id="type-teacher-wrap" class="type-nonstudent-wrap"><input type="checkbox" id="type-teacher-checkbox" class="form-control type-checkbox type-nonstudent-checkbox" name="type" value="Teacher" />Teacher</label>
+            <label id="type-grader-wrap" class="type-nonstudent-wrap"><input type="checkbox" id="type-grader-checkbox" class="form-control type-checkbox type-nonstudent-checkbox" name="type" value="Grader" />Grader</label>
+            <label id="type-student-wrap" class="type-student-wrap"><input type="checkbox" id="type-student-checkbox" class="form-control type-checkbox" name="type" value="Student" />Student</label>
+         </div>
+         <input type="hidden" class="form-control" id="type" name="type" />
+      </div>
+
+      <div class="form-group" id="state-form-group">
+         <label class="col-sm-3 control-label">Student State:</label>
+         <div class="col-sm-9">
+            <select type="text" class="form-control" name="state">
+               <option value="Ready">Ready to Register</option>
+               <option value="Registered">Registered</option>
+               <option value="Blocked">Blocked</option>
+               <option value="Passed">Passed</option>
+            </select>
+         </div>
+         <input type="hidden" class="form-control" id="type" name="type" />
+      </div>
+   </form>
 </div>

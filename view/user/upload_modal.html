@@ -1,36 +1,20 @@
-<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-hidden="true"> 
-    <div class="modal-dialog"> 
-       <div class="modal-content"> 
-          <div class="modal-header"> 
-             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button> 
-             <h4 class="modal-title">Import Students</h4> 
-          </div> 
+<div class="modal-body">
+   <form id="upload-form" class="form-horizontal" name="upload-form">
 
-          <form id="upload-form" name="upload-form"> 
-          <div class="modal-body form-horizontal"> 
-                
-                                         <!-- 
-                                         Hidden input fields for requester id, requester type, requester session, and item id that auto populated  
-                                         so $("#main-form").serialize() will include those values 
-                                         !--> 
-                                         <input type="hidden" class="form-control" id="requester-id" name="requester_id"/> 
-                                         <input type="hidden" class="form-control" id="requester-type" name="requester_type"/> 
-                                         <input type="hidden" class="form-control" id="requester-session" name="requester_session"/> 
-                    <div class="form-group"> 
-                        <label for="user_id" class="col-sm-12">Select a CSV to upload. The CSV file must contains a header row.</label> 
-                        <div class="col-sm-12"> 
-                            <label class="btn btn-default" for="fileToUpload"> 
-                                <input type="file" name="fileToUpload" id="fileToUpload" hidden> 
-                            </label> 
-                        </div> 
-                    </div> 
-                
-          </div> 
-          <div class="modal-footer"> 
-             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
-             <input type="submit" id="upload-button" class="btn btn-primary" value="Import CSV"> 
-          </div> 
-          </form>     
-       </div> 
-    </div> 
- </div>
+      <!-- 
+         Hidden input fields for requester id, requester type, requester session, and item id that auto populated  
+         so $("#main-form").serialize() will include those values 
+         !-->
+      <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
+      <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
+      <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
+      <div class="form-group">
+         <label for="user_id" class="col-sm-12">Select a CSV to upload. The CSV file must contains a header row.</label>
+         <div class="col-sm-12">
+            <label class="btn btn-default" for="fileToUpload">
+               <input type="file" name="fileToUpload" id="fileToUpload" hidden>
+            </label>
+         </div>
+      </div>
+   </form>
+</div>

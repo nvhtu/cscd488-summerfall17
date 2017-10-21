@@ -8,7 +8,9 @@
     if(in_array("Admin", $userInfo["userType"]))
     {
         $page = "admin_home";
-        $modalsArr = array("../exam/exam", "../exam/report", "../exam/roster");
+        $modalsArr = array("../exam/exam", "../exam/roster", "../exam/report");
+        $modalTitles = array("Exam", "Roster", "Report");
+        $modalSize = "large";
         $jsArr = array("../exam/exam_modal");
     }
     else if(in_array("Teacher", $userInfo["userType"]))

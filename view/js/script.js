@@ -8,11 +8,13 @@ $(document).ready(loaded);
 
 function loaded() 
 {
-   $("#search").keyup(onClickSearch);
-   $("#clear-search").click(function() {
-      $("#search").val('').focus();
-      $(this).hide();
-      onClickSearch();
+   $(".search").keyup(function(e) {onClickSearch(e, this);});
+   $(".clear-search").click(function() {
+      var $this = $(this),
+      $search = $this.parent().find('.search');
+      $search.val('').focus();
+      $this.hide();
+      onClickSearch(undefined, $search);
    });
 }
 
@@ -52,18 +54,20 @@ function loadUserInfo(data)
     init();    
 }
 
-function onClickSearch(e) {
+function onClickSearch(e, input) {
+   console.log(e, input);
+
    if (typeof e !== "undefined" && e.keyCode == 27) {
-      $("#clear-search").trigger('click');
+      $(".clear-search").trigger('click');
       return false;
    }
 
-   var searchTerm = $("#search").val(),
+   var searchTerm = $(input).val(),
    length = $.trim(searchTerm).length,
    $rows = $('.main-table>tbody>tr'),
    $data = $('.main-table>tbody>tr td').not('.btns, .details');
 
-   $("#clear-search").toggle(length != 0);
+   $(".clear-search").toggle(length != 0);
    if (length > 0) {
       var $search = '^(?=.*\\b' + $.trim(searchTerm).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
       reg = RegExp($search, 'i'),

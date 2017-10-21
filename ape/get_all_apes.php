@@ -22,7 +22,7 @@
 
         case ("get_by_id"): $sqlResult = getExamById();
                             break;
-        case ("get_by_state"): $sqlResult = getExamByState();
+        case ("get_by_state"): $sqlResult = getExamByState($requesterType, $requesterId);
                             break;
         case ("get_all"): $sqlResult = getAllExam($requesterType, $requesterId);
                             break;
@@ -41,12 +41,34 @@
         return $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$_GET["exam_id"]), true);
     }
 
-    function getExamByState()
+    function getExamByState($requesterType, $requesterId)
     {
-        $sqlSelectExam = "SELECT *
-        FROM exam
-        WHERE state = :state";
-        return $sqlResult = sqlExecute($sqlSelectExam, array(":state"=>$_GET["state"]), true);
+
+        switch($requesterType)
+        {
+            case "Admin":  $sqlSelectExams = "SELECT *
+                                            FROM exam
+                                            WHERE state = :state";
+                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
+                            break;
+
+            case "Teacher":  $sqlSelectExams = "SELECT exam.*
+                                                FROM exam
+                                                INNER JOIN in_class_exam
+                                                USING (exam_id)
+                                                WHERE teacher_id LIKE :teacher_id AND state = :state";
+                            $data = array(':teacher_id' => $requesterId, ":state"=>$_GET["state"]);
+                            return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
+                            break;
+
+            case "Student": $sqlSelectExams = "SELECT *
+                            FROM exam
+                            WHERE state = :state AND exam.exam_id NOT IN (SELECT exam_id FROM in_class_exam)";
+                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
+        }
+           
+
+        
     }
 
     function getAllExam($requesterType, $requesterId)

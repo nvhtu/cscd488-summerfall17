@@ -29,6 +29,7 @@ function loaded()
 
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 
+
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
 
@@ -40,6 +41,7 @@ function loaded()
 }
 
 
+
 function loadSettings(data) {
    _settings = data.reduce(function(obj, item) {
       obj[item.name] = item.value;
@@ -49,6 +51,17 @@ function loadSettings(data) {
 
 function init()
 {
+
+    var URLPage = getURLParameter("page");
+    if(URLPage == "teacher_exam")
+    {
+        _userType = "Teacher";
+    }
+    else if(URLPage == "admin_exam")
+    {
+        _userType = "Admin";
+    }
+
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
         requester_type: _userType

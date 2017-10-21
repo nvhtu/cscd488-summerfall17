@@ -54,9 +54,13 @@ function loadUserInfo(data)
     init();    
 }
 
+function getURLParameter(name) 
+{
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+}
+
 function onClickSearch(e, input) {
    console.log(e, input);
-
    if (typeof e !== "undefined" && e.keyCode == 27) {
       $(".clear-search").trigger('click');
       return false;

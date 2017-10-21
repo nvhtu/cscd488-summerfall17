@@ -22,28 +22,23 @@
         die();
     }
     
-    if(in_array("Teacher", $userInfo["userType"]) && in_array("Admin", $userInfo["userType"]))
+    if(in_array("Teacher", $userInfo["userType"]) || in_array("Admin", $userInfo["userType"]))
     {
-        $title = "EWU APE Users";
-        $tableTitle = "Users";
-        $tableTabs = array("Admins", "Teachers", "Graders", "Students");
-    }
-    else 
-    {
-        if(in_array("Teacher", $userInfo["userType"]))
-        {
-            $title = "EWU APE Students";
-            $tableTitle = "Students";
-            $tableTabs = array("Students");
-        }
-        else
+        if(strcmp($_GET["page"],"admin_user") == 0)
         {
             $title = "EWU APE Users";
             $tableTitle = "Users";
             $tableTabs = array("Admins", "Teachers", "Graders", "Students");
         }
+        else if (strcmp($_GET["page"],"teacher_user") == 0)
+        {
+            $title = "EWU APE Students";
+            $tableTitle = "Students";
+            //$tableTabs = array("Students");
+        }
         
     }
+
 
    require_once "../index.php";
 ?>

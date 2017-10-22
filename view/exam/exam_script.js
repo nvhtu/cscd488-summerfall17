@@ -161,27 +161,7 @@ function buildItemSummaryRow(item)
 
 function onclickReport(item)
 {
-    if(_selectedTab == "Archived")
-        $("#report-modal").find(".archived-only").show();
-    else
-        $("#report-modal").find(".archived-only").hide();
-    var downloadBtn = $("#report-modal").find("#download-button");
     
-    $.get("../ape/get_exam_roster.php", 
-    {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    exam_id: item.exam_id,
-    get_grade: 1}, 
-    function(rosterData){
-        downloadBtn.off("click");
-        downloadBtn.click(function(){
-            onclickDownload(rosterData, item);
-        });
-    },
-    "json");
-
-    $("#report-modal").find("#file-name").val(item.name.split(' ').join('_'));
 }
 
 function onclickDownload(rosterData, examData){
@@ -212,7 +192,7 @@ function onclickDownload(rosterData, examData){
 }
 
 function selectStudentData(rosterData, csvData){
-    console.log(rosterData);
+    //console.log(rosterData);
     var studentHeaders = [];
     var rosterProps = [];
 
@@ -305,14 +285,30 @@ function submitForm(e) {
       }
    }
    else if (tab === "report") {
-	  console.log("Generate report");
-	  //onclickReport();
+	  $.get("../ape/get_all_apes.php", 
+	  {requester_id: _userId,
+	  requester_type: _userType,
+	  requester_session_id: _userSessionId,
+	  request: "get_by_id",
+	  exam_id: $("#item-id").val()}, 
+	  function(item){
+		$.get("../ape/get_exam_roster.php", 
+		{requester_id: _userId,
+		requester_type: _userType,
+		requester_session_id: _userSessionId,
+		exam_id: item[0].exam_id,
+		get_grade: 1}, 
+		function(rosterData){
+			onclickDownload(rosterData, item[0]);
+		},
+		"json");
+	  },
+	  "json");
    }
 }
 
 function createItem()
 {
-    //console.log($("#" + _formId).serialize());
     $.post("../ape/create_ape.php", $("#" + _formId).serialize(), function(lastInsertId){
         $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
@@ -321,8 +317,6 @@ function createItem()
         request: "get_by_id",
         exam_id: lastInsertId}, 
         function(item){
-
-            //console.log(item);
             loadTable(item);
         },
         "json");
@@ -367,7 +361,6 @@ function addGraders(examCatId, dataId)
 
 function updateItem()
 {
-    //console.log($("#" + _formId).serialize());
     $.post("../ape/update_ape.php", $("#" + _formId).serialize(), function(){
         var item = $("#" + _formId).serialize();
         $.get("../ape/get_all_apes.php", 
@@ -379,9 +372,6 @@ function updateItem()
         function(item){
             var row = buildItemSummaryRow(item[0]);
             // var detailRow = buildItemDetailRow(item[0]);
-
-            //console.log(row);
-            //console.log(detailRow);
             $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
             // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
         },
@@ -416,10 +406,12 @@ function onclickEdit(e)
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
             el.val(val);
-        });
-    },
-    "json");
+		});
 
+		$("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
+		$("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
+    },
+	"json");
 }
 
 function onclickDelete(e) 
@@ -483,8 +475,8 @@ function onclickTabExam() {
 }
 
 function onclickTabReport() {
-   $('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
-   $("#modal-title").html("Generate Exam Report");
+	$('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
+	$("#modal-title").html("Generate Exam Report");
 }
 
 function onclickRoster(e)

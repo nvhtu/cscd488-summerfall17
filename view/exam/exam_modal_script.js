@@ -94,10 +94,10 @@ function buildOptions(data, type) {
 function onclickAddCat() {
    var $table = $('#cat-table');
    var row = buildCatRow();
-   var detailRow = buildCatGraderRow();
+   var graderRow = buildCatGraderRow();
 
    $table.append(row);
-   $table.append(detailRow);
+   $table.append(graderRow);
    
    var rowCount = $('#cat-table>tbody>tr.cat-row').length;
    if (rowCount >= _catData.length) {

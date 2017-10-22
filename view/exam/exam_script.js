@@ -138,34 +138,30 @@ function buildItemSummaryRow(item)
     };
 
     var row = buildItemRow(summaryData, true);
-
-    $addStudentsBtn = $('<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#roster-modal" data-id="' + summaryData.id + '">Exam Roster</button>');
-    $addStudentsBtn.click(onclickRoster);
-    row.children().children().append($addStudentsBtn);
     return row;
 }
 
-function buildItemDetailRow(item)
-{
-    var detailData = {
-        id: item.exam_id,
-        duration: item.duration,
-        passing_grade: item.passing_grade,
-        cutoff: item.cutoff
-    };
+// function buildItemDetailRow(item)
+// {
+//     var detailData = {
+//         id: item.exam_id,
+//         duration: item.duration,
+//         passing_grade: item.passing_grade,
+//         cutoff: item.cutoff
+//     };
 
-    var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+//     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
 
     
-    var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
-    detailData.report = reportBtn;
-    namesArr.push("Report");
+//     var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
+//     detailData.report = reportBtn;
+//     namesArr.push("Report");
 
 
-    var detailRow = buildDetailRow(detailData, namesArr);
+//     var detailRow = buildDetailRow(detailData, namesArr);
 
-    return detailRow;
-}
+//     return detailRow;
+// }
 
 function onclickReport(item)
 {
@@ -286,10 +282,10 @@ function loadTable(data)
 {
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
-        var detailRow = buildItemDetailRow(item);
+      //   var detailRow = buildItemDetailRow(item);
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
-        $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
+      //   $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
         
         
         $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
@@ -382,12 +378,12 @@ function updateItem()
         exam_id: $("#item-id").val()}, 
         function(item){
             var row = buildItemSummaryRow(item[0]);
-            var detailRow = buildItemDetailRow(item[0]);
+            // var detailRow = buildItemDetailRow(item[0]);
 
             //console.log(row);
             //console.log(detailRow);
             $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
-            $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+            // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
         },
         "json");
     }); 

@@ -174,20 +174,20 @@ function buildItemSummaryRow(item, type)
     return row;
 }
 
-function buildItemDetailRow(item)
-{
-    var detailData = {
-        id: item.exam_id,
-        duration: item.duration,
-        passing_grade: item.passing_grade,
-        cutoff: item.cutoff
-    };
+// function buildItemDetailRow(item)
+// {
+//     var detailData = {
+//         id: item.exam_id,
+//         duration: item.duration,
+//         passing_grade: item.passing_grade,
+//         cutoff: item.cutoff
+//     };
 
-    var namesArr = ["Duration", "Passing Grade", "Cutoff"];
-    var detailRow = buildDetailRow(detailData, namesArr);
+//     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+//     var detailRow = buildDetailRow(detailData, namesArr);
 
-    return detailRow;
-}
+//     return detailRow;
+// }
 
 function loadTable(data, type) 
 {
@@ -195,7 +195,7 @@ function loadTable(data, type)
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item, type);
 
-        var detailRow = buildItemDetailRow(item);
+      //   var detailRow = buildItemDetailRow(item);
 
         //console.log(detailExamRow);
 

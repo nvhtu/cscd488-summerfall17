@@ -5,16 +5,16 @@
          Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
          so $("#main-form").serialize() will include those values
          !-->
-      <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
-      <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
-      <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
-      <input type="hidden" class="form-control" id="item-id" name="exam_id" />
+      <input type="hidden" id="requester-id" name="requester_id" />
+      <input type="hidden" id="requester-type" name="requester_type" />
+      <input type="hidden" id="requester-session" name="requester_session" />
+      <input type="hidden" id="item-id" name="exam_id" />
 
       <div>
             <div class="container-fluid table-toolbar">
                <div class="form-inline">
                   <button type="button" class="btn btn-primary pull-left" id="dd-student-btn" data-target="#lookup-modal" data-toggle="modal">Register a student</button>
-                  <div class="form-group pull-right">
+                  <div class="form-group has-feedback pull-right">
                      <div class="input-group">
                         <input type="text" class="search form-control" placeholder="Search">
                         <span class="clear-search glyphicon glyphicon-remove-circle form-control-feedback"></span>

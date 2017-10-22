@@ -6,10 +6,10 @@
             Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
             so $("#main-form").serialize() will include those values
             !-->
-         <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
-         <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
-         <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
-         <input type="hidden" class="form-control" id="item-id" name="exam_id" />
+         <input type="hidden" id="requester-id" name="requester_id" />
+         <input type="hidden" id="requester-type" name="requester_type" />
+         <input type="hidden" id="requester-session" name="requester_session" />
+         <input type="hidden" id="item-id" name="exam_id" />
 
          <div class="form-group">
             <label class="col-sm-4 control-label">Exam Name:</label>
@@ -29,7 +29,7 @@
             <label class="col-sm-4 control-label">Quarter:</label>
             <div class="col-sm-8">
                <p class="form-control-static" id="quarter">(Select valid date)</p>
-               <input type="hidden" class="form-control" name="quarter" />
+               <input type="hidden" name="quarter" />
             </div>
          </div>
 
@@ -89,7 +89,7 @@
             <label class="col-sm-4 control-label">Possible Grade:</label>
             <div class="col-sm-8">
                <p class="form-control-static" id="possible-grade">(Sum of categories)</p>
-               <input type="hidden" class="form-control" name="possible_grade" />
+               <input type="hidden" name="possible_grade" />
             </div>
          </div>
       </form>
@@ -108,7 +108,7 @@
                <tr>
                   <th>Name</th>
                   <th>Max Score</th>
-                  <th>Actions</th>
+                  <th>Action</th>
                </tr>
             </thead>
             <tbody>

@@ -257,7 +257,5 @@ body > .container {
 .checkbox-fix {
     outline: none;
     border: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
 }

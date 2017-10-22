@@ -24,11 +24,8 @@ var _isEditing = false;
 
 $(document).ready(loaded);
 
-function loaded() 
-{
-
+function loaded() {
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
-
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
@@ -38,15 +35,18 @@ function loaded()
     $("a[href='#Grading-panel']").click(function(){getAllItems("Grading"); _selectedTab = "Grading";});
     $("a[href='#Archived-panel']").click(function(){getAllItems("Archived"); _selectedTab = "Archived";});
     $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
+
+    $('a[href="#Exam_tab"]').on('show.bs.tab', onclickTabExam);
+    $('a[href="#Report_tab"]').on('show.bs.tab', onclickTabReport);
 }
 
 
 
 function loadSettings(data) {
-   _settings = data.reduce(function(obj, item) {
-      obj[item.name] = item.value;
-      return obj;
-   }, {});
+	_settings = data.reduce(function(obj, item) {
+		obj[item.name] = item.value;
+		return obj;
+	}, {});
 }
 
 function init()
@@ -102,10 +102,6 @@ function init()
     });
 
     $('#add-cat-btn').click(onclickAddCat);
-
-    $('#report-modal').on('hidden.bs.modal', function () {
-        $("#report-modal").find("input[type='checkbox']").prop("checked", false);
-    })
 }
 
 function buildTable()
@@ -296,18 +292,22 @@ function loadTable(data)
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
 
-function submitForm (e)
-{
-    if(e.currentTarget.dataset["action"] == "create")
-    {
-        createItem();
-    }
-        
-    if(e.currentTarget.dataset["action"] == "update")
-    {
-        updateItem();
-    }
-        
+function submitForm(e) {
+   var tab = e.currentTarget.dataset["tab"],
+   action = e.currentTarget.dataset["action"];
+
+   if (tab === "exam") {
+      if (action === "create") {
+         createItem();
+      }
+      else if (action === "update") {
+         updateItem();
+      }
+   }
+   else if (tab === "report") {
+	  console.log("Generate report");
+	  //onclickReport();
+   }
 }
 
 function createItem()
@@ -392,7 +392,7 @@ function updateItem()
 function onclickCreate()
 {
     clearForm();
-    $(".modal-title").html("Create an Exam");
+    $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 }
@@ -401,8 +401,8 @@ function onclickEdit(e)
 {
     clearForm();
     var itemId = e.currentTarget.dataset["id"];
-    $("#item-id").val(e.currentTarget.dataset["id"]);
-    $(".modal-title").html("Edit an Exam");
+    $("#item-id").val(itemId);
+    $("#modal-title").html("Edit an Exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 
@@ -443,12 +443,14 @@ function onclickDelete(e)
 function clearForm()
 {
     $("#" + _formId).find("input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
+	$('#Report_tab').find("input[type='checkbox']").prop("checked", false);
     $("#quarter").html("(Select valid date)");
     $("#possible-grade").html("(Sum of categories)");
     $("#cat-table > tbody").empty();
     $("#cat-table").hide();
     $('#add-cat-btn').prop("disabled",false);
     $('#cat-heading').toggleClass('empty-panel-fix', true);
+	$('a[href="#Exam_tab"]').tab('show');
 }
 
 function getAllItems(state)
@@ -464,6 +466,26 @@ function getAllItems(state)
         "json");
 }
 
+function onclickTabExam() {
+   var btn = $('#submit-button'),
+   action = btn.attr("data-action");
+   
+   btn.attr("data-tab", "exam");
+
+   if (action === "create") {
+      btn.html('Create');
+      $("#modal-title").html("Create an Exam");
+   }
+   else if (action === "update") {
+      btn.html('Save changes');
+      $("#modal-title").html("Edit an Exam");
+   }
+}
+
+function onclickTabReport() {
+   $('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
+   $("#modal-title").html("Generate Exam Report");
+}
 
 function onclickRoster(e)
 {
@@ -488,7 +510,7 @@ function onclickRoster(e)
         getGrade = 0;
     }
 
-    $(".modal-title").html("Exam Roster");
+    $("#modal-title").html("Exam Roster");
     
     
     var table = buildMainTable(headersArr);

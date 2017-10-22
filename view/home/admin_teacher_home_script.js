@@ -159,7 +159,7 @@ function onclickDetail(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
-    $(".modal-title").html("Exam Detail");
+    $("#modal-title").html("Exam Detail");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 

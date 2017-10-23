@@ -23,7 +23,7 @@
                             'userLname' => 'Nguyen',
                             'userEmail' => 'abc@xyz.com' );
             
-           /* $userInfo = array('userId' => '111', 
+           $userInfo = array('userId' => '111', 
                             'userType' => array("Admin", "Teacher"), 
                             'userSession' => '111111',
                             'userFname' => 'Tu',

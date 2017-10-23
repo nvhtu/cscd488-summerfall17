@@ -395,12 +395,54 @@ function onclickEdit(e)
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
             el.val(val);
-		});
-
-		$("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
+        });
+        $('input[name="date"]').triggerHandler('changeDate');
+        $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
 		$("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
     },
-	"json");
+    "json");
+
+    $.get("../ape/get_exam_cats.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    exam_id: itemId}, 
+    populateExamCats,
+    "json");
+}
+
+function populateExamCats(examCatData){
+    $.each(examCatData, function(index, examCat){
+        onclickAddCat();
+        var catRow = $(".cat-row:last");
+        catRow.find("option[value='" + examCat.cat_id + "']").prop("selected", true);
+        catRow.find("input").val(examCat.possible_grade);
+
+        var dataId = catRow.attr("data-id");
+
+        $.get("../grade/get_graders.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        request: "get_by_exam_cat_id",
+        exam_cat_id: examCat.exam_cat_id}, 
+        function(graderData){
+            if(graderData.length > 0){
+                catRow.find(".btn-info").click();
+                populateGraders(graderData, dataId);
+            }
+        },
+        "json");
+    });
+    calcPossibleGrade();
+}
+
+function populateGraders(graderData, dataId){
+    var graderRow = $(".cat-grader-row[data-id='" + dataId + "']");
+    $.each(graderData, function(index, grader){
+        graderRow.find(".btn-primary").click();
+        graderRow.find("select:last").find("option[value='" + grader.user_id + "']").prop("selected", true);
+    });
 }
 
 function onclickDelete(e) 

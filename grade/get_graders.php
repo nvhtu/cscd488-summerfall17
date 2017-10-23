@@ -17,13 +17,12 @@
     $requesterType = $_GET["requester_type"];
     $allowedType = array("Grader", "Admin", "Teacher");
 
-    $examId = $_GET["exam_id"];
     $request = $_GET["request"];
 
     //Sanitize the input
 	$requesterId = sanitize_input($requesterId);
     $requesterType = sanitize_input($requesterType);
-    $examId = sanitize_input($examId);
+    
     $request = sanitize_input($request);
 
 
@@ -38,9 +37,11 @@
 
     switch($request)
     {
-        case "get_by_exam_id": $sqlResult = getGradersByExamId($examId);
+        case "get_by_exam_id": $sqlResult = getGradersByExamId();
                             break;
         case "get_by_open_exams": $sqlResult = getGradersOpenExams();
+                            break;
+        case "get_by_exam_cat_id": $sqlResult = getGradersByExamCatId();
                             break;
     }
 
@@ -48,8 +49,16 @@
 
     echo json_encode($sqlResult);
 
-    function getGradersByExamId($examId)
+    function getGradersByExamId()
     {
+        if(empty($_GET["exam_id"])){
+            http_response_code(400);
+            die("Incomplete input.");
+        }
+        $examId = $_GET["exam_id"];
+
+        $examId = sanitize_input($examId);
+        
         $sqlGetGraders = "SELECT user_id,  COUNT(*) AS assigned_cat_num, exam_id, f_name, l_name
         FROM exam_category NATURAL JOIN assigned_grader JOIN user USING (user_id)
         WHERE exam_category.exam_id = :exam_id
@@ -86,5 +95,25 @@
         WHERE exam.state = 'Grading'";
 
         return sqlExecute($sqlGetGraders, array(), true);
+    }
+
+    function getGradersByExamCatId()
+    {
+        if(empty($_GET["exam_cat_id"])){
+            http_response_code(400);
+            die("Incomplete input.");
+        }
+
+        $examCatId = $_GET["exam_cat_id"];
+
+        $examCatId = sanitize_input($examCatId);
+
+        validate_only_numbers($examCatId);
+
+        $sqlExamCatId = "SELECT user_id 
+                         FROM assigned_grader
+                         WHERE exam_cat_id = :exam_cat_id";
+
+        return sqlExecute($sqlExamCatId, array(':exam_cat_id' => $examCatId), true);
     }
 ?>    

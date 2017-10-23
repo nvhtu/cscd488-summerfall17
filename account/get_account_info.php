@@ -7,6 +7,7 @@
     //require "../pdoconfig.php";
     require "../auth/user_auth.php";
     require "../util/sql_exe.php";
+    require "../settings/init_settings.php";
     
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
@@ -102,8 +103,66 @@
 
         if(strcmp($type, "Student") == 0)
         {
-            $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state FROM student JOIN user ON student_id LIKE user_id";
-            $sqlResult = sqlExecute($sqlGetAllStudents, null, True);
+            $requesterType = $_GET["requester_type"];
+            
+            //If requester is a Teacher, only get students belong to them. They are who registered
+            //in that Teacher's current in-class exams. To prevent Teacher from getting students from previous quarters,
+            //the code checks the in-class exam date to see if it falls within current quarter dates.
+            if(strcmp($requesterType, "Teacher") == 0)
+            {
+                if(!isset($GLOBALS["settings"]))
+                initializeSettings();
+
+                //---Get current quarter start and end dates
+                $today = date("Y-m-d");
+                $curQuarterStart = "";
+                $curQuarterEnd = "";
+                $quarterStartName = "";
+                $quarterStartCount = 0;
+
+                for($i=2; $i < count($GLOBALS["settings"]); $i++)
+                {
+                    if($today >= $GLOBALS["settings"][$i]["value"] && strstr($GLOBALS["settings"][$i]["name"],"Start"))
+                    {
+                        $curQuarterStart = $GLOBALS["settings"][$i]["value"];
+                        $quarterStartName = $GLOBALS["settings"][$i]["name"];
+                        $quarterStartCount = $i;
+                    }
+                    else
+                    if(strcmp($curQuarterStart,"") != 0)
+                    {
+                        $curQuarterEnd = $GLOBALS["settings"][$quarterStartCount+1]["value"];
+                    }
+                    
+                }
+
+                //check if today doesn't fall into any quarter range (meaning we're on the break ;) )
+                if($today > $curQuarterEnd || strcmp($curQuarterStart,"") == 0)
+                {
+                    http_response_code(400);
+                    die("You currently don't have any students in your class. You're restricted from viewing previous quarters students.");
+                }
+                //--- END Get current quarter start and end dates
+
+                $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state, E.name AS exam_name
+                FROM in_class_exam ICE JOIN exam_roster ER USING (exam_id)
+                JOIN user U ON (ER.student_id = U.user_id)
+                JOIN student S ON (ER.student_id = S.student_id)
+                JOIn exam E ON (ICE.exam_id = E.exam_id)
+                WHERE ICE.teacher_id = :teacher_id AND DATE(E.date) BETWEEN :date_start AND :date_end";
+
+                $data = array(":teacher_id"=>$_GET["requester_id"], ":date_start"=>$curQuarterStart, ":date_end"=>$curQuarterEnd);
+
+                $sqlResult = sqlExecute($sqlGetStudents, $data, True);
+
+                echo("");
+            }
+            else
+            {
+                $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state FROM student JOIN user ON student_id LIKE user_id";
+                $sqlResult = sqlExecute($sqlGetAllStudents, null, True);
+            }
+            
 
         }
         else 

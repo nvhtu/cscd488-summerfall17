@@ -29,6 +29,15 @@ function loaded()
 
 function init()
 {
+    var URLPage = getURLParameter("page");
+    if(URLPage == "teacher_user")
+    {
+        _userType = "Teacher";
+    }
+    else if(URLPage == "admin_user")
+    {
+        _userType = "Admin";
+    }
         checkTypeFunction();
     
         buildTable();
@@ -110,10 +119,7 @@ function init()
 
 function buildTable()
 {
-        //build Student table
-        var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
-        var table = buildMainTable(headersArr);
-        $("#Students-panel > .table-responsive").html(table);
+        
         
         
         if (_userType == "Admin")
@@ -131,7 +137,22 @@ function buildTable()
             //build Graders table
             $("#Graders-panel > .table-responsive").html(table);
             getAllItems("Grader");
-        }                 
+
+            //build Student table
+            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
+            var table = buildMainTable(headersArr);
+            $("#Students-panel > .table-responsive").html(table);
+
+        }        
+        else if(_userType == "Teacher")
+        {
+            //build Student table
+            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Exam name", "Action"];
+            var table = buildMainTable(headersArr);
+            $(".table-responsive").html(table);
+
+            getAllItems("Student");
+        }        
 }
 
 function buildItemSummaryRow(item, type)
@@ -139,14 +160,30 @@ function buildItemSummaryRow(item, type)
     var summaryData;
     if(type == "Student")
     {
-        summaryData = {
-            id: item.user_id,
-            ewu_id: item.user_id,
-            f_name: item.f_name,
-            l_name: item.l_name,
-            email: item.email,
-            state: item.state
-        };
+        if(_userType == "Teacher")
+        {
+            summaryData = {
+                id: item.user_id,
+                ewu_id: item.user_id,
+                f_name: item.f_name,
+                l_name: item.l_name,
+                email: item.email,
+                state: item.state,
+                exam_name: item.exam_name
+            };
+        }
+        else
+        {
+            summaryData = {
+                id: item.user_id,
+                ewu_id: item.user_id,
+                f_name: item.f_name,
+                l_name: item.l_name,
+                email: item.email,
+                state: item.state
+            };
+        }
+
     }
     else
     {
@@ -165,20 +202,20 @@ function buildItemSummaryRow(item, type)
     return row;
 }
 
-function buildItemDetailRow(item)
-{
-    var detailData = {
-        id: item.exam_id,
-        duration: item.duration,
-        passing_grade: item.passing_grade,
-        cutoff: item.cutoff
-    };
+// function buildItemDetailRow(item)
+// {
+//     var detailData = {
+//         id: item.exam_id,
+//         duration: item.duration,
+//         passing_grade: item.passing_grade,
+//         cutoff: item.cutoff
+//     };
 
-    var namesArr = ["Duration", "Passing Grade", "Cutoff"];
-    var detailRow = buildDetailRow(detailData, namesArr);
+//     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+//     var detailRow = buildDetailRow(detailData, namesArr);
 
-    return detailRow;
-}
+//     return detailRow;
+// }
 
 function loadTable(data, type) 
 {
@@ -186,11 +223,19 @@ function loadTable(data, type)
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item, type);
 
-        var detailRow = buildItemDetailRow(item);
+      //   var detailRow = buildItemDetailRow(item);
 
         //console.log(detailExamRow);
 
-        $("#" + type + "s-panel > .table-responsive > ." + _tableId).append(row);
+        if(_userType == "Teacher")
+        {
+            $(".table-responsive > ." + _tableId).append(row);
+        }
+        else
+        {
+            $("#" + type + "s-panel > .table-responsive > ." + _tableId).append(row);
+        }
+        
         
         //$("." + _tableId).append(detailRow);
     });
@@ -319,7 +364,7 @@ function onclickCreate()
 {
     
     //getAllLoc();
-    $(".modal-title").html("Create a User");
+    $("#modal-title").html("Create a User");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 
@@ -343,7 +388,7 @@ function onclickEdit(e)
 
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
-    $(".modal-title").html("Edit a User");
+    $("#modal-title").html("Edit a User");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 

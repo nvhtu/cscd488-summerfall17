@@ -24,9 +24,7 @@ var _isEditing = false;
 
 $(document).ready(loaded);
 
-function loaded() 
-{
-
+function loaded() {
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 
     $("#create-button").click(onclickCreate);
@@ -37,22 +35,29 @@ function loaded()
     $("a[href='#Grading-panel']").click(function(){getAllItems("Grading"); _selectedTab = "Grading";});
     $("a[href='#Archived-panel']").click(function(){getAllItems("Archived"); _selectedTab = "Archived";});
     $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
+
+    $('a[href="#Exam_tab"]').on('show.bs.tab', onclickTabExam);
+    $('a[href="#Report_tab"]').on('show.bs.tab', onclickTabReport);
 }
 
-
-function loadSettings(data) {
-   _settings = data.reduce(function(obj, item) {
-      obj[item.name] = item.value;
-      return obj;
-   }, {});
-}
 
 function init()
 {
+
+    var URLPage = getURLParameter("page");
+    if(URLPage == "teacher_exam")
+    {
+        _userType = "Teacher";
+    }
+    else if(URLPage == "admin_exam")
+    {
+        _userType = "Admin";
+    }
+
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
         requester_type: _userType
-        }, loadSettings, "json");
+        }, function(data){_settings = data;}, "json");
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
@@ -89,10 +94,6 @@ function init()
     });
 
     $('#add-cat-btn').click(onclickAddCat);
-
-    $('#report-modal').on('hidden.bs.modal', function () {
-        $("#report-modal").find("input[type='checkbox']").prop("checked", false);
-    })
 }
 
 function buildTable()
@@ -125,59 +126,30 @@ function buildItemSummaryRow(item)
     };
 
     var row = buildItemRow(summaryData, true);
-
-    $addStudentsBtn = $('<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#roster-modal" data-id="' + summaryData.id + '">Exam Roster</button>');
-    $addStudentsBtn.click(onclickRoster);
-    row.children().children().append($addStudentsBtn);
     return row;
 }
 
-function buildItemDetailRow(item)
-{
-    var detailData = {
-        id: item.exam_id,
-        duration: item.duration,
-        passing_grade: item.passing_grade,
-        cutoff: item.cutoff
-    };
+// function buildItemDetailRow(item)
+// {
+//     var detailData = {
+//         id: item.exam_id,
+//         duration: item.duration,
+//         passing_grade: item.passing_grade,
+//         cutoff: item.cutoff
+//     };
 
-    var namesArr = ["Duration", "Passing Grade", "Cutoff"];
+//     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
 
     
-    var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
-    detailData.report = reportBtn;
-    namesArr.push("Report");
+//     var reportBtn = "<button type='button' class='btn btn-primary btn-xs' data-toggle='modal' data-target='#report-modal' data-id='" + detailData.id + "'>Generate</button>";
+//     detailData.report = reportBtn;
+//     namesArr.push("Report");
 
 
-    var detailRow = buildDetailRow(detailData, namesArr);
+//     var detailRow = buildDetailRow(detailData, namesArr);
 
-    return detailRow;
-}
-
-function onclickReport(item)
-{
-    if(_selectedTab == "Archived")
-        $("#report-modal").find(".archived-only").show();
-    else
-        $("#report-modal").find(".archived-only").hide();
-    var downloadBtn = $("#report-modal").find("#download-button");
-    
-    $.get("../ape/get_exam_roster.php", 
-    {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    exam_id: item.exam_id,
-    get_grade: 1}, 
-    function(rosterData){
-        downloadBtn.off("click");
-        downloadBtn.click(function(){
-            onclickDownload(rosterData, item);
-        });
-    },
-    "json");
-
-    $("#report-modal").find("#file-name").val(item.name.split(' ').join('_'));
-}
+//     return detailRow;
+// }
 
 function onclickDownload(rosterData, examData){
     var csvContent = "data:text/csv;charset=utf-8,";
@@ -207,7 +179,7 @@ function onclickDownload(rosterData, examData){
 }
 
 function selectStudentData(rosterData, csvData){
-    console.log(rosterData);
+    //console.log(rosterData);
     var studentHeaders = [];
     var rosterProps = [];
 
@@ -273,10 +245,10 @@ function loadTable(data)
 {
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
-        var detailRow = buildItemDetailRow(item);
+      //   var detailRow = buildItemDetailRow(item);
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
-        $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
+      //   $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
         
         
         $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
@@ -287,23 +259,43 @@ function loadTable(data)
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
 
-function submitForm (e)
-{
-    if(e.currentTarget.dataset["action"] == "create")
-    {
-        createItem();
-    }
-        
-    if(e.currentTarget.dataset["action"] == "update")
-    {
-        updateItem();
-    }
-        
+function submitForm(e) {
+   var tab = e.currentTarget.dataset["tab"],
+   action = e.currentTarget.dataset["action"];
+
+   if (tab === "exam") {
+      if (action === "create") {
+         createItem();
+      }
+      else if (action === "update") {
+         updateItem();
+      }
+   }
+   else if (tab === "report") {
+	  $.get("../ape/get_all_apes.php", 
+	  {requester_id: _userId,
+	  requester_type: _userType,
+	  requester_session_id: _userSessionId,
+	  request: "get_by_id",
+	  exam_id: $("#item-id").val()}, 
+	  function(item){
+		$.get("../ape/get_exam_roster.php", 
+		{requester_id: _userId,
+		requester_type: _userType,
+		requester_session_id: _userSessionId,
+		exam_id: item[0].exam_id,
+		get_grade: 1}, 
+		function(rosterData){
+			onclickDownload(rosterData, item[0]);
+		},
+		"json");
+	  },
+	  "json");
+   }
 }
 
 function createItem()
 {
-    //console.log($("#" + _formId).serialize());
     $.post("../ape/create_ape.php", $("#" + _formId).serialize(), function(lastInsertId){
         $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
@@ -312,8 +304,6 @@ function createItem()
         request: "get_by_id",
         exam_id: lastInsertId}, 
         function(item){
-
-            //console.log(item);
             loadTable(item);
         },
         "json");
@@ -358,7 +348,6 @@ function addGraders(examCatId, dataId)
 
 function updateItem()
 {
-    //console.log($("#" + _formId).serialize());
     $.post("../ape/update_ape.php", $("#" + _formId).serialize(), function(){
         var item = $("#" + _formId).serialize();
         $.get("../ape/get_all_apes.php", 
@@ -369,12 +358,9 @@ function updateItem()
         exam_id: $("#item-id").val()}, 
         function(item){
             var row = buildItemSummaryRow(item[0]);
-            var detailRow = buildItemDetailRow(item[0]);
-
-            //console.log(row);
-            //console.log(detailRow);
+            // var detailRow = buildItemDetailRow(item[0]);
             $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
-            $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+            // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
         },
         "json");
     }); 
@@ -383,19 +369,21 @@ function updateItem()
 function onclickCreate()
 {
     clearForm();
-    $(".modal-title").html("Create an Exam");
+    $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
-    $("#submit-button").html("Create");
+	$("#submit-button").html("Create");
+	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
 }
 
 function onclickEdit(e) 
 {
     clearForm();
     var itemId = e.currentTarget.dataset["id"];
-    $("#item-id").val(e.currentTarget.dataset["id"]);
-    $(".modal-title").html("Edit an Exam");
+    $("#item-id").val(itemId);
+    $("#modal-title").html("Edit an Exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
+	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
 
     $.get("../ape/get_all_apes.php", 
     {requester_id: _userId,
@@ -409,6 +397,8 @@ function onclickEdit(e)
             el.val(val);
         });
         $('input[name="date"]').triggerHandler('changeDate');
+        $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
+		$("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
     },
     "json");
 
@@ -476,12 +466,14 @@ function onclickDelete(e)
 function clearForm()
 {
     $("#" + _formId).find("input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
+	$('#Report_tab').find("input[type='checkbox']").prop("checked", false);
     $("#quarter").html("(Select valid date)");
     $("#possible-grade").html("(Sum of categories)");
     $("#cat-table > tbody").empty();
     $("#cat-table").hide();
     $('#add-cat-btn').prop("disabled",false);
     $('#cat-heading').toggleClass('empty-panel-fix', true);
+	$('a[href="#Exam_tab"]').tab('show');
 }
 
 function getAllItems(state)
@@ -497,6 +489,26 @@ function getAllItems(state)
         "json");
 }
 
+function onclickTabExam() {
+   var btn = $('#submit-button'),
+   action = btn.attr("data-action");
+   
+   btn.attr("data-tab", "exam");
+
+   if (action === "create") {
+      btn.html('Create');
+      $("#modal-title").html("Create an Exam");
+   }
+   else if (action === "update") {
+      btn.html('Save changes');
+      $("#modal-title").html("Edit an Exam");
+   }
+}
+
+function onclickTabReport() {
+	$('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
+	$("#modal-title").html("Generate Exam Report");
+}
 
 function onclickRoster(e)
 {
@@ -521,7 +533,7 @@ function onclickRoster(e)
         getGrade = 0;
     }
 
-    $(".modal-title").html("Exam Roster");
+    $("#modal-title").html("Exam Roster");
     
     
     var table = buildMainTable(headersArr);

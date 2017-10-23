@@ -90,15 +90,48 @@ body > .container {
    }
 }
 
+.modal-header {
+   background-color: #f5f5f5;
+   border-top-left-radius: 5px;
+   border-top-right-radius: 5px;
+}
+
+.modal-footer {
+   background-color: #f5f5f5;
+   border-bottom-left-radius: 5px;
+   border-bottom-right-radius: 5px;
+}
+
 /*
- * Table
+ * Buttons
  */
-.panel.with-nav-tabs .panel-heading {
+.btn-label {
+   position: relative;
+   left: -12px;
+   display: inline-block;
+   padding: 6px 12px;
+   background: rgba(0,0,0,0.1);
+   border-radius: 3px 0 0 3px;
+}
+
+.btn-labeled {
+   padding-top: 0;
    padding-bottom: 0;
 }
 
-.panel.with-nav-tabs .nav-tabs {
+/*
+ * Table
+ */
+.with-nav-tabs {
+   padding-bottom: 0;
+}
+
+.with-nav-tabs .nav-tabs {
    border-bottom: none;
+}
+
+.modal .with-nav-tabs .nav-tabs {
+   padding-right: 15px;
 }
 
 .table-toolbar {
@@ -109,7 +142,7 @@ body > .container {
    position: relative;
 }
 
-#clear-search {
+.form-inline .has-feedback .form-control-feedback.clear-search {
    cursor: pointer;
    pointer-events: auto;
    color: #ccc;
@@ -121,10 +154,6 @@ body > .container {
 .panel-default>.panel-heading .panel-title {
    padding-top: 5px;
    font-size: 20px;
-}
-
-.panel-title.pull-left {
-   padding-top: 8px;
 }
 
 .panel .table {
@@ -183,10 +212,6 @@ body > .container {
    text-align: right;
 }
 
-.panel-footer .pagination {
-   margin: 0;
-}
-
 /*
  * Footer
  */
@@ -232,7 +257,5 @@ body > .container {
 .checkbox-fix {
     outline: none;
     border: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
 }

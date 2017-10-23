@@ -1,92 +1,71 @@
-<div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog">
-         <div class="modal-content">
-            <div class="modal-header">
-               <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-               <h4 class="modal-title">Confirm Your Registration</h4>
-            </div>
-            <div class="modal-body form-horizontal">
-               <form id="main-form">
-   
-                  <!--
-                  Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
-                  so $("#main-form").serialize() will include those values
-                  -->
-                  <input type="hidden" class="form-control" id="requester-id" name="requester_id" />
-                  <input type="hidden" class="form-control" id="requester-type" name="requester_type" />
-                  <input type="hidden" class="form-control" id="requester-session" name="requester_session" />
-                  <input type="hidden" class="form-control" id="item-id" name="exam_id" />
-   
-                  <div class="form-group">
-                     <label for="name" class="col-sm-3 control-label">Exam Name:</label>
-                     <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" name="name" />
-                     </div>
-                  </div>
-   
-                  <div class="form-group">
-                     <label for="quarter" class="col-sm-3 control-label">Quarter:</label>
-                     <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" name="quarter" />
-                     </div>
-                  </div>
-   
-                  <div class="form-group">
-                     <label for="date" class="col-sm-3 control-label">Date:</label>
-                     <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" name="date" />
-                     </div>
-                  </div>
+<div class="modal-body">
+   <form id="main-form" class="form-horizontal">
 
-                  <div class="form-group">
-                        <label for="start-time" class="col-sm-3 control-label">Start Time:</label>
-                        <div class="col-sm-9">
-                           <input disabled type="text" class="form-control" name="start_time" />
-                        </div>
-                     </div>
+      <!--
+         Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
+         so $("#main-form").serialize() will include those values
+         !-->
+      <input type="hidden" id="requester-id" name="requester_id" />
+      <input type="hidden" id="requester-type" name="requester_type" />
+      <input type="hidden" id="requester-session" name="requester_session" />
+      <input type="hidden" id="item-id" name="exam_id" />
 
-                  <div class="form-group">
-                        <label for="duration" class="col-sm-3 control-label">Duration:</label>
-                        <div class="col-sm-9">
-                           <input disabled type="text" class="form-control" name="duration" />
-                        </div>
-                     </div>
-      
-                     
-   
-                  <div class="form-group">
-                     <label for="location" class="col-sm-3 control-label">Location:</label>
-                     <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" name="location" />
-                     </div>
-                  </div>
-   
-                  <div class="form-group">
-                     <label for="state" class="col-sm-3 control-label">State:</label>
-                     <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" name="state" />
-                     </div>
-                  </div>
-   
-                  <div class="form-group">
-                     <label for="passing-grade" class="col-sm-3 control-label">Passing Grade:</label>
-                     <div class="col-sm-9">
-                        <input disabled type="text" class="form-control" name="passing_grade" />
-                     </div>
-                  </div>
-   
-                  
-   
-
-   
-                  
-   
-               </form>
-            </div>
-            <div class="modal-footer">
-               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-               <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button" data-action="confirm">Register</button>
-            </div>
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Exam Name:</label>
+         <div class="col-sm-9">
+            <input disabled type="text" class="form-control" name="name" />
          </div>
       </div>
-   </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Quarter:</label>
+         <div class="col-sm-9">
+            <input disabled type="text" class="form-control" name="quarter" />
+         </div>
+      </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Date:</label>
+         <div class="col-sm-9">
+            <input disabled type="text" class="form-control" name="date" />
+         </div>
+      </div>
+
+      <div class="form-group">
+            <label class="col-sm-3 control-label">Start Time:</label>
+            <div class="col-sm-9">
+               <input disabled type="text" class="form-control" name="start_time" />
+            </div>
+         </div>
+
+      <div class="form-group">
+            <label class="col-sm-3 control-label">Duration:</label>
+            <div class="col-sm-9">
+               <input disabled type="text" class="form-control" name="duration" />
+            </div>
+         </div>
+
+         
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Location:</label>
+         <div class="col-sm-9">
+            <input disabled type="text" class="form-control" name="location" />
+         </div>
+      </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">State:</label>
+         <div class="col-sm-9">
+            <input disabled type="text" class="form-control" name="state" />
+         </div>
+      </div>
+
+      <div class="form-group">
+         <label class="col-sm-3 control-label">Passing Grade:</label>
+         <div class="col-sm-9">
+            <input disabled type="text" class="form-control" name="passing_grade" />
+         </div>
+      </div>
+   </form>
+</div>

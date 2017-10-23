@@ -9,6 +9,14 @@
         $sqlResult = sqlExecute("SELECT * FROM admin_setting",
                      array(),
                      true);
-        $GLOBALS["settings"] = $sqlResult;
+
+
+        $GLOBALS["settings"] = array_reduce($sqlResult, "sqlArrReduce");
+    }
+
+    function sqlArrReduce($obj, $item)
+    {
+        $obj[$item["name"]] = $item["value"];
+        return $obj;
     }
 ?>

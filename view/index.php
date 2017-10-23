@@ -51,10 +51,7 @@
    <?php 
       if (isset($modalsArr))
       {
-        foreach($modalsArr as $theModal)
-        {
-            require_once $theModal . "_modal.html";
-        }  
+         require_once $absPath . '/includes/modal.php';
       }
       require_once $absPath . '/includes/navbar.html';
    ?>
@@ -83,10 +80,10 @@
                  }
                  else 
                  {
-                    if(isset($_GET["page"]))
+                    /*if(isset($_GET["page"]))
                     {
                       $page = $_GET["page"];
-                    }
+                    }*/
                     require_once $path . $page . ".html";
                  }
                   

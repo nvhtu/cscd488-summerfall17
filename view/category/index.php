@@ -11,6 +11,7 @@ if(in_array("Admin", $userInfo["userType"]) || in_array("Teacher", $userInfo["us
     $tableTitle = "Categories";
     //Strings in $modalsArr are the modal HTML file names minus "_modal.html" E.g. "roster_modal.html" -> "roster"
     $modalsArr = array("category");
+    $modalTitles = array("Category");
     //Strings in $jsArr are the JS file names minus "_script.js" E.g. "exam_student_script.js" -> "exam_student"
     $jsArr = array("category");
     require_once "../index.php";

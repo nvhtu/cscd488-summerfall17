@@ -8,7 +8,7 @@
     $page = "user";
     $title = "";
     $tableTitle = "";
-    $tableTabs = array();
+    
     //Strings in $modalsArr are the modal HTML file names minus "_modal.html" E.g. "roster_modal.html" -> "roster"
     $modalsArr = array("user", "upload", "lookup");
     $modalTitles = array("User", "Upload", "Lookup");
@@ -29,16 +29,18 @@
             $title = "EWU APE Users";
             $tableTitle = "Users";
             $tableTabs = array("Admins", "Teachers", "Graders", "Students");
+            require_once "../index.php";
         }
         else if (strcmp($_GET["page"],"teacher_user") == 0)
         {
             $title = "EWU APE Students";
             $tableTitle = "Students";
             //$tableTabs = array("Students");
+            require_once "../index.php";
         }
         
     }
 
 
-   require_once "../index.php";
+  
 ?>

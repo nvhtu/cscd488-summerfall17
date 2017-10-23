@@ -119,10 +119,7 @@ function init()
 
 function buildTable()
 {
-        //build Student table
-        var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
-        var table = buildMainTable(headersArr);
-        $("#Students-panel > .table-responsive").html(table);
+        
         
         
         if (_userType == "Admin")
@@ -140,7 +137,22 @@ function buildTable()
             //build Graders table
             $("#Graders-panel > .table-responsive").html(table);
             getAllItems("Grader");
-        }                 
+
+            //build Student table
+            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
+            var table = buildMainTable(headersArr);
+            $("#Students-panel > .table-responsive").html(table);
+
+        }        
+        else if(_userType == "Teacher")
+        {
+            //build Student table
+            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Exam name", "Action"];
+            var table = buildMainTable(headersArr);
+            $(".table-responsive").html(table);
+
+            getAllItems("Student");
+        }        
 }
 
 function buildItemSummaryRow(item, type)
@@ -148,14 +160,30 @@ function buildItemSummaryRow(item, type)
     var summaryData;
     if(type == "Student")
     {
-        summaryData = {
-            id: item.user_id,
-            ewu_id: item.user_id,
-            f_name: item.f_name,
-            l_name: item.l_name,
-            email: item.email,
-            state: item.state
-        };
+        if(_userType == "Teacher")
+        {
+            summaryData = {
+                id: item.user_id,
+                ewu_id: item.user_id,
+                f_name: item.f_name,
+                l_name: item.l_name,
+                email: item.email,
+                state: item.state,
+                exam_name: item.exam_name
+            };
+        }
+        else
+        {
+            summaryData = {
+                id: item.user_id,
+                ewu_id: item.user_id,
+                f_name: item.f_name,
+                l_name: item.l_name,
+                email: item.email,
+                state: item.state
+            };
+        }
+
     }
     else
     {
@@ -199,7 +227,15 @@ function loadTable(data, type)
 
         //console.log(detailExamRow);
 
-        $("#" + type + "s-panel > .table-responsive > ." + _tableId).append(row);
+        if(_userType == "Teacher")
+        {
+            $(".table-responsive > ." + _tableId).append(row);
+        }
+        else
+        {
+            $("#" + type + "s-panel > .table-responsive > ." + _tableId).append(row);
+        }
+        
         
         //$("." + _tableId).append(detailRow);
     });

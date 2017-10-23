@@ -41,14 +41,6 @@ function loaded() {
 }
 
 
-
-function loadSettings(data) {
-	_settings = data.reduce(function(obj, item) {
-		obj[item.name] = item.value;
-		return obj;
-	}, {});
-}
-
 function init()
 {
 
@@ -65,7 +57,7 @@ function init()
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
         requester_type: _userType
-        }, loadSettings, "json");
+        }, function(data){_settings = data;}, "json");
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);

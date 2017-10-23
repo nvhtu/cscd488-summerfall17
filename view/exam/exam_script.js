@@ -159,11 +159,6 @@ function buildItemSummaryRow(item)
 //     return detailRow;
 // }
 
-function onclickReport(item)
-{
-    
-}
-
 function onclickDownload(rosterData, examData){
     var csvContent = "data:text/csv;charset=utf-8,";
     
@@ -384,7 +379,8 @@ function onclickCreate()
     clearForm();
     $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
-    $("#submit-button").html("Create");
+	$("#submit-button").html("Create");
+	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
 }
 
 function onclickEdit(e) 
@@ -395,6 +391,7 @@ function onclickEdit(e)
     $("#modal-title").html("Edit an Exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
+	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
 
     $.get("../ape/get_all_apes.php", 
     {requester_id: _userId,

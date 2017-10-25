@@ -20,6 +20,7 @@
     $date = $_POST["date"];
     $location = $_POST["location"];
     $state = $_POST["state"];
+    $possible_grade = $_POST["possible_grade"];
     $passing_grade = $_POST["passing_grade"];
     $duration = $_POST["duration"];
     $start_time = $_POST["start_time"];
@@ -46,6 +47,7 @@
                             date = :exam_date,
                             location = :location,
                             state = :state,
+                            possible_grade = :possible_grade,
                             passing_grade = :passing_grade,
                             duration = :duration,
                             start_time = :start_time,
@@ -57,6 +59,7 @@
             ':exam_date' => $date,
             ':location' => $location,
             ':state' => $state,
+            ':possible_grade' => $possible_grade,
             ':passing_grade' => $passing_grade,
             ':duration' => $duration,
             ':start_time' => $start_time,

@@ -71,23 +71,23 @@ function populateForm(){
     requester_session_id: _userSessionId}, 
     function(data){
         _settings = data;
-        $.each(_settings, function(index, val){
-            $('#' + val["name"]).val(val["value"]);
+        $.each(_settings, function(name, val){
+            $('#' + name).val(val);
         });
     },
     "json");
 }
 
 function submitForm(){
-    $.each(_settings, function(index, val){
-        var input = $('#' + val["name"]).val();
-        if(input !== val["value"]){
-            _settings[index]["value"] = input;
+    $.each(_settings, function(name, val){
+        var input = $('#' + name).val();
+        if(input !== val){
+            _settings[name] = input;
             $.post("../settings/update_setting.php", 
                 {requester_id: _userId,
                 requester_type: _userType,
                 requester_session_id: _userSessionId,
-                name: val["name"],
+                name: name,
                 value: input}
             );
         }

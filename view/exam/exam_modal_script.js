@@ -92,6 +92,8 @@ function buildOptions(data, type) {
 }
 
 function onclickAddCat() {
+   _catSectionModified = true;
+
    var $table = $('#cat-table');
    var row = buildCatRow();
    var graderRow = buildCatGraderRow();
@@ -112,6 +114,16 @@ function onclickAddCat() {
 
 function onclickDeleteCat(e) {
    var catId = e.currentTarget.dataset["id"];
+   _catSectionModified = true;
+   
+   /*if($("#submit-button").attr("data-action") == "update"){
+      var cat = $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').find("select").val();
+      _deletedExamCats.push(cat);
+      var modIndex = _modifiedExamCats.indexOf(cat)
+      if(modIndex != -1)
+            _modifiedExamCats.splice(modIndex, 1);
+      console.log(_deletedExamCats);
+   }*/
    $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').remove();
    $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]').remove();
    
@@ -129,6 +141,15 @@ function onclickDeleteCat(e) {
 function onclickAddGrader(e) {
    var catId = e.currentTarget.dataset["id"],
    $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
+   _catSectionModified = true;
+
+   /*if($("#submit-button").attr("data-action") == "update"){
+      var cat = $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').find("select").val();
+      var modIndex = _modifiedExamCats.indexOf(cat)
+      if(modIndex == -1)
+            _modifiedExamCats.push(cat);
+      console.log(_deletedExamCats);
+   }*/
 
    var $btnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
    $btnDel.attr("data-id", catId);
@@ -156,6 +177,8 @@ function onclickAddGrader(e) {
 }
 
 function onclickDeleteGrader(e) {
+   _catSectionModified = true;
+
    var catId = e.currentTarget.dataset["id"];
    $(e.currentTarget).parent().parent().remove();
    

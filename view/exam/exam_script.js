@@ -22,6 +22,10 @@ var _selectedTab = "Open";
 
 var _isEditing = false;
 
+/*var _deletedExamCats;
+var _modifiedExamCats;*/
+var _catSectionModified;
+
 $(document).ready(loaded);
 
 function loaded() {
@@ -29,6 +33,7 @@ function loaded() {
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
+    $("#submit-button").attr("data-tab", "exam");
 
     $("a[href='#Open-panel']").click(function(){getAllItems("Open"); _selectedTab = "Open";});
     $("a[href='#In_Progress-panel']").click(function(){getAllItems("In_Progress"); _selectedTab = "In_Progress";});
@@ -94,6 +99,10 @@ function init()
     });
 
     $('#add-cat-btn').click(onclickAddCat);
+
+    $('#cat-table').on('change', 'input, select', function(){
+        _catSectionModified = true;        
+    });
 }
 
 function buildTable()
@@ -350,6 +359,18 @@ function updateItem()
 {
     $.post("../ape/update_ape.php", $("#" + _formId).serialize(), function(){
         var item = $("#" + _formId).serialize();
+        
+        if(_catSectionModified){
+            $.post("../ape/remove_exam_cat.php",
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            exam_id: $("#item-id").val()},
+            function(){
+                addExamCats($("#item-id").val());
+            });
+        }
+
         $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
         requester_type: _userType,
@@ -359,8 +380,9 @@ function updateItem()
         function(item){
             var row = buildItemSummaryRow(item[0]);
             // var detailRow = buildItemDetailRow(item[0]);
-            $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
+            //$("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
             // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+            $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(row);
         },
         "json");
     }); 
@@ -409,11 +431,16 @@ function onclickEdit(e)
     exam_id: itemId}, 
     populateExamCats,
     "json");
+
+    /*_deletedExamCats = Array();
+    _modifiedExamCats = Array();*/
 }
 
 function populateExamCats(examCatData){
     $.each(examCatData, function(index, examCat){
         onclickAddCat();
+        _catSectionModified = false;
+        
         var catRow = $(".cat-row:last");
         catRow.find("option[value='" + examCat.cat_id + "']").prop("selected", true);
         catRow.find("input").val(examCat.possible_grade);
@@ -440,7 +467,10 @@ function populateExamCats(examCatData){
 function populateGraders(graderData, dataId){
     var graderRow = $(".cat-grader-row[data-id='" + dataId + "']");
     $.each(graderData, function(index, grader){
-        graderRow.find(".btn-primary").click();
+        var fakeE = {currentTarget: graderRow.find(".btn-primary")[0]};
+        onclickAddGrader(fakeE);
+        _catSectionModified = false;
+        
         graderRow.find("select:last").find("option[value='" + grader.user_id + "']").prop("selected", true);
     });
 }
@@ -457,15 +487,15 @@ function onclickDelete(e)
         requester_session_id: _userSessionId,
         exam_id: itemId},
         function(){
-            $("tr[data-target='#item-" + itemId + "']").remove();
-            $("tr[id='item-" + itemId + "']").remove();
+            $("tr[data-id='item-" + itemId + "']").remove();
+            //$("tr[id='item-" + itemId + "']").remove();
         });
     }
 }
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
+    $("#" + _formId).find("select, input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
 	$('#Report_tab').find("input[type='checkbox']").prop("checked", false);
     $("#quarter").html("(Select valid date)");
     $("#possible-grade").html("(Sum of categories)");
@@ -473,7 +503,8 @@ function clearForm()
     $("#cat-table").hide();
     $('#add-cat-btn').prop("disabled",false);
     $('#cat-heading').toggleClass('empty-panel-fix', true);
-	$('a[href="#Exam_tab"]').tab('show');
+    $('a[href="#Exam_tab"]').tab('show');
+    _catSectionModified = false;
 }
 
 function getAllItems(state)

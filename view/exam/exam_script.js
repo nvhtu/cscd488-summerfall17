@@ -102,13 +102,9 @@ function init()
 
     $('#add-cat-btn').click(onclickAddCat);
 
-<<<<<<< HEAD
     $('#cat-table').on('change', 'input, select', function(){
         _catSectionModified = true;        
     });
-=======
-    buildRosterTab();
->>>>>>> 4084c0e0a8caf318ae5b7db865d08e79ac36098a
 }
 
 function buildTable()
@@ -433,12 +429,8 @@ function onclickEdit(e)
     populateExamCats,
     "json");
 
-<<<<<<< HEAD
     /*_deletedExamCats = Array();
     _modifiedExamCats = Array();*/
-=======
-    onclickRoster(e);
->>>>>>> 4084c0e0a8caf318ae5b7db865d08e79ac36098a
 }
 
 function populateExamCats(examCatData){

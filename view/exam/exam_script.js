@@ -38,6 +38,8 @@ function loaded() {
 
     $('a[href="#Exam_tab"]').on('show.bs.tab', onclickTabExam);
     $('a[href="#Report_tab"]').on('show.bs.tab', onclickTabReport);
+
+    //$('#lookup-results').hide();
 }
 
 
@@ -94,6 +96,8 @@ function init()
     });
 
     $('#add-cat-btn').click(onclickAddCat);
+
+    buildRosterTab();
 }
 
 function buildTable()
@@ -101,7 +105,7 @@ function buildTable()
     headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
 
     var table = buildMainTable(headersArr);
-    $(".table-responsive").html(table);
+    $(".tab-pane>.table-responsive").html(table);
 
     getAllItems("Open");
 }
@@ -249,12 +253,6 @@ function loadTable(data)
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
       //   $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
-        
-        
-        $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
-            onclickReport(item);
-        });
-        
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
@@ -380,7 +378,7 @@ function onclickEdit(e)
     clearForm();
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(itemId);
-    $("#modal-title").html("Edit an Exam");
+    //$("#modal-title").html("Edit an Exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
@@ -392,6 +390,7 @@ function onclickEdit(e)
     request: "get_by_id",
     exam_id: itemId}, 
     function(item){
+		$("#modal-title").html(item[0].name);
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
             el.val(val);
@@ -409,6 +408,8 @@ function onclickEdit(e)
     exam_id: itemId}, 
     populateExamCats,
     "json");
+
+    onclickRoster(e);
 }
 
 function populateExamCats(examCatData){
@@ -497,17 +498,14 @@ function onclickTabExam() {
 
    if (action === "create") {
       btn.html('Create');
-      $("#modal-title").html("Create an Exam");
    }
    else if (action === "update") {
       btn.html('Save changes');
-      $("#modal-title").html("Edit an Exam");
    }
 }
 
 function onclickTabReport() {
 	$('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
-	$("#modal-title").html("Generate Exam Report");
 }
 
 function onclickRoster(e)
@@ -515,26 +513,21 @@ function onclickRoster(e)
     headersArr = new Array();
     getGrade = -1;
 
-    
-
     if (_selectedTab != "Open")
     {
-        $("#add-student-btn").hide();
+        //$("#add-student-btn").hide();
 
-        headersArr = ["Student ID", "First Name", "Last Name", "Seat #", "Grade", "Result", "Action"];
+        headersArr = ["ID", "First Name", "Last Name", "Seat #", "Grade", "Result", "Action"];
         getGrade = 1;
     }
     else
     {
-        $("#add-student-btn").show();
-        $("#add-student-btn").click(onclickRegNewStudentBtn);
+        //$("#add-student-btn").show();
+        //$("#add-student-btn").click(onclickRegNewStudentBtn);
 
-        headersArr = ["Student ID", "First Name", "Last Name", "Seat #", "Action"];
+        headersArr = ["ID", "First Name", "Last Name", "Seat #", "Action"];
         getGrade = 0;
     }
-
-    $("#modal-title").html("Exam Roster");
-    
     
     var table = buildMainTable(headersArr);
     $("#roster-table-wrapper").html(table);
@@ -625,27 +618,26 @@ function onclickDeleteStudent(e)
     }
 }
 
-function onclickRegNewStudentBtn()
-{
-    modifyLookupModal();
-}
+// function onclickRegNewStudentBtn()
+// {
+//     modifyLookupModal();
+// }
 
-function modifyLookupModal()
-{
-    $("#lookup-button").remove();
-    var $newLookupBtn = $("<button type='button' id='lookup-button' class='btn btn-primary'>Look up</button>");
-    $newLookupBtn.click(onclickLookup);
-    $("#lookup-string").after($newLookupBtn);
+// function modifyLookupModal()
+// {
+//     $("#lookup-button").remove();
+//     var $newLookupBtn = $("<button type='button' id='lookup-button' class='btn btn-primary'>Look up</button>");
+//     $newLookupBtn.click(onclickLookup);
+//     $("#lookup-string").after($newLookupBtn);
 
-    $("#lookup-modal-title").html("Look up student");
-    headersArr = ["Student ID", "First Name", "Last Name", "Email", "State", "Action"];
-    table = buildMainTable(headersArr);
-    $("#lookup-table-wrapper").html(table);
-}
+//     headersArr = ["Student ID", "First Name", "Last Name", "Email", "State", "Action"];
+//     table = buildMainTable(headersArr);
+//     $("#lookup-table-wrapper").html(table);
+// }
 
 function onclickLookup()
 {
-    $("#lookup-table-wrapper > ."+_tableId + " tbody").empty();
+    $("#lookup-results > ."+_tableId + " tbody").empty();
     searchStr = $("#lookup-string").val();
     if(searchStr != "")
     {
@@ -688,7 +680,7 @@ function onclickLookup()
                      )
                   );
     
-                $("#lookup-table-wrapper > ." + _tableId).append(row);
+                $("#lookup-results > ." + _tableId).append(row);
 
                 
             });

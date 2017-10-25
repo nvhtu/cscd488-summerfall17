@@ -91,6 +91,14 @@ function buildOptions(data, type) {
    return options;
 }
 
+function buildRosterTab() {
+    $('#btn-lookup').click(onclickLookup);
+
+    headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
+    table = buildMainTable(headersArr);
+    $("#lookup-results").html(table);
+}
+
 function onclickAddCat() {
    var $table = $('#cat-table');
    var row = buildCatRow();
@@ -201,7 +209,7 @@ function buildCatRow() {
 }
 
 function buildCatGraderRow() {
-   var $btnAddGrader = $('<button type="button" class="btn btn-primary">Add Grader</button>');
+   var $btnAddGrader = $('<button type="button" class="btn btn-primary btn-labeled pull-right"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>Add Grader</button>');
    $btnAddGrader.attr("data-id", _catCount);
    $btnAddGrader.click(onclickAddGrader);
 
@@ -212,7 +220,8 @@ function buildCatGraderRow() {
                $('<table class="table table-condensed">').append(
                   $('<tbody>').append(
                      $('<tr class="active">').append(
-                        $('<td>').append(
+                        $('<td class="grader-header clearfix">').append(
+                            $('<h4 class="pull-left">').text("Graders:"),
                            $btnAddGrader
                         )
                      ),

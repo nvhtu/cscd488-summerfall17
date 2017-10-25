@@ -120,18 +120,27 @@
                 $quarterStartName = "";
                 $quarterStartCount = 0;
 
-                for($i=2; $i < count($GLOBALS["settings"]); $i++)
+                $sortedQuarterDatesArr = array(0=>$GLOBALS["settings"]["fallStart"],
+                                               1=>$GLOBALS["settings"]["fallEnd"],
+                                               2=>$GLOBALS["settings"]["winterStart"],
+                                               3=>$GLOBALS["settings"]["winterEnd"],
+                                               4=>$GLOBALS["settings"]["springStart"],
+                                               5=>$GLOBALS["settings"]["springEnd"],
+                                               6=>$GLOBALS["settings"]["summerStart"],
+                                               7=>$GLOBALS["settings"]["summerEnd"],);
+
+                for($i=0; $i < count($sortedQuarterDatesArr); $i++)
                 {
-                    if($today >= $GLOBALS["settings"][$i]["value"] && strstr($GLOBALS["settings"][$i]["name"],"Start"))
+                    if($today >= $sortedQuarterDatesArr[$i] && $i%2 == 0)
                     {
-                        $curQuarterStart = $GLOBALS["settings"][$i]["value"];
-                        $quarterStartName = $GLOBALS["settings"][$i]["name"];
+                        $curQuarterStart = $sortedQuarterDatesArr[$i];
+                        $quarterStartName = key($sortedQuarterDatesArr);
                         $quarterStartCount = $i;
                     }
                     else
                     if(strcmp($curQuarterStart,"") != 0)
                     {
-                        $curQuarterEnd = $GLOBALS["settings"][$quarterStartCount+1]["value"];
+                        $curQuarterEnd = $sortedQuarterDatesArr[$quarterStartCount+1];
                     }
                     
                 }

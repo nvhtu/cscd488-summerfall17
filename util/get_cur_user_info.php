@@ -16,12 +16,12 @@
 
         if($isDev)
         {
-           /* $userInfo = array('userId' => '3333', 
-                            'userType' => array("Student"), 
+            $userInfo = array('userId' => '222', 
+                            'userType' => array("Admin","Teacher"), 
                             'userSession' => '111111',
                             'userFname' => 'Tu',
                             'userLname' => 'Nguyen',
-                            'userEmail' => 'abc@xyz.com' );*/
+                            'userEmail' => 'abc@xyz.com' );
             
            $userInfo = array('userId' => '111', 
                             'userType' => array("Admin", "Teacher"), 

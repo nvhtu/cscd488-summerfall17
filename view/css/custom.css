@@ -85,7 +85,7 @@ body > .container {
  * Modal
  */
 @media (min-width: 992px) {
-   #detail-modal #col-left {
+   #detail-modal .col-left {
       border-right: 1px solid #e5e5e5;
    }
 }
@@ -100,6 +100,28 @@ body > .container {
    background-color: #f5f5f5;
    border-bottom-left-radius: 5px;
    border-bottom-right-radius: 5px;
+}
+
+#cat-table .graders .input-group {
+    margin-left: auto;
+   margin-bottom: 5px;
+}
+
+.cat-grader-row table tr>td {
+    padding: 5px 15px;
+}
+
+.cat-grader-row table tr>td.graders {
+    padding-bottom: 15px;
+}
+
+.grader-header>h4 {
+    margin: 0;
+    padding-top: 7px;
+}
+
+#roster-form .table-toolbar {
+    padding-top: 0px;
 }
 
 /*
@@ -183,7 +205,7 @@ body > .container {
    border-top: 0;
 }
 
-#col-right>.panel>table th:not(:first-of-type) {
+#detail-modal .col-right>.panel>table th:not(:first-of-type) {
    width: 1%;
    white-space: nowrap;
 }
@@ -248,10 +270,6 @@ body > .container {
 
 .empty-panel-fix {
    border-bottom: unset;
-}
-
-#cat-table .graders .input-group:not(:last-of-type) {
-   margin-bottom: 5px;
 }
 
 .checkbox-fix {

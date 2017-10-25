@@ -22,6 +22,10 @@ var _selectedTab = "Open";
 
 var _isEditing = false;
 
+/*var _deletedExamCats;
+var _modifiedExamCats;*/
+var _catSectionModified;
+
 $(document).ready(loaded);
 
 function loaded() {
@@ -29,6 +33,7 @@ function loaded() {
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
+    $("#submit-button").attr("data-tab", "exam");
 
     $("a[href='#Open-panel']").click(function(){getAllItems("Open"); _selectedTab = "Open";});
     $("a[href='#In_Progress-panel']").click(function(){getAllItems("In_Progress"); _selectedTab = "In_Progress";});
@@ -38,6 +43,8 @@ function loaded() {
 
     $('a[href="#Exam_tab"]').on('show.bs.tab', onclickTabExam);
     $('a[href="#Report_tab"]').on('show.bs.tab', onclickTabReport);
+
+    //$('#lookup-results').hide();
 }
 
 
@@ -94,6 +101,10 @@ function init()
     });
 
     $('#add-cat-btn').click(onclickAddCat);
+
+    $('#cat-table').on('change', 'input, select', function(){
+        _catSectionModified = true;        
+    });
 }
 
 function buildTable()
@@ -101,7 +112,7 @@ function buildTable()
     headersArr = ["Name", "Date", "Start Time", "Location", "Action"];
 
     var table = buildMainTable(headersArr);
-    $(".table-responsive").html(table);
+    $(".tab-pane>.table-responsive").html(table);
 
     getAllItems("Open");
 }
@@ -249,12 +260,6 @@ function loadTable(data)
 
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
       //   $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
-        
-        
-        $(".btn-xs[data-id='" + item.exam_id + "']").click(function(){
-            onclickReport(item);
-        });
-        
     });
     $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
@@ -350,6 +355,18 @@ function updateItem()
 {
     $.post("../ape/update_ape.php", $("#" + _formId).serialize(), function(){
         var item = $("#" + _formId).serialize();
+        
+        if(_catSectionModified){
+            $.post("../ape/remove_exam_cat.php",
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            exam_id: $("#item-id").val()},
+            function(){
+                addExamCats($("#item-id").val());
+            });
+        }
+
         $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
         requester_type: _userType,
@@ -359,8 +376,9 @@ function updateItem()
         function(item){
             var row = buildItemSummaryRow(item[0]);
             // var detailRow = buildItemDetailRow(item[0]);
-            $("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
+            //$("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
             // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+            $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(row);
         },
         "json");
     }); 
@@ -380,7 +398,7 @@ function onclickEdit(e)
     clearForm();
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(itemId);
-    $("#modal-title").html("Edit an Exam");
+    //$("#modal-title").html("Edit an Exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
@@ -392,6 +410,7 @@ function onclickEdit(e)
     request: "get_by_id",
     exam_id: itemId}, 
     function(item){
+		$("#modal-title").html(item[0].name);
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
             el.val(val);
@@ -409,11 +428,16 @@ function onclickEdit(e)
     exam_id: itemId}, 
     populateExamCats,
     "json");
+
+    /*_deletedExamCats = Array();
+    _modifiedExamCats = Array();*/
 }
 
 function populateExamCats(examCatData){
     $.each(examCatData, function(index, examCat){
         onclickAddCat();
+        _catSectionModified = false;
+        
         var catRow = $(".cat-row:last");
         catRow.find("option[value='" + examCat.cat_id + "']").prop("selected", true);
         catRow.find("input").val(examCat.possible_grade);
@@ -440,7 +464,10 @@ function populateExamCats(examCatData){
 function populateGraders(graderData, dataId){
     var graderRow = $(".cat-grader-row[data-id='" + dataId + "']");
     $.each(graderData, function(index, grader){
-        graderRow.find(".btn-primary").click();
+        var fakeE = {currentTarget: graderRow.find(".btn-primary")[0]};
+        onclickAddGrader(fakeE);
+        _catSectionModified = false;
+        
         graderRow.find("select:last").find("option[value='" + grader.user_id + "']").prop("selected", true);
     });
 }
@@ -457,15 +484,15 @@ function onclickDelete(e)
         requester_session_id: _userSessionId,
         exam_id: itemId},
         function(){
-            $("tr[data-target='#item-" + itemId + "']").remove();
-            $("tr[id='item-" + itemId + "']").remove();
+            $("tr[data-id='item-" + itemId + "']").remove();
+            //$("tr[id='item-" + itemId + "']").remove();
         });
     }
 }
 
 function clearForm()
 {
-    $("#" + _formId).find("input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
+    $("#" + _formId).find("select, input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
 	$('#Report_tab').find("input[type='checkbox']").prop("checked", false);
     $("#quarter").html("(Select valid date)");
     $("#possible-grade").html("(Sum of categories)");
@@ -473,7 +500,8 @@ function clearForm()
     $("#cat-table").hide();
     $('#add-cat-btn').prop("disabled",false);
     $('#cat-heading').toggleClass('empty-panel-fix', true);
-	$('a[href="#Exam_tab"]').tab('show');
+    $('a[href="#Exam_tab"]').tab('show');
+    _catSectionModified = false;
 }
 
 function getAllItems(state)
@@ -497,17 +525,14 @@ function onclickTabExam() {
 
    if (action === "create") {
       btn.html('Create');
-      $("#modal-title").html("Create an Exam");
    }
    else if (action === "update") {
       btn.html('Save changes');
-      $("#modal-title").html("Edit an Exam");
    }
 }
 
 function onclickTabReport() {
 	$('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
-	$("#modal-title").html("Generate Exam Report");
 }
 
 function onclickRoster(e)
@@ -515,26 +540,21 @@ function onclickRoster(e)
     headersArr = new Array();
     getGrade = -1;
 
-    
-
     if (_selectedTab != "Open")
     {
-        $("#add-student-btn").hide();
+        //$("#add-student-btn").hide();
 
-        headersArr = ["Student ID", "First Name", "Last Name", "Seat #", "Grade", "Result", "Action"];
+        headersArr = ["ID", "First Name", "Last Name", "Seat #", "Grade", "Result", "Action"];
         getGrade = 1;
     }
     else
     {
-        $("#add-student-btn").show();
-        $("#add-student-btn").click(onclickRegNewStudentBtn);
+        //$("#add-student-btn").show();
+        //$("#add-student-btn").click(onclickRegNewStudentBtn);
 
-        headersArr = ["Student ID", "First Name", "Last Name", "Seat #", "Action"];
+        headersArr = ["ID", "First Name", "Last Name", "Seat #", "Action"];
         getGrade = 0;
     }
-
-    $("#modal-title").html("Exam Roster");
-    
     
     var table = buildMainTable(headersArr);
     $("#roster-table-wrapper").html(table);
@@ -625,27 +645,26 @@ function onclickDeleteStudent(e)
     }
 }
 
-function onclickRegNewStudentBtn()
-{
-    modifyLookupModal();
-}
+// function onclickRegNewStudentBtn()
+// {
+//     modifyLookupModal();
+// }
 
-function modifyLookupModal()
-{
-    $("#lookup-button").remove();
-    var $newLookupBtn = $("<button type='button' id='lookup-button' class='btn btn-primary'>Look up</button>");
-    $newLookupBtn.click(onclickLookup);
-    $("#lookup-string").after($newLookupBtn);
+// function modifyLookupModal()
+// {
+//     $("#lookup-button").remove();
+//     var $newLookupBtn = $("<button type='button' id='lookup-button' class='btn btn-primary'>Look up</button>");
+//     $newLookupBtn.click(onclickLookup);
+//     $("#lookup-string").after($newLookupBtn);
 
-    $("#lookup-modal-title").html("Look up student");
-    headersArr = ["Student ID", "First Name", "Last Name", "Email", "State", "Action"];
-    table = buildMainTable(headersArr);
-    $("#lookup-table-wrapper").html(table);
-}
+//     headersArr = ["Student ID", "First Name", "Last Name", "Email", "State", "Action"];
+//     table = buildMainTable(headersArr);
+//     $("#lookup-table-wrapper").html(table);
+// }
 
 function onclickLookup()
 {
-    $("#lookup-table-wrapper > ."+_tableId + " tbody").empty();
+    $("#lookup-results > ."+_tableId + " tbody").empty();
     searchStr = $("#lookup-string").val();
     if(searchStr != "")
     {
@@ -688,7 +707,7 @@ function onclickLookup()
                      )
                   );
     
-                $("#lookup-table-wrapper > ." + _tableId).append(row);
+                $("#lookup-results > ." + _tableId).append(row);
 
                 
             });

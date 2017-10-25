@@ -91,7 +91,17 @@ function buildOptions(data, type) {
    return options;
 }
 
+function buildRosterTab() {
+    $('#btn-lookup').click(onclickLookup);
+
+    headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
+    table = buildMainTable(headersArr);
+    $("#lookup-results").html(table);
+}
+
 function onclickAddCat() {
+   _catSectionModified = true;
+
    var $table = $('#cat-table');
    var row = buildCatRow();
    var graderRow = buildCatGraderRow();
@@ -112,6 +122,16 @@ function onclickAddCat() {
 
 function onclickDeleteCat(e) {
    var catId = e.currentTarget.dataset["id"];
+   _catSectionModified = true;
+   
+   /*if($("#submit-button").attr("data-action") == "update"){
+      var cat = $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').find("select").val();
+      _deletedExamCats.push(cat);
+      var modIndex = _modifiedExamCats.indexOf(cat)
+      if(modIndex != -1)
+            _modifiedExamCats.splice(modIndex, 1);
+      console.log(_deletedExamCats);
+   }*/
    $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').remove();
    $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]').remove();
    
@@ -129,6 +149,15 @@ function onclickDeleteCat(e) {
 function onclickAddGrader(e) {
    var catId = e.currentTarget.dataset["id"],
    $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
+   _catSectionModified = true;
+
+   /*if($("#submit-button").attr("data-action") == "update"){
+      var cat = $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').find("select").val();
+      var modIndex = _modifiedExamCats.indexOf(cat)
+      if(modIndex == -1)
+            _modifiedExamCats.push(cat);
+      console.log(_deletedExamCats);
+   }*/
 
    var $btnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
    $btnDel.attr("data-id", catId);
@@ -156,6 +185,8 @@ function onclickAddGrader(e) {
 }
 
 function onclickDeleteGrader(e) {
+   _catSectionModified = true;
+
    var catId = e.currentTarget.dataset["id"];
    $(e.currentTarget).parent().parent().remove();
    
@@ -201,7 +232,7 @@ function buildCatRow() {
 }
 
 function buildCatGraderRow() {
-   var $btnAddGrader = $('<button type="button" class="btn btn-primary">Add Grader</button>');
+   var $btnAddGrader = $('<button type="button" class="btn btn-primary btn-labeled pull-right"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>Add Grader</button>');
    $btnAddGrader.attr("data-id", _catCount);
    $btnAddGrader.click(onclickAddGrader);
 
@@ -212,7 +243,8 @@ function buildCatGraderRow() {
                $('<table class="table table-condensed">').append(
                   $('<tbody>').append(
                      $('<tr class="active">').append(
-                        $('<td>').append(
+                        $('<td class="grader-header clearfix">').append(
+                            $('<h4 class="pull-left">').text("Graders:"),
                            $btnAddGrader
                         )
                      ),

@@ -1,35 +1,61 @@
-<div class="modal-body">
-   <form id="roster-form" class="form-horizontal">
+<div class="modal-body row">
 
-      <!--
-         Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
-         so $("#main-form").serialize() will include those values
-         !-->
-      <input type="hidden" id="requester-id" name="requester_id" />
-      <input type="hidden" id="requester-type" name="requester_type" />
-      <input type="hidden" id="requester-session" name="requester_session" />
-      <input type="hidden" id="item-id" name="exam_id" />
+    <div class="col-md-6 col-left">
+        <form id="lookup-form" class="form-horizontal" name="lookup-form">
 
-      <div>
-            <div class="container-fluid table-toolbar">
-               <div class="form-inline">
-                  <button type="button" class="btn btn-primary pull-left" id="dd-student-btn" data-target="#lookup-modal" data-toggle="modal">Register a student</button>
-                  <div class="form-group has-feedback pull-right">
-                     <div class="input-group">
-                        <input type="text" class="search form-control" placeholder="Search">
-                        <span class="clear-search glyphicon glyphicon-remove-circle form-control-feedback"></span>
-                        <span class="input-group-btn">
-                           <button type="button" class="btn btn-default btn-search" aria-label="Search"><span class="glyphicon glyphicon-search"></span></button>
-                        </span>
-                     </div>
-                  </div>
-               </div>
-            </div>
+            <!-- 
+                Hidden input fields for requester id, requester type, requester session, and item id that auto populated  
+                so $("#main-form").serialize() will include those values 
+                !-->
+            <input type="hidden" id="requester-id" name="requester_id" />
+            <input type="hidden" id="requester-type" name="requester_type" />
+            <input type="hidden" id="requester-session" name="requester_session" />
             
-            <div class="table-responsive" id="roster-table-wrapper">
-                     
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="lookup-string" placeholder="ID, name, or email">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="btn-lookup" type="button">Look Up Student</button>
+                        </span>
+                    </div>
+                </div>
             </div>
-         </div>
+            <div class="table-responsive" id="lookup-results"></div>
+        </form>
+        <hr class="separator hidden-md hidden-lg">
+    </div>
 
-   </form>
+    <div class="col-md-6 col-right">
+        <form id="roster-form" class="form-horizontal">
+
+            <!--
+            Hidden input fields for requester id, requester type, requester session, and item id that auto populated 
+            so $("#main-form").serialize() will include those values
+            !-->
+            <input type="hidden" id="requester-id" name="requester_id" />
+            <input type="hidden" id="requester-type" name="requester_type" />
+            <input type="hidden" id="requester-session" name="requester_session" />
+            <input type="hidden" id="item-id" name="exam_id" />
+
+            <div>
+                <div class="container-fluid table-toolbar">
+                    <div class="form-inline clearfix">
+                        <div class="form-group has-feedback pull-right">
+                            <div class="input-group">
+                                <input type="text" class="search form-control" placeholder="Search">
+                                <span class="clear-search glyphicon glyphicon-remove-circle form-control-feedback"></span>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-search" aria-label="Search">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive" id="roster-table-wrapper"></div>
+            </div>
+        </form>
+    </div>
 </div>

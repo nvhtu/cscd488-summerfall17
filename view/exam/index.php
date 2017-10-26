@@ -26,7 +26,7 @@
             $tableTitle = "Exams";
             $tableTabs = array();
             $tableTabs = array("Open", "In Progress", "Grading", "Archived", "Hidden");
-            $jsArr = array("exam", "exam_modal");
+            $jsArr = array("exam", "exam_modal", "exam_detail", "exam_roster", "exam_report");
         }
         else
         {

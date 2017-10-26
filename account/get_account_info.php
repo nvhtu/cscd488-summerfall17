@@ -145,12 +145,13 @@
                     
                 }
 
+                /*
                 //check if today doesn't fall into any quarter range (meaning we're on the break ;) )
                 if($today > $curQuarterEnd || strcmp($curQuarterStart,"") == 0)
                 {
                     http_response_code(400);
                     die("You currently don't have any students in your class. You're restricted from viewing previous quarters students.");
-                }
+                }*/
                 //--- END Get current quarter start and end dates
 
                 $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state, E.name AS exam_name
@@ -164,7 +165,11 @@
 
                 $sqlResult = sqlExecute($sqlGetStudents, $data, True);
 
-                echo("");
+                if (count($sqlResult)==0)
+                {
+                    //http_response_code(400);
+                    die("You currently don't have any students in your class. You're restricted from viewing previous quarters students.");
+                }
             }
             else
             {

@@ -79,41 +79,41 @@ function buildItemRow(summaryData, isBasicBtns)
     }
 }
 
-// /**
-//  * Build an item detail row that will appear when click the info button
-//  * @param {object} detailData - An javascript object contains data for the detail row
-//  * @param {string} namesArr - An array of corresponding strings for detailData properties. E.g. "Passing Grade". This array size must match the number of properties in detailData object.
-//  * @return {string} HTML string of the detail row
-//  */
-// function buildDetailRow(detailData, namesArr)
-// {
-//     var detailRowHTML = '<tr class="item-detail-row" data-id="item-' + detailData.id + '">'
-//     + '<td class="details" colspan="100%">'
-//     + '<div class="collapse" id="item-' + detailData.id + '">'
-//     + '<table class="table table-condensed">'
-//     + '<tbody>';
+/**
+ * Build an item detail row that will appear when click the info button
+ * @param {object} detailData - An javascript object contains data for the detail row
+ * @param {string} namesArr - An array of corresponding strings for detailData properties. E.g. "Passing Grade". This array size must match the number of properties in detailData object.
+ * @return {string} HTML string of the detail row
+ */
+function buildDetailRow(detailData, namesArr)
+{
+    var detailRowHTML = '<tr class="item-detail-row" data-id="item-' + detailData.id + '">'
+    + '<td class="details" colspan="100%">'
+    + '<div class="collapse" id="item-' + detailData.id + '">'
+    + '<table class="table table-condensed">'
+    + '<tbody>';
 
-//     var count = 0;
+    var count = 0;
 
-//     for (var property in detailData) 
-//     {
-//         if (detailData.hasOwnProperty(property)) 
-//         {
-//             if(detailData[property] != detailData.id)
-//             {
-//                 detailRowHTML += '<tr class="active">'
-//                                 + '<th>' + namesArr[count] + ': </th>'
-//                                 + '<td>' + detailData[property] + ' </td>'
-//                                 + '</tr>';
+    for (var property in detailData) 
+    {
+        if (detailData.hasOwnProperty(property)) 
+        {
+            if(detailData[property] != detailData.id)
+            {
+                detailRowHTML += '<tr class="active">'
+                                + '<th>' + namesArr[count] + ': </th>'
+                                + '<td>' + detailData[property] + ' </td>'
+                                + '</tr>';
                 
-//                 count++;
-//             }
+                count++;
+            }
             
             
-//         }
-//     }
+        }
+    }
 
-//     detailRowHTML += '</tbody></table></div></td></tr>';
-//     //console.log(detailRowHTML);
-//     return detailRowHTML;
-// }
+    detailRowHTML += '</tbody></table></div></td></tr>';
+    //console.log(detailRowHTML);
+    return detailRowHTML;
+}

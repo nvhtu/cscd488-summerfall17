@@ -8,28 +8,36 @@
 
 var _origClickEvent;
 
+$('a[href="#Exam_tab"]').click(function(){onclickTabExam();});
+$('a[href="#Report_tab"]').click(function(){onclickTabReport();});
+$('a[href="#Roster_tab"]').click(function(){onclickTabRoster();});
+$("#submit-button").click(submitForm);
+
 function onOpenDetailModal(e)
-{
+{/*
       $('a[href="#Exam_tab"]').on('show.bs.tab', onclickTabExam);
       $('a[href="#Report_tab"]').on('show.bs.tab', onclickTabReport);
       $('a[href="#Roster_tab"]').on('show.bs.tab', onclickTabRoster);
+      */
+
+
       
-      $("#submit-button").click(submitForm);
+      
       $("#submit-button").attr("data-tab", "exam");
 
       _origClickEvent = e;
 
-      loadTabExam(_origClickEvent);
+      loadTabExam();
 }
 
 function onclickTabExam() 
 {
-      loadTabExam(_origClickEvent);
+      loadTabExam();
 }
 
-function onclickTabRoster(_origClickEvent)   
+function onclickTabRoster()   
 {
-      loadTabRoster(_origClickEvent);
+      loadTabRoster();
 }
 
 function onclickTabReport() 

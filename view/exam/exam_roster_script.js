@@ -1,6 +1,9 @@
+$("#btn-lookup").click(onclickLookup);
+
 function loadTabRoster()
 {
-    $('#btn-lookup').click(onclickLookup);
+    
+    
     
     headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
     table = buildMainTable(headersArr);
@@ -9,7 +12,7 @@ function loadTabRoster()
     headersArr = new Array();
     getGrade = -1;
 
-    if (_selectedTab != "Open")
+    if (_selectedTab != "Open" && _selectedTab != "In_Progress")
     {
         //$("#add-student-btn").hide();
 
@@ -28,9 +31,13 @@ function loadTabRoster()
     var table = buildMainTable(headersArr);
     $("#roster-table-wrapper").html(table);
 
-    var itemId = $("#main-form > #item-id").val();
+    var itemId = _origClickEvent.currentTarget.dataset["id"];
     
     $("#roster-form > #item-id").val(itemId);
+
+    //clear 2 tables
+    $("#roster-table-wrapper > ."+_tableId + " tbody").empty();
+    $("#lookup-results > ."+_tableId + " tbody").empty();
 
 
 
@@ -47,32 +54,16 @@ function loadTabRoster()
 
 function loadRosterTable(data)
 {
+    $("#roster-table-wrapper > ."+_tableId + " tbody").empty();
     $.each(data, function(i, item) 
     {
             switch (_selectedTab)
             {
-                case "Open":    
-                                var summaryData = {
-                                    id: item.student_id,
-                                    studentid: item.student_id,
-                                    fname: item.f_name,
-                                    lname: item.l_name,
-                                    seatnum: item.seat_num
-                                };
-                                var row = buildItemRow(summaryData, false);
-                                var $bttnDel = $('<button type="button" class="btn btn-danger">Unregister</button>');
-                                $bttnDel.attr("data-id", summaryData.id);
-                                $bttnDel.click(onclickDeleteStudent);
-                    
-                                row.append(
-                                    $('<td class="btns">').append(
-                                    $('<div class="btn-group" role="group">').append($bttnDel, ' ')
-                                    )
-                                );
-                                $("#roster-table-wrapper > ." + _tableId).append(row);
+                case "Open":    loadRosterTableNoGrades(item);
                                 break;
+                                
                 
-                case "In_Progress": $("#roster-table-wrapper > .main-table > thead > tr > th:nth-child(5)").remove();
+                case "In_Progress": loadRosterTableNoGrades(item);
                             break;
                 
                 case "Grading":
@@ -140,13 +131,13 @@ function onclickLookup()
     searchStr = $("#lookup-string").val();
     if(searchStr != "")
     {
-        //$("#Students-panel > .table-responsive > ."+_tableId + " tbody").empty();
         $.get("../account/student_search.php", 
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
         search_str: searchStr}, 
         function(data){
+            $("#lookup-results > ."+_tableId + " tbody").empty();
             $.each(data, function(i, item) 
             {
                 var summaryData = {
@@ -216,6 +207,29 @@ function onclickRegisterStudent(e)
         loadRosterTable,
         "json");
     });
+}
+
+function loadRosterTableNoGrades(item)
+{
+    var summaryData = {
+        id: item.student_id,
+        studentid: item.student_id,
+        fname: item.f_name,
+        lname: item.l_name,
+        seatnum: item.seat_num
+    };
+    var row = buildItemRow(summaryData, false);
+    var $bttnDel = $('<button type="button" class="btn btn-danger">Unregister</button>');
+    $bttnDel.attr("data-id", summaryData.id);
+    $bttnDel.click(onclickDeleteStudent);
+
+    row.append(
+        $('<td class="btns">').append(
+        $('<div class="btn-group" role="group">').append($bttnDel, ' ')
+        )
+    );
+    $("#roster-table-wrapper > ." + _tableId).append(row);
+    
 }
 
 function loadRosterTableHasGrades(item)

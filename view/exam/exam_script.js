@@ -120,8 +120,10 @@ function buildItemSummaryRow(item)
     return row;
 }
 
-function loadTable(data) 
+function loadTable(data, state) 
 {
+    $("#" + state + "-panel > .table-responsive > ."+_tableId + " tbody").empty();
+
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
       //   var detailRow = buildItemDetailRow(item);
@@ -129,7 +131,7 @@ function loadTable(data)
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
       //   $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
     });
-    $(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
+    //$(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
 
 function submitForm(e) {
@@ -216,12 +218,13 @@ function clearForm()
 function getAllItems(state)
 {
     $("#" + state + "-panel > .table-responsive > ."+_tableId + " tbody").empty();
-    
     $.get("../ape/get_all_apes.php", 
         {requester_id: _userId,
         requester_type: _userType,
         requester_session_id: _userSessionId,
         request: "get_all"}, 
-        loadTable,
+        function(data){
+            loadTable(data, state);
+        },
         "json");
 }

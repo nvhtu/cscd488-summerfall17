@@ -11,7 +11,7 @@
         $modalsArr = array("../exam/exam", "../exam/roster", "../exam/report");
         $modalTitles = array("Exam", "Roster", "Report");
         $modalSize = "large";
-        $jsArr = array("../exam/exam_modal");
+        $jsArr = array("../exam/exam_modal", "../exam/exam_detail", "../exam/exam_report", "../exam/exam_roster");
     }
         else if(in_array("Grader", $userInfo["userType"]))
             {

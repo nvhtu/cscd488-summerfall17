@@ -55,7 +55,7 @@ function init()
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
         requester_type: _userType
-        }, loadSettings, "json");
+        }, function(data){_settings = data;}, "json");
         
     getAllLoc();
     getAllCat();        
@@ -73,14 +73,6 @@ function init()
     
 }
 
-function loadSettings(data) 
-{
-    _settings = data.reduce(function(obj, item) {
-       obj[item.name] = item.value;
-       return obj;
-    }, {});
-
-}
 
 function loadUpcomingExams()
 {

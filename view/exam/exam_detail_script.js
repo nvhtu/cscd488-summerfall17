@@ -5,74 +5,73 @@ var _catOptions;
 var _graderOptions;
 var _stateOptions;
 
+$('input[name="date"]').datepicker({
+    format: 'yyyy-mm-dd',
+    forceParse: false,
+    todayHighlight: true,
+    autoclose: true
+}).on('changeDate', autofillQuarter);
+
+$('input[name="date"]').keydown(function(){
+    return false;
+});
+
+$('#add-cat-btn').click(onclickAddCat);
+
+$('#cat-table').on('change', 'input, select', function(){
+    _catSectionModified = true;        
+});
+
 function loadTabExam()
 {
-    var btn = $('#submit-button'),
-    action = btn.attr("data-action");
+    //var btn = $('#submit-button');
+    //action = btn.attr("data-action");
     
-    btn.attr("data-tab", "exam");
+    //btn.attr("data-tab", "exam");
  
-    if (action === "create") {
+    /*if (action === "create") {
        btn.html('Create');
     }
     else if (action === "update") {
        btn.html('Save changes');
-    }
+    }*/
 
-       clearForm();
-       var itemId = _origClickEvent.currentTarget.dataset["id"];
-       $("#item-id").val(itemId);
-       //$("#modal-title").html("Edit an Exam");
-       $("#submit-button").attr("data-action", "update");
-       $("#submit-button").html("Save changes");
-       $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
-   
-       var options={
-           format: 'yyyy-mm-dd',
-           forceParse: false,
-           todayHighlight: true,
-           autoclose: true,
-         };
-         $('input[name="date"]').datepicker(options).on('changeDate', autofillQuarter);
-     
-         $('input[name="date"]').keydown(function(){
-             return false;
-         });
-     
-         $('#add-cat-btn').click(onclickAddCat);
-     
-         $('#cat-table').on('change', 'input, select', function(){
-             _catSectionModified = true;        
-         });
+    clearForm();
+    var itemId = _origClickEvent.currentTarget.dataset["id"];
+    $("#item-id").val(itemId);
+    //$("#modal-title").html("Edit an Exam");
+    $("#submit-button").attr("data-action", "update");
+    $("#submit-button").html("Save changes");
+    $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
 
-       $.get("../ape/get_all_apes.php", 
-       {requester_id: _userId,
-       requester_type: _userType,
-       requester_session_id: _userSessionId,
-       request: "get_by_id",
-       exam_id: itemId}, 
-       function(item){
-           $("#modal-title").html(item[0].name);
-           $.each(item[0], function(name, val){
-               var el = $('[name="'+name+'"]');
-               el.val(val);
-           });
-           $('input[name="date"]').triggerHandler('changeDate');
-           $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
-           $("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
-       },
-       "json");
-   
-       $.get("../ape/get_exam_cats.php", 
-       {requester_id: _userId,
-       requester_type: _userType,
-       requester_session_id: _userSessionId,
-       exam_id: itemId}, 
-       populateExamCats,
-       "json");
-   
-       /*_deletedExamCats = Array();
-       _modifiedExamCats = Array();*/
+    $.get("../ape/get_all_apes.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_by_id",
+    exam_id: itemId}, 
+    function(item){
+        $("#modal-title").html(item[0].name);
+        $.each(item[0], function(name, val){
+            var el = $('[name="'+name+'"]');
+            el.val(val);
+        });
+        $('input[name="date"]').triggerHandler('changeDate');
+        $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
+        $("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
+    },
+    "json");
+
+    $.get("../ape/get_exam_cats.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    exam_id: itemId}, 
+    populateExamCats,
+    "json");
+
+    /*_deletedExamCats = Array();
+    _modifiedExamCats = Array();*/
    
 }
 

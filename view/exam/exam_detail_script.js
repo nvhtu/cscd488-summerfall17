@@ -5,7 +5,7 @@ var _catOptions;
 var _graderOptions;
 var _stateOptions;
 
-function loadTabExam(e)
+function loadTabExam()
 {
     var btn = $('#submit-button'),
     action = btn.attr("data-action");
@@ -20,7 +20,7 @@ function loadTabExam(e)
     }
 
        clearForm();
-       var itemId = e.currentTarget.dataset["id"];
+       var itemId = _origClickEvent.currentTarget.dataset["id"];
        $("#item-id").val(itemId);
        //$("#modal-title").html("Edit an Exam");
        $("#submit-button").attr("data-action", "update");

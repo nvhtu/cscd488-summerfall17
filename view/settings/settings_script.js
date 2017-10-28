@@ -45,7 +45,7 @@ function buildForm(){
             format: 'yyyy-mm-dd',
             forceParse: false,
             todayHighlight: true,
-            autoclose: true,
+            autoclose: true
         };
         $('input[name="date"]').datepicker(options);
     

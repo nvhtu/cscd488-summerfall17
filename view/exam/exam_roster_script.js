@@ -16,15 +16,18 @@ function loadTabRoster()
 
     if (_selectedTab != "Open" && _selectedTab != "In_Progress")
     {
-        //$("#add-student-btn").hide();
+        $("#Roster_tab .col-left").hide();
+        $("#Roster_tab .col-right").removeClass("col-md-6");
+        $("#Roster_tab .col-right").addClass("col-md-12");
 
         headersArr = ["ID", "First Name", "Last Name", "Seat #", "Grade", "Result", "Action"];
         getGrade = 1;
     }
     else
     {
-        //$("#add-student-btn").show();
-        //$("#add-student-btn").click(onclickRegNewStudentBtn);
+        $("#Roster_tab .col-left").show();
+        $("#Roster_tab .col-right").removeClass("col-md-12");
+        $("#Roster_tab .col-right").addClass("col-md-6");
 
         headersArr = ["ID", "First Name", "Last Name", "Seat #", "Action"];
         getGrade = 0;

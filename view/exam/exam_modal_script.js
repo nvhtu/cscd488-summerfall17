@@ -14,15 +14,11 @@ $('a[href="#Roster_tab"]').click(function(){onclickTabRoster();});
 $("#submit-button").click(submitForm);
 
 function onOpenDetailModal(e)
-{/*
-      $('a[href="#Exam_tab"]').on('show.bs.tab', onclickTabExam);
-      $('a[href="#Report_tab"]').on('show.bs.tab', onclickTabReport);
-      $('a[href="#Roster_tab"]').on('show.bs.tab', onclickTabRoster);
-      */
-
-
-      
-      
+{
+      $('select[name="state"] option[value="In_Progress"]').show();
+      $('select[name="state"] option[value="Grading"]').show();
+      $('select[name="state"] option[value="Archived"]').show();
+  
 
       _origClickEvent = e;
 

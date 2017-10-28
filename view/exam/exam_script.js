@@ -177,7 +177,13 @@ function onclickCreate()
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").attr("data-tab", "exam");
 	$("#submit-button").html("Create");
-	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
+    $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
+    
+    //Hide In-Progress, Grading and Archived options on Create an exam
+    $('select[name="state"] option[value="In_Progress"]').hide();
+    $('select[name="state"] option[value="Grading"]').hide();
+    $('select[name="state"] option[value="Archived"]').hide();
+
 }
 
 function onclickEdit(e) 

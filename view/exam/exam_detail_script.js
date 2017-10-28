@@ -59,7 +59,6 @@ function loadTabExam()
         });
         $('input[name="date"]').triggerHandler('changeDate');
         $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
-        $("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
     },
     "json");
 

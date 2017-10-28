@@ -1,10 +1,11 @@
 $("#select-all-checkbox").click(function(){
-    $("#report-form").find("input[type='checkbox']").prop('checked', $("#select-all-checkbox").prop('checked'));
+    $("#report-form").find("input[type='checkbox']:visible").prop('checked', $("#select-all-checkbox").prop('checked'));
 });
 
 function loadTabReport()
 {
     $('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
+    $("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
 }
 
 function onclickDownload(rosterData, examData){
@@ -83,7 +84,8 @@ function selectStudentData(rosterData, csvData){
     }
 
     csvData.push(studentHeaders);
-    csvData.push(maxScoreRow);
+    if(_selectedTab == "Archived")
+        csvData.push(maxScoreRow);
 
     $.each(rosterData, function(index, student){
         var studentData = [];

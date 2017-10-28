@@ -20,7 +20,7 @@ var _graderData = Array();
 
 var _selectedTab = "Open";
 
-var _isEditing = false;
+
 
 /*var _deletedExamCats;
 var _modifiedExamCats;*/
@@ -172,8 +172,10 @@ function submitForm(e) {
 function onclickCreate()
 {
     clearForm();
+    $('a[href="#Exam_tab"]').tab('show');
     $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
+    $("#submit-button").attr("data-tab", "exam");
 	$("#submit-button").html("Create");
 	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
 }

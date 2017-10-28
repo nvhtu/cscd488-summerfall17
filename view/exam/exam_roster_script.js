@@ -1,13 +1,15 @@
+var _isEditing = false;
+
 $("#btn-lookup").click(onclickLookup);
+
 
 function loadTabRoster()
 {
-    
-    
-    
+    _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
     table = buildMainTable(headersArr);
     $("#lookup-results").html(table);
+    $("#lookup-string").val("");
 
     headersArr = new Array();
     getGrade = -1;
@@ -102,8 +104,10 @@ function onclickDeleteStudent(e)
         exam_id: examId,
         student_id: studentId},
         function(){
-            $("tr[data-target='#item-" + studentId + "']").remove();
-            $("tr[id='item-" + studentId + "']").remove();
+            $("#roster-table-wrapper tr[data-id='item-" + studentId + "']").remove();
+            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Open");
+            $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",false);
+
         });
     }
 }
@@ -151,15 +155,15 @@ function onclickLookup()
             
                 var row = buildItemRow(summaryData, false);
 
-                var $registerBtn = "";
-            
+                $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '" data-fname="'+ summaryData.f_name +'" data-lname="'+ summaryData.l_name +'">Register</button>');
+
                 if(item.state != "Ready")
                 {
-                    $registerBtn = $('<button type="button" class="btn btn-primary" disabled>Register</button>');
+                    $registerBtn.prop("disabled", true);
                 }
                 else
                 {
-                    $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '">Register</button>');
+                    $registerBtn.prop("disabled", false);
                 }
                 
                 $registerBtn.click(onclickRegisterStudent);
@@ -182,6 +186,8 @@ function onclickLookup()
 function onclickRegisterStudent(e)
 {
     var studentId = e.currentTarget.dataset["id"];
+    var studentLName = e.currentTarget.dataset["lname"];
+    var studentFName = e.currentTarget.dataset["fname"];
     var examId =  $("#roster-form > #item-id").val();
 
     $.post("../ape/register.php", 
@@ -190,12 +196,23 @@ function onclickRegisterStudent(e)
     requester_session_id: _userSessionId,
     student_id: studentId,
     exam_id: examId}, 
-    function(){
+    function(data){
         alert("Student has been added to the exam successfully.");
 
-        $("tr[data-target='#item-" + studentId + "'] > td:nth-child(5)").html("Registered");
-        $("tr[data-target='#item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",true);
+        $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Registered");
+        $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",true);
 
+        var item = {
+            student_id: studentId,
+            f_name: studentLName,
+            l_name: studentFName,
+            seat_num: data
+        };
+        
+        loadRosterTableNoGrades(item);
+
+
+        /*
         //reload exam roster table
         $("#roster-table-wrapper > ."+_tableId + " tbody").empty();
         $.get("../ape/get_exam_roster.php", 
@@ -205,7 +222,7 @@ function onclickRegisterStudent(e)
         exam_id: examId,
         get_grade: getGrade}, 
         loadRosterTable,
-        "json");
+        "json");*/
     });
 }
 
@@ -218,14 +235,39 @@ function loadRosterTableNoGrades(item)
         lname: item.l_name,
         seatnum: item.seat_num
     };
-    var row = buildItemRow(summaryData, false);
+
+    var row = '<tr class="item-row" data-id="item-' + summaryData.id + '" aria-expanded="true">';
+    
+        for (var property in summaryData) 
+        {
+            if (summaryData.hasOwnProperty(property)) 
+            {
+                if(property != "id" && property != "seatnum")
+                {
+                    row += '<td>' + summaryData[property] + ' </td>';
+                }
+                else if(property == "seatnum")
+                {
+                    row += '<td><input type="number" class="student-seat-input" disabled value="' + summaryData[property] + '"></td>';
+                }      
+            }
+        }
+
+    row = $(row);
+
     var $bttnDel = $('<button type="button" class="btn btn-danger">Unregister</button>');
     $bttnDel.attr("data-id", summaryData.id);
     $bttnDel.click(onclickDeleteStudent);
 
+    var $bttnEditSeat = $('<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only"></span></button>');
+    $bttnEditSeat.attr("data-id", summaryData.id);
+    $bttnEditSeat.attr("data-action", "edit");
+    $bttnEditSeat.click(onclickEditSeat);
+    
+
     row.append(
         $('<td class="btns">').append(
-        $('<div class="btn-group" role="group">').append($bttnDel, ' ')
+        $('<div class="btn-group" role="group">').append($bttnEditSeat, $bttnDel, ' ')
         )
     );
     $("#roster-table-wrapper > ." + _tableId).append(row);
@@ -259,7 +301,7 @@ function loadRosterTableHasGrades(item)
     $bttnInfo.attr("data-id", summaryData.id);
     $bttnInfo.click(onclickInfoGrade);
     //create edit button
-    var $bttnEdit = $('<button type="button" class="btn btn-warning" data-action="edit-grade" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
+    var $bttnEdit = $('<button type="button" class="btn btn-warning" data-action="edit" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
     $bttnEdit.click(onclickEditGrade);
 
@@ -332,30 +374,74 @@ function buildGradeDetailRow(detailData, namesArr)
     return detailRowHTML;
 }
 
+function onclickEditSeat(e)
+{
+    var itemId = e.currentTarget.dataset["id"];
+    $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",false);
+
+    if(e.currentTarget.dataset["action"] == "edit")
+    {
+        //console.log("edit");
+        _isEditing = true;
+        toggleSaveEditBtn(true, itemId);
+        
+    }
+    else
+        if(e.currentTarget.dataset["action"] == "save")
+        {
+            //console.log("save");
+
+            onSaveSeat(e);
+
+            toggleSaveEditBtn(false, itemId);
+            _isEditing = false;
+            
+        }
+}
+
+function onSaveSeat(e)
+{
+    var studentId = e.currentTarget.dataset["id"];
+    var examId = _origClickEvent.currentTarget.dataset["id"];
+    var seatNum = $("#roster-table-wrapper tr[data-id='item-" + studentId + "'] .student-seat-input").val();
+
+    $.post("../ape/update_student_seat.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    exam_id: examId,
+    student_id: studentId,
+    seat_num: seatNum});
+
+    $("#roster-table-wrapper tr[data-id='item-" + studentId + "'] .student-seat-input").prop("disabled",true);
+
+}
+
+
 function onclickEditGrade(e)
 {
     var itemId = e.currentTarget.dataset["id"];
     $("#item-" + itemId + " .cat-grade-input").prop("disabled", false);
     
-    if(e.currentTarget.dataset["action"] == "edit-grade")
+    if(e.currentTarget.dataset["action"] == "edit")
     {
         //console.log("edit");
         _isEditing = true;
-        toggleSaveGradeBtn(true, itemId);
+        toggleSaveEditBtn(true, itemId);
         
     }
     else
-        if(e.currentTarget.dataset["action"] == "save-grade")
+        if(e.currentTarget.dataset["action"] == "save")
         {
             //console.log("save");
 
             onSaveGrade(e);
 
-            toggleSaveGradeBtn(false, itemId);
+            toggleSaveEditBtn(false, itemId);
             _isEditing = false;
             
         }
 }
+
 
 function onclickInfoGrade(e)
 {
@@ -368,7 +454,7 @@ function onclickInfoGrade(e)
         {
             $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
             
-                toggleSaveGradeBtn(false, itemId)
+                toggleSaveEditBtn(false, itemId)
             
                 //Disable Edit button collapse when the detail row has been expanded earlier by Info button
                 if(!$detailRow.hasClass("in"))
@@ -390,7 +476,7 @@ function onclickInfoGrade(e)
     {
         $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
         
-            toggleSaveGradeBtn(false, itemId)
+            toggleSaveEditBtn(false, itemId)
         
             //Disable Edit button collapse when the detail row has been expanded earlier by Info button
             if(!$detailRow.hasClass("in"))
@@ -408,21 +494,22 @@ function onclickInfoGrade(e)
     
 }
 
-function toggleSaveGradeBtn(isSave, itemId)
+function toggleSaveEditBtn(isSave, itemId)
 {
     if(isSave)
     {
         $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").removeClass("glyphicon-pencil");
         $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").addClass("glyphicon-floppy-disk");
-        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-action", "save-grade");
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-action", "save");
     }
     else
     {
         $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").removeClass("glyphicon-floppy-disk");
         $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning .glyphicon").addClass("glyphicon-pencil");
-        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-action", "edit-grade");
+        $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + itemId + "'] .btn-warning").attr("data-action", "edit");
     }
 }
+
 
 function onSaveGrade(e)
 {

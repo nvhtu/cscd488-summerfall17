@@ -40,6 +40,7 @@ function loadTabExam()
     var itemId = _origClickEvent.currentTarget.dataset["id"];
     $("#item-id").val(itemId);
     //$("#modal-title").html("Edit an Exam");
+    $("#submit-button").attr("data-tab", "exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
     $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);

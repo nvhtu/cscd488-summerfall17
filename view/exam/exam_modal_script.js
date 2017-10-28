@@ -23,11 +23,11 @@ function onOpenDetailModal(e)
 
       
       
-      $("#submit-button").attr("data-tab", "exam");
 
       _origClickEvent = e;
 
-      loadTabExam();
+      //loadTabExam();
+      $('a[href="#Exam_tab"]').click();
 }
 
 function onclickTabExam() 

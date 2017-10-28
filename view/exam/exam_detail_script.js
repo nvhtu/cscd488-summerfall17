@@ -39,7 +39,7 @@ function loadTabExam()
     clearForm();
     var itemId = _origClickEvent.currentTarget.dataset["id"];
     $("#item-id").val(itemId);
-    //$("#modal-title").html("Edit an Exam");
+
     $("#submit-button").attr("data-tab", "exam");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");

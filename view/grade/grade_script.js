@@ -28,6 +28,8 @@ function loaded()
         $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
     });
 
+    $("#submit-button").attr("name", "submit-graded-button");
+    $("#submit-button").html("Submit Graded");
     $("[name='submit-graded-button'").prop("disabled", true);
     $("[name='submit-graded-button'").click(function(e){submitForm(e, true);});
 }
@@ -80,6 +82,7 @@ function buildGradeButton(item){
 
 function loadTable(data) 
 {
+    console.log(data);
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
         $("." + _tableId).append(row);
@@ -161,6 +164,7 @@ function getAllItems()
         requester_type: "Grader",
         requester_session_id: _userSessionId}, 
         function(data){
+            console.log(data);
             loadTable(data);
             loadModal(data)
         },

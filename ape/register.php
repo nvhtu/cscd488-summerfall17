@@ -39,6 +39,8 @@
 				false);
 		//change student state to "Registered"
 		sqlExecute("UPDATE student SET state = :state WHERE student_id LIKE :id", array(":state" => "Registered", ":id" => $student_id), false);
+
+		echo json_encode($seatNum);
 	}
 
 	else{//No room in exam

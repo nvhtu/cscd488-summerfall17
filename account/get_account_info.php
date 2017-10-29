@@ -22,9 +22,12 @@
 
     //Validate strings
 
+
+    $sqlResult = array();
+
     switch ($request)
     {
-        case ("get_own"): getOwnAccount($requesterId, $requesterType);
+        case ("get_own"): $sqlResult = getOwnAccount($requesterId, $requesterType);
                          break;
         case ("get_by_id"): //Student and Grader can't request account info other than their own
                             if(strcmp($requesterType, "Student") == 0 || strcmp($requesterType, "Grader") == 0) 
@@ -34,15 +37,18 @@
                             }
                             else 
                             {
-                                getAccountById();
+                                $sqlResult = getAccountById();
                             }
                             break;
-        case ("get_by_type"): getAllByType();
+        case ("get_by_type"): $sqlResult = getAllByType();
                             break;
         default: http_response_code(400);
                 echo "Unrecognized request string.";
     }
 
+    echo json_encode($sqlResult);
+
+    
     /**
     * Gets acount info the requester
     * @param: $requesterId requester ID
@@ -63,7 +69,7 @@
             $sqlResult = getNonStudentInfo($requesterId);
         }
         
-        echo $sqlResult;
+        return $sqlResult;
         
     }
 
@@ -84,11 +90,11 @@
 
         if($sqlResult[0]["count"] == 0)
         {
-            echo getNonStudentInfo($id);
+            return getNonStudentInfo($id);
         }
         else 
         {
-            echo getStudentInfo($id);   
+            return getStudentInfo($id);   
         }
     }
 
@@ -187,7 +193,7 @@
             $sqlResult = sqlExecute($sqlGetAllNonStudents, array('type'=>$type), True);
         }
 
-        echo json_encode($sqlResult);
+        return $sqlResult;
     }
 
     /**
@@ -219,7 +225,7 @@
         }
         $sqlResult[0]["type"] = array("Student");
         
-        return json_encode($sqlResult);
+        return $sqlResult;
     }
 
     /**
@@ -251,7 +257,7 @@
             array_push($sqlResult[0]["type"], $sqlResultType[$i]["type"]);
         }       
 
-        return json_encode($sqlResult);
+        return $sqlResult;
     }
 
 ?>    

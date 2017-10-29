@@ -56,7 +56,7 @@ function getExamInfo(ungradedSeats, item){
         request: "get_by_id",
         exam_id: item.exam_id},
         function(examInfo){
-            console.log(examInfo);
+            //console.log(examInfo);
             getCatInfo(examInfo, ungradedSeats, item);
         },
         "json"

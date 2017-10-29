@@ -175,7 +175,8 @@ function onclickCreate()
     $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
 	$("#submit-button").html("Create");
-	$('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
+    $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
+    $('a[href="#Exam_tab"]').tab('show');
 }
 
 function onclickEdit(e) 

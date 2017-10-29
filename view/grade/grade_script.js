@@ -82,7 +82,7 @@ function buildGradeButton(item){
 
 function loadTable(data) 
 {
-    console.log(data);
+    //console.log(data);
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
         $("." + _tableId).append(row);
@@ -164,7 +164,7 @@ function getAllItems()
         requester_type: "Grader",
         requester_session_id: _userSessionId}, 
         function(data){
-            console.log(data);
+            //console.log(data);
             loadTable(data);
             loadModal(data)
         },

@@ -32,6 +32,26 @@ function loadTabRoster()
         headersArr = ["ID", "First Name", "Last Name", "Seat #", "Action"];
         getGrade = 0;
     }
+
+    //If it's in-class exam page, remove student lookup function/UI elements in Roster tab
+    //and load in-class students to lookup result table
+    if (_userType == "Teacher")
+    {
+        //$("#lookup-form > .form-group .btn-primary").remove();
+        //$("#lookup-form > .form-group").css("visibility", "hidden");
+        $("#lookup-form > .form-group > .col-sm-12").html("<h5>In-class Students</h5>");
+
+
+        $.get("../account/get_account_info.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        request: "get_by_type",
+        type: "Student"}, 
+        loadLookupTable,
+        "json");
+    
+    }
     
     var table = buildMainTable(headersArr);
     $("#roster-table-wrapper").html(table);
@@ -143,47 +163,48 @@ function onclickLookup()
         requester_type: _userType,
         requester_session_id: _userSessionId,
         search_str: searchStr}, 
-        function(data){
-            $("#lookup-results > ."+_tableId + " tbody").empty();
-            $.each(data, function(i, item) 
-            {
-                var summaryData = {
-                    id: item.user_id,
-                    ewu_id: item.user_id,
-                    f_name: item.f_name,
-                    l_name: item.l_name,
-                    email: item.email,
-                    state: item.state
-                };
-            
-                var row = buildItemRow(summaryData, false);
-
-                $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '" data-fname="'+ summaryData.f_name +'" data-lname="'+ summaryData.l_name +'">Register</button>');
-
-                if(item.state != "Ready")
-                {
-                    $registerBtn.prop("disabled", true);
-                }
-                else
-                {
-                    $registerBtn.prop("disabled", false);
-                }
-                
-                $registerBtn.click(onclickRegisterStudent);
-
-                row.append(
-                    $('<td class="btns">').append(
-                       $('<div class="btn-group" role="group">').append($registerBtn, ' ')
-                     )
-                  );
-    
-                $("#lookup-results > ." + _tableId).append(row);
-
-                
-            });
-        },
+        loadLookupTable,
         "json");
     }
+}
+
+function loadLookupTable(data)
+{
+    $("#lookup-results > ."+_tableId + " tbody").empty();
+    $.each(data, function(i, item) 
+    {
+        var summaryData = {
+            id: item.user_id,
+            ewu_id: item.user_id,
+            f_name: item.f_name,
+            l_name: item.l_name,
+            email: item.email,
+            state: item.state
+        };
+    
+        var row = buildItemRow(summaryData, false);
+
+        $registerBtn = $('<button type="button" class="btn btn-primary" data-id="' + summaryData.id + '" data-fname="'+ summaryData.f_name +'" data-lname="'+ summaryData.l_name +'">Register</button>');
+
+        if(item.state != "Ready")
+        {
+            $registerBtn.prop("disabled", true);
+        }
+        else
+        {
+            $registerBtn.prop("disabled", false);
+        }
+        
+        $registerBtn.click(onclickRegisterStudent);
+
+        row.append(
+            $('<td class="btns">').append(
+               $('<div class="btn-group" role="group">').append($registerBtn, ' ')
+             )
+          );
+
+        $("#lookup-results > ." + _tableId).append(row);
+        });
 }
 
 function onclickRegisterStudent(e)

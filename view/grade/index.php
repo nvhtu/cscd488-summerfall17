@@ -12,7 +12,6 @@ if(in_array("Grader", $userInfo["userType"]))
     $tableTitle = "Assigned APE Sections";
     //Strings in $modalsArr are the modal HTML file names minus "_modal.html" E.g. "roster_modal.html" -> "roster"
     $modalsArr = array("grade");
-    $modalTitles = array("Grade");
     //Strings in $jsArr are the JS file names minus "_script.js" E.g. "exam_student_script.js" -> "exam_student"
     $jsArr = array("grade");
     require_once "../index.php";

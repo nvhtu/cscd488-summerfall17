@@ -20,11 +20,11 @@ var _graderData = Array();
 
 var _selectedTab = "Open";
 
-var _isEditing = false;
+
 
 /*var _deletedExamCats;
 var _modifiedExamCats;*/
-var _catSectionModified;
+
 
 $(document).ready(loaded);
 
@@ -134,49 +134,27 @@ function loadTable(data, state)
     //$(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
 }
 
-function submitForm(e) {
-   var tab = e.currentTarget.dataset["tab"],
-   action = e.currentTarget.dataset["action"];
 
-   if (tab === "exam") {
-      if (action === "create") {
-         createItem();
-      }
-      else if (action === "update") {
-         updateItem();
-      }
-   }
-   else if (tab === "report") {
-	  $.get("../ape/get_all_apes.php", 
-	  {requester_id: _userId,
-	  requester_type: _userType,
-	  requester_session_id: _userSessionId,
-	  request: "get_by_id",
-	  exam_id: $("#item-id").val()}, 
-	  function(item){
-		$.get("../ape/get_exam_roster.php", 
-		{requester_id: _userId,
-		requester_type: _userType,
-		requester_session_id: _userSessionId,
-		exam_id: item[0].exam_id,
-		get_grade: 1}, 
-		function(rosterData){
-			onclickDownload(rosterData, item[0]);
-		},
-		"json");
-	  },
-	  "json");
-   }
-}
 
 function onclickCreate()
 {
     clearForm();
+    $('a[href="#Exam_tab"]').tab('show');
     $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
+    $("#submit-button").attr("data-tab", "exam");
 	$("#submit-button").html("Create");
     $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
+<<<<<<< HEAD
     $('a[href="#Exam_tab"]').tab('show');
+=======
+    
+    //Hide In-Progress, Grading and Archived options on Create an exam
+    $('select[name="state"] option[value="In_Progress"]').hide();
+    $('select[name="state"] option[value="Grading"]').hide();
+    $('select[name="state"] option[value="Archived"]').hide();
+
+>>>>>>> 06134f86132bb8b4a15a701981df5a5ac6815a12
 }
 
 function onclickEdit(e) 
@@ -202,19 +180,6 @@ function onclickDelete(e)
     }
 }
 
-function clearForm()
-{
-    $("#" + _formId).find("select, input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
-	$('#Report_tab').find("input[type='checkbox']").prop("checked", false);
-    $("#quarter").html("(Select valid date)");
-    $("#possible-grade").html("(Sum of categories)");
-    $("#cat-table > tbody").empty();
-    $("#cat-table").hide();
-    $('#add-cat-btn').prop("disabled",false);
-    $('#cat-heading').toggleClass('empty-panel-fix', true);
-    //$('a[href="#Exam_tab"]').tab('show');
-    _catSectionModified = false;
-}
 
 function getAllItems(state)
 {

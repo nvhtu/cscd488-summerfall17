@@ -49,10 +49,19 @@
 
 <body>
    <?php 
+      if (isset($modalTabsArr))
+      {
+         require_once $absPath . '/includes/tabbedModal.php';
+      }
+
       if (isset($modalsArr))
       {
-         require_once $absPath . '/includes/modal.php';
+        foreach($modalsArr as $theModal)
+        {
+          require_once $theModal . "_modal.html";
+        }  
       }
+
       require_once $absPath . '/includes/navbar.html';
    ?>
    

@@ -16,6 +16,8 @@ var _graderData = Array();
 
 var _isEditing = false;
 
+var _selectedTab = "Open";
+
 $(document).ready(loaded);
 
 function loaded()
@@ -56,6 +58,10 @@ function init()
         requester_id: _userId,
         requester_type: _userType
         }, function(data){_settings = data;}, "json");
+
+        $("#requester-id").val(_userId);
+        $("#requester-type").val(_userType);
+        $("#requester-session").val(_userSessionId);
         
     getAllLoc();
     getAllCat();        
@@ -81,7 +87,7 @@ function loadUpcomingExams()
 
 function buildExamsTable()
 {
-    headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats"];
+    headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats", "Action"];
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
@@ -140,35 +146,17 @@ function buildItemSummaryRow(item)
 
     var row = buildItemRow(summaryData, false);
 
-    $bttnDetail = $('<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detail-modal" data-id="' + summaryData.id + '">Detail</button>');
-    $bttnDetail.click(onclickDetail);
-    row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnDetail)));
+    var $btnDetails = $('<button type="button" class="btn btn-info btn-labeled" data-toggle="modal" data-target="#detail-modal"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-list-alt"></i></span>Details</button>');
+    $btnDetails.attr("data-id", summaryData.id);
+    $btnDetails.click(onclickDetail);
+    row.append($('<td>').append($('<div class="btn-group" role="group">').append($btnDetails)));
 
     return row;
 }
 
 function onclickDetail(e) 
 {
-    var itemId = e.currentTarget.dataset["id"];
-    $("#item-id").val(e.currentTarget.dataset["id"]);
-    $("#modal-title").html("Exam Detail");
-    $("#submit-button").attr("data-action", "update");
-    $("#submit-button").html("Save changes");
-
-    $.get("../ape/get_all_apes.php", 
-    {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    request: "get_by_id",
-    exam_id: itemId}, 
-    function(item){
-        $.each(item[0], function(name, val){
-            var el = $('[name="'+name+'"]');
-            el.val(val);
-        });
-    },
-    "json");
-
+    onOpenDetailModal(e);
 }
 
 function loadGradingExams()

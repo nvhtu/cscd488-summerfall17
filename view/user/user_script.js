@@ -54,8 +54,13 @@ function init()
     
         //Create import button in Students tab
         $("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
-        //Create look up button in Students tab
-        $("#import-students-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
+        
+        if(_userType != "Teacher")
+        {
+            //Create look up button in Students tab
+            $("#import-students-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
+        }
+        
         
 
 
@@ -110,7 +115,6 @@ function init()
         $(".msg-box").hide();
     
         $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
-            console.log(jqxhr.responseText);
             $(".msg-box").addClass("alert-danger");
             $(".msg-box").fadeIn();
             $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
@@ -335,7 +339,8 @@ function updateItem()
                 id: $("#item-id").val()
             }, function(item){
                 var row = buildItemSummaryRow(item[0], _selectedTab);
-                $("tr[data-target='#item-" + item[0].user_id + "']").replaceWith(row);
+                //console.log($("tr[data-id='#item-" + item[0].user_id + "']"));
+                $("tr[data-id='item-" + item[0].user_id + "']").replaceWith(row);
                 $(".btn-group > .btn-danger").remove();
             }, "json");
     });

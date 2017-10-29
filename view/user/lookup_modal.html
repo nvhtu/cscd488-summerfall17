@@ -1,24 +1,40 @@
-<div class="modal-body">
-   <form id="lookup-form" class="form-horizontal" name="lookup-form">
+<div class="modal fade" id="lookup-modal" tabindex="-1" role="dialog" aria-hidden="true"> 
+    <div class="modal-dialog"> 
+       <div class="modal-content"> 
+          <div class="modal-header"> 
+             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button> 
+             <h4 class="modal-title" id="lookup-modal-title">Look up Students</h4> 
+          </div> 
 
-      <!-- 
-         Hidden input fields for requester id, requester type, requester session, and item id that auto populated  
-         so $("#main-form").serialize() will include those values 
-         !-->
-      <input type="hidden" id="requester-id" name="requester_id" />
-      <input type="hidden" id="requester-type" name="requester_type" />
-      <input type="hidden" id="requester-session" name="requester_session" />
-      <div class="form-group">
-         <label for="user_id" class="col-sm-12">Look up a student by student ID, first name, last name, or email:</label>
-         <div class="col-sm-12">
-
-            <input type="text" name="lookup-string" id="lookup-string">
-
-         </div>
-      </div>
-
-      <div class="table-responsive" id="lookup-table-wrapper">
-
-      </div>
-   </form>
-</div>
+          <form id="lookup-form" name="lookup-form"> 
+          <div class="modal-body form-horizontal"> 
+                
+                                         <!-- 
+                                         Hidden input fields for requester id, requester type, requester session, and item id that auto populated  
+                                         so $("#main-form").serialize() will include those values 
+                                         !--> 
+                                         <input type="hidden" class="form-control" id="requester-id" name="requester_id"/> 
+                                         <input type="hidden" class="form-control" id="requester-type" name="requester_type"/> 
+                                         <input type="hidden" class="form-control" id="requester-session" name="requester_session"/> 
+                    <div class="form-group"> 
+                        <label for="user_id" class="col-sm-12">Look up a student by student ID, first name, last name, or email:</label> 
+                        <div class="col-sm-12"> 
+                    
+                                <input type="text" name="lookup-string" id="lookup-string"> 
+                            
+                        </div> 
+                    </div>
+                    
+                    <div class="table-responsive" id="lookup-table-wrapper">
+                        
+                </div>
+                
+          </div> 
+          <div class="modal-footer"> 
+             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+             <button type="button" data-dismiss="modal" id="lookup-button" class="btn btn-primary">Look up</button> 
+          </div> 
+          </form>     
+       </div> 
+    </div> 
+ </div>

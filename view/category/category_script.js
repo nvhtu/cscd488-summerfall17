@@ -71,7 +71,7 @@ function loadTable(data)
 {
     $.each(data, function(i, item) {
         var row = buildItemSummaryRow(item);
-        $(row).find(".btn-info").remove();
+        //$(row).find(".btn-info").remove();
 
         $("." + _tableId).append(row);
     });
@@ -118,9 +118,9 @@ function updateItem()
         cat_id: $("#item-id").val()}, 
         function(item){
             var row = buildItemSummaryRow(item[0]);
-            $(row).find(".btn-info").remove();
+            //$(row).find(".btn-info").remove();
 
-            $("tr[data-target='#item-" + item[0].cat_id + "']").replaceWith(row);
+            $("tr[data-id='item-" + item[0].cat_id + "']").replaceWith(row);
         },
         "json");
     }); 
@@ -169,8 +169,7 @@ function onclickDelete(e)
         requester_session_id: _userSessionId,
         cat_id: itemId},
         function(){
-            $("tr[data-target='#item-" + itemId + "']").remove();
-            $("tr[id='item-" + itemId + "']").remove();
+            $("tr[data-id='item-" + itemId + "']").remove();
         });
     }
 }

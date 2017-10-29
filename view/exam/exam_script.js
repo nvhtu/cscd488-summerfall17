@@ -145,16 +145,12 @@ function onclickCreate()
     $("#submit-button").attr("data-tab", "exam");
 	$("#submit-button").html("Create");
     $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', true);
-<<<<<<< HEAD
-    $('a[href="#Exam_tab"]').tab('show');
-=======
     
     //Hide In-Progress, Grading and Archived options on Create an exam
     $('select[name="state"] option[value="In_Progress"]').hide();
     $('select[name="state"] option[value="Grading"]').hide();
     $('select[name="state"] option[value="Archived"]').hide();
 
->>>>>>> 06134f86132bb8b4a15a701981df5a5ac6815a12
 }
 
 function onclickEdit(e) 

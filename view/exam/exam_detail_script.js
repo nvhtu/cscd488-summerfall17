@@ -9,7 +9,8 @@ $('input[name="date"]').datepicker({
     format: 'yyyy-mm-dd',
     forceParse: false,
     todayHighlight: true,
-    autoclose: true
+    autoclose: true,
+    orientation: "top right"
 }).on('changeDate', autofillQuarter);
 
 $('input[name="date"]').keydown(function(){

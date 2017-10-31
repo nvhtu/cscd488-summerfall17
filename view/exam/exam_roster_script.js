@@ -128,7 +128,7 @@ function onclickDeleteStudent(e)
         student_id: studentId},
         function(){
             $("#roster-table-wrapper tr[data-id='item-" + studentId + "']").remove();
-            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Open");
+            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Ready");
             $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",false);
 
         });

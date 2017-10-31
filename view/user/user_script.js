@@ -151,7 +151,7 @@ function buildTable()
         else if(_userType == "Teacher")
         {
             //build Student table
-            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Exam name", "Action"];
+            var headersArr = ["EWU ID", "First Name", "Last Name", "Email", "State", "Action"];
             var table = buildMainTable(headersArr);
             $(".table-responsive").html(table);
 
@@ -172,8 +172,7 @@ function buildItemSummaryRow(item, type)
                 f_name: item.f_name,
                 l_name: item.l_name,
                 email: item.email,
-                state: item.state,
-                exam_name: item.exam_name
+                state: item.state
             };
         }
         else
@@ -205,21 +204,6 @@ function buildItemSummaryRow(item, type)
 
     return row;
 }
-
-// function buildItemDetailRow(item)
-// {
-//     var detailData = {
-//         id: item.exam_id,
-//         duration: item.duration,
-//         passing_grade: item.passing_grade,
-//         cutoff: item.cutoff
-//     };
-
-//     var namesArr = ["Duration", "Passing Grade", "Cutoff"];
-//     var detailRow = buildDetailRow(detailData, namesArr);
-
-//     return detailRow;
-// }
 
 function loadTable(data, type) 
 {

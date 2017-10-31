@@ -151,26 +151,16 @@
                     
                 }
 
-                /*
-                //check if today doesn't fall into any quarter range (meaning we're on the break ;) )
-                if($today > $curQuarterEnd || strcmp($curQuarterStart,"") == 0)
-                {
-                    http_response_code(400);
-                    die("You currently don't have any students in your class. You're restricted from viewing previous quarters students.");
-                }*/
-                //--- END Get current quarter start and end dates
 
-                $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state, E.name AS exam_name
-                FROM in_class_exam ICE JOIN exam_roster ER USING (exam_id)
-                JOIN user U ON (ER.student_id = U.user_id)
-                JOIN student S ON (ER.student_id = S.student_id)
-                JOIn exam E ON (ICE.exam_id = E.exam_id)
-                WHERE ICE.teacher_id = :teacher_id AND DATE(E.date) BETWEEN :date_start AND :date_end";
+                $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state
+                FROM in_class_student ICS JOIN user U ON (ICS.student_id = U.user_id)
+                JOIN student S ON (ICS.student_id = S.student_id)
+                WHERE ICS.teacher_id LIKE :teacher_id AND ICS.start_date = :start_date AND ICS.end_date = :end_date";
 
-                $data = array(":teacher_id"=>$_GET["requester_id"], ":date_start"=>$curQuarterStart, ":date_end"=>$curQuarterEnd);
+                $data = array(":teacher_id"=>$_GET["requester_id"], ":start_date"=>$curQuarterStart, ":end_date"=>$curQuarterEnd);
 
                 $sqlResult = sqlExecute($sqlGetStudents, $data, True);
-
+                
                 if (count($sqlResult)==0)
                 {
                     //http_response_code(400);

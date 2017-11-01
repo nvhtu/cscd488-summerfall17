@@ -118,38 +118,8 @@
                 if(!isset($GLOBALS["settings"]))
                 initializeSettings();
 
-                //---Get current quarter start and end dates
-                $today = date("Y-m-d");
-                $curQuarterStart = "";
-                $curQuarterEnd = "";
-                $quarterStartName = "";
-                $quarterStartCount = 0;
-
-                $sortedQuarterDatesArr = array(0=>$GLOBALS["settings"]["fallStart"],
-                                               1=>$GLOBALS["settings"]["fallEnd"],
-                                               2=>$GLOBALS["settings"]["winterStart"],
-                                               3=>$GLOBALS["settings"]["winterEnd"],
-                                               4=>$GLOBALS["settings"]["springStart"],
-                                               5=>$GLOBALS["settings"]["springEnd"],
-                                               6=>$GLOBALS["settings"]["summerStart"],
-                                               7=>$GLOBALS["settings"]["summerEnd"],);
-
-                for($i=0; $i < count($sortedQuarterDatesArr); $i++)
-                {
-                    if($today >= $sortedQuarterDatesArr[$i] && $i%2 == 0)
-                    {
-                        $curQuarterStart = $sortedQuarterDatesArr[$i];
-                        $quarterStartName = key($sortedQuarterDatesArr);
-                        $quarterStartCount = $i;
-                    }
-                    else
-                    if(strcmp($curQuarterStart,"") != 0)
-                    {
-                        $curQuarterEnd = $sortedQuarterDatesArr[$quarterStartCount+1];
-                    }
-                    
-                }
-
+                $curQuarterStart = $GLOBALS["settings"]["curQuarterStart"];
+                $curQuarterEnd = $GLOBALS["settings"]["curQuarterEnd"];
 
                 $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state
                 FROM in_class_student ICS JOIN user U ON (ICS.student_id = U.user_id)

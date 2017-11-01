@@ -269,7 +269,23 @@ function populateGraders(graderData, dataId){
         onclickAddGrader(fakeE);
         _catSectionModified = false;
         
-        graderRow.find("select:last").find("option[value='" + grader.user_id + "']").prop("selected", true);
+        var select = graderRow.find("select:last");
+        if(select.find("option[value='" + grader.user_id + "']").length != 0){
+            select.find("option[value='" + grader.user_id + "']").prop("selected", true);
+        }
+        else if(_selectedTab == "Archived"){
+            $.get("../account/get_account_info.php", 
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            request: "get_by_id",
+            id: grader.user_id}, 
+            function(item){
+                select.append('<option value="' + item[0].user_id + '">' + item[0].f_name + ' ' + item[0].l_name + '</option>');
+                select.find("option[value='" + item[0].user_id + "']").prop("selected", true);
+            },
+            "json");
+        }
     });
 }
 
@@ -292,6 +308,12 @@ function onclickAddCat() {
     if (rowCount > 0) {
        $('#cat-table').show();
        $('#cat-heading').toggleClass('empty-panel-fix', false);
+    }
+
+    if (_userType == "Teacher") {
+        row.find(".btn-info").click();
+        graderRow.find(".btn-primary").click();
+        graderRow.find("select").find("option[value='" + _userId + "']").prop("selected", true);
     }
  }
  

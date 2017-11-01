@@ -111,9 +111,8 @@
         {
             $requesterType = $_GET["requester_type"];
             
-            //If requester is a Teacher, only get students belong to them. They are who registered
-            //in that Teacher's current in-class exams. To prevent Teacher from getting students from previous quarters,
-            //the code checks the in-class exam date to see if it falls within current quarter dates.
+            //If requester is a Teacher, only get students belong to them. They are who uploaded
+            //by that Teacher. A Teacher is prevented from getting students from previous quarters.
             if(strcmp($requesterType, "Teacher") == 0)
             {
                 if(!isset($GLOBALS["settings"]))

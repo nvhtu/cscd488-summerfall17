@@ -24,7 +24,7 @@
                             'userEmail' => 'abc@xyz.com' );
             
            $userInfo = array('userId' => '111', 
-                            'userType' => array("Admin", "Teacher"), 
+                            'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Tu',
                             'userLname' => 'Nguyen',

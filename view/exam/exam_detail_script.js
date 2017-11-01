@@ -344,7 +344,7 @@ function onclickAddCat() {
        $curRow.find('td.graders').show();
     }
     
-    if (graderCount >= _graderData.length) {
+    if (graderCount >= Math.min(_graderData.length, _settings.catGraderLimit)) {
        $curRow.find('button.btn-primary').prop("disabled",true);
     }
  }

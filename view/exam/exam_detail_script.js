@@ -5,16 +5,25 @@ var _catOptions;
 var _graderOptions;
 var _stateOptions;
 
-$('input[name="date"]').datepicker({
+$('.input-group.date').datepicker({
     format: 'yyyy-mm-dd',
     forceParse: false,
     todayHighlight: true,
     autoclose: true,
-    orientation: "top right"
+    orientation: "top left"
 }).on('changeDate', autofillQuarter);
 
 $('input[name="date"]').keydown(function(){
     return false;
+});
+
+$('.timepicker input').timepicker({
+    defaultTime: '08:00 AM',
+    minuteStep: 5,
+    showInputs: false,
+    showMeridian: false
+}).focus(function() {
+    $(this).timepicker('showWidget');
 });
 
 $('#add-cat-btn').click(onclickAddCat);
@@ -59,6 +68,7 @@ function loadTabExam()
             el.val(val);
         });
         $('input[name="date"]').triggerHandler('changeDate');
+        $('input[name="start_time"]').timepicker('setTime', $('input[name="start_time"]').val());
         $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
     },
     "json");
@@ -366,7 +376,7 @@ function onclickAddCat() {
        $curRow.find('td.graders').show();
     }
     
-    if (graderCount >= _graderData.length) {
+    if (graderCount >= Math.min(_graderData.length, _settings.catGraderLimit)) {
        $curRow.find('button.btn-primary').prop("disabled",true);
     }
  }
@@ -486,7 +496,7 @@ function onclickAddCat() {
  }
  
  function autofillQuarter() {
-    var quarter = getQuarter( $(this).val() );
+    var quarter = getQuarter( $('input[name="date"]').val() );
     $("#quarter").text(quarter);
     $('input[name="quarter"]').val(quarter);
  }

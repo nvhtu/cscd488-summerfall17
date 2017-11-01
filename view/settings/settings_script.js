@@ -45,16 +45,16 @@ function buildForm(){
             format: 'yyyy-mm-dd',
             forceParse: false,
             todayHighlight: true,
-            autoclose: true
+            autoclose: true,
+            orientation: "top left"
         };
-        $('input[name="date"]').datepicker(options);
-    
+        $('.input-group.date').datepicker(options)
+        .on("changeDate", function(){
+            $("#submit-button").prop("disabled", false);
+        });
+
         $('input[name="date"]').keydown(function(){
             return false;
-        });
-    
-        $('input[name="date"]').on("changeDate", function(){
-            $("#submit-button").prop("disabled", false);
         });
     
         $("input").on("input", function(){

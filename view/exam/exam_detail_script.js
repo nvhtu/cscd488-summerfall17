@@ -26,7 +26,9 @@ $('.timepicker input').timepicker({
     $(this).timepicker('showWidget');
 });
 
-$('#add-cat-btn').click(onclickAddCat);
+$('#add-cat-btn').click(function(){
+    onclickAddCat(true);
+});
 
 $('#cat-table').on('change', 'input, select', function(){
     _catSectionModified = true;        
@@ -236,7 +238,7 @@ function getAllLoc()
 
  function populateExamCats(examCatData){
     $.each(examCatData, function(index, examCat){
-        onclickAddCat();
+        onclickAddCat(false);
         _catSectionModified = false;
         
         var catRow = $(".cat-row:last");
@@ -290,7 +292,7 @@ function populateGraders(graderData, dataId){
 }
 
 
-function onclickAddCat() {
+function onclickAddCat(isUserClick) {
     _catSectionModified = true;
  
     var $table = $('#cat-table');
@@ -310,7 +312,7 @@ function onclickAddCat() {
        $('#cat-heading').toggleClass('empty-panel-fix', false);
     }
 
-    if (_userType == "Teacher") {
+    if (_userType == "Teacher" && isUserClick) {
         row.find(".btn-info").click();
         graderRow.find(".btn-primary").click();
         graderRow.find("select").find("option[value='" + _userId + "']").prop("selected", true);

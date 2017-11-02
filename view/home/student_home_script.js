@@ -248,6 +248,9 @@ function getStudentInfo()
         getAllLoc();
         
         buildTable();
+        $(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
     },
     "json");
 }

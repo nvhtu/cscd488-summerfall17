@@ -43,8 +43,6 @@ function main()
 
 
 $("#submit-button").click(function(){
-        console.log("click");
-        
         var id = $("#account-id").val();
         var fname = $("#account-fname").val();
         var lname = $("#account-lname").val();

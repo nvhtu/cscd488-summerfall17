@@ -427,7 +427,15 @@ function clearForm()
 
 function getAllItems(type)
 {
-    $("#" + type + "s-panel > .table-responsive > ."+_tableId + " tbody").empty();
+    if(_userType == "Teacher")
+    {
+        $(".panel .table-responsive > ."+_tableId + " tbody").empty();
+    }
+    else
+    {
+        $("#" + type + "s-panel > .table-responsive > ."+_tableId + " tbody").empty();
+    }
+    
     
     $.get("../account/get_account_info.php", 
         {requester_id: _userId,
@@ -494,18 +502,18 @@ function onsubmitUploadForm(e)
     e.preventDefault();
     var uploadForm = document.getElementById('upload-form');
     var formData = new FormData(uploadForm);
-    console.log(formData);
+    //console.log(formData);
 
     $.ajax({
         url: '../account/upload_student_csv.php',
         type: 'POST',
         data: formData,
-        async: false,
         cache: false,
         contentType: false,
         processData: false,
         success: function (returndata) {
-          alert(returndata);
+            getAllItems("Student");
+            alert(returndata);
         }
       });
 }

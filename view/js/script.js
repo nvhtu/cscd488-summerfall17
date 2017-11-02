@@ -100,7 +100,7 @@ function sortRows() {
 
 function onClickSort(th) {
    var $table, $headers;
-   if ($('div.with-nav-tabs').length) {
+   if ($('.main .with-nav-tabs').length) {
       $table = $(".tab-pane.active table.main-table");
       $headers = $(".tab-pane.active table.main-table>thead th:not(:last-child)");
    }

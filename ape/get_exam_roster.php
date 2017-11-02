@@ -51,25 +51,35 @@
                     $sqlStudentsResult[$i][$attrName] = $attrVal;
                 }
     
-    
-                $sqlSelectCats = "SELECT cat.name as cat, grade, e.exam_id, ec.possible_grade, cg.grader_exam_cat_id
-                FROM category_grade AS cg JOIN assigned_grader AS ag ON cg.grader_exam_cat_id = ag.grader_exam_cat_id 
-                JOIN exam_category AS ec ON ag.exam_cat_id = ec.exam_cat_id
-                JOIN category as cat ON ec.cat_id = cat.cat_id
-                JOIN exam as e ON e.exam_id = ec.exam_id
-                WHERE student_id LIKE :student_id AND e.exam_id  = :exam_id";
-    
-                $data = array(':student_id' => $studentId, ':exam_id' => $examId);
-                $sqlResultCats = sqlExecute($sqlSelectCats, $data, true);
-    
+
+                $sqlResultStudentGradedCats = getStudentGradedCats($studentId, $examId);
+                $sqlResultCatGrades = getStudentCatGrades($studentId, $examId);
+
                 $sqlStudentsResult[$i]["cats"] = array();
-    
-    
-                for ($theCat=0; $theCat<count($sqlResultCats); $theCat++)
+
+                for ($theCat=0; $theCat<count($sqlResultStudentGradedCats); $theCat++)
                 {
-                    $sqlStudentsResult[$i]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["grade"];
-                    $sqlStudentsResult[$i]["cats"][$sqlResultCats[$theCat]["cat"] . " Max"] = $sqlResultCats[$theCat]["possible_grade"];
-                    $sqlStudentsResult[$i]["cats"][$sqlResultCats[$theCat]["cat"] . " ID"] = $sqlResultCats[$theCat]["grader_exam_cat_id"];
+                    $sqlStudentsResult[$i]["cats"][$theCat] = array();
+                    $sqlStudentsResult[$i]["cats"][$theCat]["exam_cat_id"] = $sqlResultStudentGradedCats[$theCat]["exam_cat_id"];
+                    $sqlStudentsResult[$i]["cats"][$theCat]["name"] = $sqlResultStudentGradedCats[$theCat]["name"];
+                    //$sqlStudentsResult[$i]["cats"][$theCat]["avg_grade"] = $sqlResultStudentGradedCats[$theCat]["avg_grade"];
+                    $sqlStudentsResult[$i]["cats"][$theCat]["possible_grade"] = $sqlResultStudentGradedCats[$theCat]["possible_grade"];
+
+                    $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"] = array();
+
+                    for ($theGraderCat=0; $theGraderCat<count($sqlResultCatGrades); $theGraderCat++)
+                    {
+                        if ($sqlResultCatGrades[$theGraderCat]["exam_cat_id"] == $sqlResultStudentGradedCats[$theCat]["exam_cat_id"])
+                        {
+
+                            $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$sqlResultCatGrades[$theGraderCat]["grader_name"]] = $sqlResultCatGrades[$theGraderCat]["grade"];
+                            //$sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$theGraderCat]["grade"] = $sqlResultCatGrades[$theGraderCat]["grade"];
+                            //$sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$theGraderCat]["name"] = $sqlResultCatGrades[$theGraderCat]["cat"];
+                            //$sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$theGraderCat]["possible_grade"] = $sqlResultCatGrades[$theGraderCat]["possible_grade"];
+                            
+                        }
+                        
+                    }
                 }
             }
             
@@ -80,7 +90,44 @@
         echo json_encode($sqlStudentsResult);
 
     }
+
+    function getStudentGradedCats($studentId, $examId)
+    {
+        /*$sqlSelectAvgCatGrade = "SELECT exam_cat_id, name, AVG(grade) as avg_grade, possible_grade
+        FROM category_grade CG JOIN assigned_grader AG USING (grader_exam_cat_id)
+        JOIN exam_category EC USING (exam_cat_id)
+        JOIN category C USING (cat_id)
+        WHERE student_id LIKE :student_id AND EC.exam_cat_id IN (SELECT exam_cat_id
+                                                                FROM exam_category
+                                                                WHERE exam_id = :exam_id)
+        GROUP BY exam_cat_id";*/
+
+        $sqlSelectAvgCatGrade = "SELECT exam_cat_id, name, possible_grade
+                            FROM category_grade CG JOIN assigned_grader AG USING (grader_exam_cat_id)
+                            JOIN exam_category EC USING (exam_cat_id)
+                            JOIN category C USING (cat_id)
+                            WHERE student_id LIKE :student_id AND EC.exam_cat_id IN (SELECT exam_cat_id
+                                                                                    FROM exam_category
+                                                                                    WHERE exam_id = :exam_id)
+                            GROUP BY exam_cat_id";
+
+        $data = array(':student_id' => $studentId, ':exam_id' => $examId);
+        return sqlExecute($sqlSelectAvgCatGrade, $data, true);
+    }
     
+    function getStudentCatGrades($studentId, $examId)
+    {
+        $sqlSelectCats = "SELECT cat.name as cat, grade, e.exam_id, ec.possible_grade, CONCAT(u.f_name,' ',u.l_name) AS grader_name, ag.exam_cat_id, cg.grader_exam_cat_id
+        FROM category_grade AS cg JOIN assigned_grader AS ag ON cg.grader_exam_cat_id = ag.grader_exam_cat_id 
+        JOIN exam_category AS ec ON ag.exam_cat_id = ec.exam_cat_id
+        JOIN category AS cat ON ec.cat_id = cat.cat_id
+        JOIN exam AS e ON e.exam_id = ec.exam_id
+        JOIN user AS u ON ag.user_id = u.user_id
+        WHERE student_id LIKE :student_id AND e.exam_id  = :exam_id";
+
+        $data = array(':student_id' => $studentId, ':exam_id' => $examId);
+        return sqlExecute($sqlSelectCats, $data, true);
+    }
     
 
 ?>

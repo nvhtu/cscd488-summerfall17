@@ -164,6 +164,10 @@ body > .container {
    position: relative;
 }
 
+.students-specific-btn {
+    margin-left: 10px;
+}
+
 .form-inline .has-feedback .form-control-feedback.clear-search {
    cursor: pointer;
    pointer-events: auto;
@@ -228,10 +232,16 @@ body > .container {
    border-top: 0;
 }
 
+.table .item-detail-row>td input {
+    display: inline-block;
+    width: auto;
+}
+
 .table .item-detail-row table th {
    white-space: nowrap;
    width: 1%;
    text-align: right;
+   vertical-align: middle;
 }
 
 /*
@@ -268,6 +278,10 @@ body > .container {
    color: white;
 }
 
+
+/*
+ * Fixes
+ */
 .empty-panel-fix {
    border-bottom: unset;
 }
@@ -276,4 +290,8 @@ body > .container {
     outline: none;
     border: none;
     box-shadow: none;
+}
+
+input[type=file][hidden] {
+    display: none !important;
 }

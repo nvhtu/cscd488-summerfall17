@@ -5,23 +5,30 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+	require_once "../util/sql_exe.php";
+	require_once "../util/check_id.php";
+	require_once "../settings/init_settings.php";
 
 
-    $requesterId = $_GET["requester_id"];
-    $requesterType = $_GET["requester_type"];
+
+	$requesterId = $_POST["requester_id"];
+	$teacherId = $requesterId;
+	$requesterType = $_POST["requester_type"];
     $allowedType = array("Admin", "Teacher", "System");
 
     //if searchStr contains white space, split it into f_name and l_name
 
 
     //User authentication
+	user_auth($requesterId, $requesterType, $allowedType);
 
     //Validate strings not empty
 
     //Validate strings
 
+	if(!isset($GLOBALS["settings"]))
+	initializeSettings();
 
     $target_dir = "../../upload/";
 	$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
@@ -60,6 +67,10 @@
 		*/
 	}
 
+	$_POST["requester_id"] = "999999";
+	$_POST["requester_type"] = "System";
+	require_once "../account/create_account.php";
+
 	//Reading csv file
 	$theFile = fopen($_FILES["fileToUpload"]["tmp_name"], "r");
 	$row = 1;
@@ -70,22 +81,56 @@
 			$num = count($data);
 			if ($row>1)
 			{
-				var_dump($data);
-				
-							$sqlInsertUser = "INSERT INTO user (user_id, f_name, l_name, email) 
-												VALUES (:id, :fname, :lname, :email)";  
-							sqlExecute($sqlInsertUser, array(':id'=>$data[0], ':fname'=>$data[1], ':lname'=>$data[2], ':email'=>$data[3]), False);
+				if(checkUserExists($data[0]))
+				{
+					if(checkStudentExists($data[0]))
+					{
+						if(checkInClassStudentExists($data[0], $teacherId, $GLOBALS["settings"]["curQuarterStart"], $GLOBALS["settings"]["curQuarterEnd"]))
+						{
+							echo "\nStudent ID " . $data[0] . ", " . $data[1] . " " . $data[2] . ", is already in your class.\n";
+						}
+						else
+						{
+							//Insert to in_class_student table
+							createInClassStudent($data[0], $teacherId);
 							
-							$state = "Ready";
-							$sqlInsertStudent = "INSERT INTO student (student_id, state)
-												VALUES (:id, :state)";
-							sqlExecute($sqlInsertStudent, array(':id'=>$data[0], ':state'=>$state), False);
-				
+							echo "\nStudent ID " . $data[0] . ", " . $data[1] . " " . $data[2] . ", account already exists and has been added to your class.\n";
+						}
+					}
+					else
+					{
+						//Insert to student table
+						createStudentAccount($data[0], "Ready");
+						//Insert to in_class_student table
+						createInClassStudent($data[0], $teacherId);
+
+						echo "\nStudent ID " . $data[0] . ", " . $data[1] . " " . $data[2] . ", account already exists and has been added to your class.\n";
+					}
+				}
+				else 
+				{
+					//Insert new user
+					createAccount($data[0],$data[1],$data[2],$data[3]);
+					//Insert to student table
+					createStudentAccount($data[0], "Ready");
+					//Insert to in_class_student table
+					createInClassStudent($data[0], $teacherId);
+
+					echo "\nStudent ID " . $data[0] . ", " . $data[1] . " " . $data[2] . ", account is succesfully created and added to your class.\n";
+				}
 			}
 			$row++;
 			
 		}
 		fclose($handle);
 	}
+
+	function createInClassStudent($studentId, $teacherId)
+	{
+		$sqlInsertInClassStudent = "INSERT INTO in_class_student (student_id, teacher_id, start_date, end_date) 
+									VALUES (:student_id, :teacher_id, :start_date, :end_date)";  
+		sqlExecute($sqlInsertInClassStudent, array(':student_id'=>$studentId, ':teacher_id'=>$teacherId, ':start_date'=>$GLOBALS["settings"]["curQuarterStart"], ':end_date'=>$GLOBALS["settings"]["curQuarterEnd"]), False);
+	}
+
 
 ?>    

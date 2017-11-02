@@ -5,19 +5,15 @@
  * @version: 1.2
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
 
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
     $allowedType = array("Admin", "Teacher", "System");
 
-    $id = $_POST["id"];
-    $fname = $_POST["f_name"];
-    $lname = $_POST["l_name"];
-    $email = $_POST["email"];
-    $type = $_POST["type"];
+
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
@@ -37,34 +33,54 @@
     //Validate strings
 
     
-
-    $sqlInsertUser = "INSERT INTO user (user_id, f_name, l_name, email) 
-            VALUES (:id, :fname, :lname, :email)";  
-    sqlExecute($sqlInsertUser, array(':id'=>$id, ':fname'=>$fname, ':lname'=>$lname, ':email'=>$email), False);
-
-    
-    if(in_array("Student", $type)) //Student account
+    if(strcmp($requesterType,"System") != 0)
     {
-        $state = $_POST["state"];
-        $sqlInsertStudent = "INSERT INTO student (student_id, state)
-                            VALUES (:id, :state)";
+        $id = $_POST["id"];
+        $fname = $_POST["f_name"];
+        $lname = $_POST["l_name"];
+        $email = $_POST["email"];
+        $type = $_POST["type"];
 
-        sqlExecute($sqlInsertStudent, array(':id'=>$id, ':state'=>$state), False);
+        createAccount($id, $fname, $lname, $email);
 
-    }
-    else //Teacher, Grader account
-    {
-        foreach ($type as $theType)
+        if(in_array("Student", $type)) //Student account
         {
-
-            $sqlAddAccount = "INSERT INTO faculty(faculty_id, type)
-                            VALUES (:id, :type)";
-
-            sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$theType), False);
-
+            $state = $_POST["state"];
+            createStudentAccount($id, $state);
+    
         }
+        else //Teacher, Grader account
+        {
+            foreach ($type as $theType)
+            {
+                createFacultyAccount($id, $theType);
+            }
+        }
+    
+        echo $id;
+    }
+    
+    
+
+
+    function createAccount($id, $fname, $lname, $email)
+    {
+        $sqlInsertUser = "INSERT INTO user (user_id, f_name, l_name, email) 
+        VALUES (:id, :fname, :lname, :email)";  
+        sqlExecute($sqlInsertUser, array(':id'=>$id, ':fname'=>$fname, ':lname'=>$lname, ':email'=>$email), False);
     }
 
-    echo $id;
+    function createStudentAccount($id, $state)
+    {
+        $sqlInsertStudent = "INSERT INTO student (student_id, state)
+        VALUES (:id, :state)";
+        sqlExecute($sqlInsertStudent, array(':id'=>$id, ':state'=>$state), False);
+    }
 
+    function createFacultyAccount($id, $type)
+    {
+        $sqlAddAccount = "INSERT INTO faculty(faculty_id, type)
+        VALUES (:id, :type)";
+        sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$type), False);
+    }
 ?>    

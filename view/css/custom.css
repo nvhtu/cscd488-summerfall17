@@ -228,10 +228,16 @@ body > .container {
    border-top: 0;
 }
 
+.table .item-detail-row>td input {
+    display: inline-block;
+    width: auto;
+}
+
 .table .item-detail-row table th {
    white-space: nowrap;
    width: 1%;
    text-align: right;
+   vertical-align: middle;
 }
 
 /*
@@ -276,4 +282,8 @@ body > .container {
     outline: none;
     border: none;
     box-shadow: none;
+}
+
+input[type=file][hidden] {
+    display: none !important;
 }

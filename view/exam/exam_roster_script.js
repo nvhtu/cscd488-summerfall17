@@ -272,7 +272,7 @@ function loadRosterTableNoGrades(item)
                 }
                 else if(property == "seatnum")
                 {
-                    row += '<td><input type="number" class="student-seat-input" disabled value="' + summaryData[property] + '"></td>';
+                    row += '<td><input type="number" class="student-seat-input form-control" disabled value="' + summaryData[property] + '"></td>';
                 }      
             }
         }
@@ -384,7 +384,7 @@ function buildGradeDetailRow(detailData, namesArr)
             {
                 detailRowHTML += '<tr class="active">'
                                 + '<th>' + property + ': </th>'
-                                + '<td> <input type="number" class="cat-grade-input" disabled value="' + detailData[property] + '" data-id="' + detailData[property + " ID"] + '"' + ' min="0" max="' + detailData[property + " Max"] + '">' + ' / ' + detailData[property + " Max"] + '</td>'
+                                + '<td> <input type="number" class="cat-grade-input form-control" disabled value="' + detailData[property] + '" data-id="' + detailData[property + " ID"] + '"' + ' min="0" max="' + detailData[property + " Max"] + '">' + ' / ' + detailData[property + " Max"] + '</td>'
                                 + '</tr>';
                 
                 

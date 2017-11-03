@@ -98,4 +98,20 @@
             return True;
         }
     }
+
+    function checkStudentCatGradeExists($studentId, $examCatId)
+    {
+        $sqlCheckExists = "SELECT COUNT(*) as count
+        FROM student_cat_grade
+        WHERE student_id LIKE :student_id AND exam_cat_id = :exam_cat_id";
+        $sqlResult = sqlExecute($sqlCheckExists, array('student_id'=>$studentId, 'exam_cat_id'=>$examCatId), TRUE);
+
+        if($sqlResult[0]["count"] == 0)
+        {
+            return False;
+        }
+        else {
+            return True;
+        }
+    }
 ?>

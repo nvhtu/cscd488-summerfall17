@@ -69,7 +69,7 @@ function loadTabExam()
             var el = $('[name="'+name+'"]');
             el.val(val);
         });
-        $('input[name="date"]').triggerHandler('changeDate');
+        $('.input-group.date').triggerHandler('changeDate');
         $('input[name="start_time"]').timepicker('setTime', $('input[name="start_time"]').val());
         $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
     },
@@ -81,11 +81,7 @@ function loadTabExam()
     requester_session_id: _userSessionId,
     exam_id: itemId}, 
     populateExamCats,
-    "json");
-
-    /*_deletedExamCats = Array();
-    _modifiedExamCats = Array();*/
-   
+    "json");   
 }
 
 function getAllLoc() 
@@ -323,14 +319,6 @@ function onclickAddCat(isUserClick) {
     var catId = e.currentTarget.dataset["id"];
     _catSectionModified = true;
     
-    /*if($("#submit-button").attr("data-action") == "update"){
-       var cat = $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').find("select").val();
-       _deletedExamCats.push(cat);
-       var modIndex = _modifiedExamCats.indexOf(cat)
-       if(modIndex != -1)
-             _modifiedExamCats.splice(modIndex, 1);
-       console.log(_deletedExamCats);
-    }*/
     $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').remove();
     $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]').remove();
     
@@ -343,20 +331,13 @@ function onclickAddCat(isUserClick) {
        $('#cat-table').hide();
        $('#cat-heading').toggleClass('empty-panel-fix', true);
     }
+    calcPossibleGrade();
  }
  
  function onclickAddGrader(e) {
     var catId = e.currentTarget.dataset["id"],
     $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
     _catSectionModified = true;
- 
-    /*if($("#submit-button").attr("data-action") == "update"){
-       var cat = $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').find("select").val();
-       var modIndex = _modifiedExamCats.indexOf(cat)
-       if(modIndex == -1)
-             _modifiedExamCats.push(cat);
-       console.log(_deletedExamCats);
-    }*/
  
     var $btnDel = $('<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span><span class="sr-only">Delete</span></button>');
     $btnDel.attr("data-id", catId);

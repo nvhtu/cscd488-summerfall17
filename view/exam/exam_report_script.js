@@ -10,17 +10,15 @@ function loadTabReport()
 
 function onclickDownload(rosterData, examData){
     var csvContent = "data:text/csv;charset=utf-8,";
-    
+    console.log(rosterData);
+    console.log(examData);
     var i;
     for(i = 0; _locData[i].loc_id != examData.location; i++);
     var locName = _locData[i].name;
 
-    /*var csvHeader = [examData.name + ": " + examData.quarter + " Quarter " + examData.date + " " +
-        examData.start_time + " " + locName];*/
     var csvData = [["Exam Name", examData.name],["Quarter", examData.quarter],["Date", examData.date],
         ["Time", examData.start_time],["Location", locName]];
-    /*csvData.push(csvHeader);
-    csvData.push([]);*/
+
     csvData = selectStudentData(rosterData, csvData);
     
     csvData.forEach(function(infoArray, index){
@@ -74,14 +72,17 @@ function selectStudentData(rosterData, csvData){
         //maxScoreRow.push("");
     }
     if($("#student-cat-grade-checkbox").prop('checked')){
-        $.each(_catData, function(index, cat){
-            var catName = cat.name;
-            if(typeof rosterData[0].cats[catName] != "undefined"){
+        $.each(rosterData[0].cats, function(index, cat){
+            var catRow = [cat.name + " Max Score", cat.possible_grade,"", "Graders"];
+            $.each(cat.graders_grades, function(name, grade){
+                catRow.push(name);
+                /*studentHeaders.push(catName + " (" + name + ")");
                 rosterProps.push("cats");
-                rosterProps.push(catName);
-                studentHeaders.push(catName);
-                csvData.push([catName + " Max Score", rosterData[0].cats[catName + " Max"]]);
-            }
+                rosterProps.push(index);
+                rosterProps.push(name);*/
+            });
+            
+            csvData.push(catRow);
         });
     }
 

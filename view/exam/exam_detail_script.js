@@ -20,8 +20,7 @@ $('input[name="date"]').keydown(function(){
 $('.timepicker input').timepicker({
     defaultTime: '08:00 AM',
     minuteStep: 5,
-    showInputs: false,
-    showMeridian: false
+    showInputs: false
 }).focus(function() {
     $(this).timepicker('showWidget');
 });

@@ -50,7 +50,7 @@
                             possible_grade = :possible_grade,
                             passing_grade = :passing_grade,
                             duration = :duration,
-                            start_time = :start_time,
+                            start_time = STR_TO_DATE(:start_time, '%h:%i %p'),
                             cutoff = :cutoff
                         WHERE exam_id = :exam_id";
     $data = array(

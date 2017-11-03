@@ -300,6 +300,7 @@ function loadRosterTableNoGrades(item)
 
 function loadRosterTableHasGrades(item)
 {
+    //console.log(item);
     var passedResult = "";
     if(item.passed == 1)
     {
@@ -349,7 +350,7 @@ function loadRosterTableHasGrades(item)
     
     
     var detailData = {
-        id: item.student_id
+        id: item.student_id,
     };
 
     var namesArr = Array();
@@ -357,16 +358,50 @@ function loadRosterTableHasGrades(item)
     $.each(item["cats"], function(i, theCat)
     {
         detailData[i] = theCat;
-        namesArr.push(i);
+        var avg = checkAvgGrade(theCat);
+        detailData[i]["avg_grade"] = avg;
     });
 
-    var detailRow = buildGradeDetailRow(detailData, namesArr);
+    //console.log(detailData);
+
+    var detailRow = buildGradeDetailRow(detailData);
 
     $("#roster-table-wrapper > ." + _tableId).append(summaryRow);
     $("#roster-table-wrapper > ." + _tableId).append(detailRow);
 }
 
-function buildGradeDetailRow(detailData, namesArr)
+function checkAvgGrade(theCat)
+{
+    var sum = 0;
+    var count = 0;
+    var gradeArr = new Array();
+
+    for (var property in theCat.graders_grades)
+    {
+        gradeArr.push(parseInt(theCat.graders_grades[property]));
+        sum += parseInt(theCat.graders_grades[property]);
+        count++;
+    }
+    var avg = sum/count;
+
+
+    //Check grade difference
+    for (var i=0; i<gradeArr.length; i++)
+    {
+        if(i<gradeArr.length-1)
+        {
+            if(Math.abs(gradeArr[i] - gradeArr[i+1]) > parseInt(_settings.pointDiffRange))
+            {
+                return false;
+            }
+        }
+        
+    }
+
+    return avg;
+}
+
+function buildGradeDetailRow(detailData)
 {
     var detailRowHTML = '<tr class="item-detail-row" data-id="item-' + detailData.id + '">'
     + '<td class="details" colspan="100%">'
@@ -374,25 +409,38 @@ function buildGradeDetailRow(detailData, namesArr)
     + '<table class="table table-condensed">'
     + '<tbody>';
 
-    var count = 0;
-
-    for (var property in detailData) 
+    
+    $.each(detailData, function(i, theCat)
     {
-        if (detailData.hasOwnProperty(property) && !property.includes("Max") && !property.includes("ID")) 
+        if(i != "id")
         {
-            if(detailData[property] != detailData.id)
+            if (theCat.avg_grade != false)
             {
-                detailRowHTML += '<tr class="active">'
-                                + '<th>' + property + ': </th>'
-                                + '<td> <input type="number" class="cat-grade-input form-control" disabled value="' + detailData[property] + '" data-id="' + detailData[property + " ID"] + '"' + ' min="0" max="' + detailData[property + " Max"] + '">' + ' / ' + detailData[property + " Max"] + '</td>'
-                                + '</tr>';
-                
-                
+                detailRowHTML += '<tr class="active parent-detail-row">'
+                + '<th>' + theCat.name + ' final grade: </th>'
+                + '<td> <input type="number" class="cat-grade-input form-control" disabled value="' + theCat.avg_grade + '" data-id="' + theCat.exam_cat_id + '"' + ' min="0" max="' + theCat.possible_grade + '">' + ' / ' + theCat.possible_grade + '</td>'
+                + '</tr>';
             }
-            
-            count++;
+            else
+            {
+                detailRowHTML += '<tr class="active parent-detail-row red-row">'
+                + '<th>' + theCat.name + ' final grade: </th>'
+                + '<td> <input type="number" class="cat-grade-input form-control" disabled value="" data-id="' + theCat.exam_cat_id + '"' + ' min="0" max="' + theCat.possible_grade + '">' + ' / ' + theCat.possible_grade + '</td>'
+                + '</tr>';
+            }
+    
+            for (var property in theCat.graders_grades)
+            {
+                detailRowHTML += '<tr class="active sub-detail-row">'
+                + '<th>' + property + ' : </th>'
+                + '<td>' + theCat.graders_grades[property] + '/' + theCat.possible_grade + '</td>'
+                + '</tr>';
+            }
+    
         }
-    }
+        
+    });
+
 
     detailRowHTML += '</tbody></table></div></td></tr>';
     return detailRowHTML;

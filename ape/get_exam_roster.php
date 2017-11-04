@@ -8,6 +8,8 @@
     require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
 
+    $systemId = "999999";
+
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
     $examId = $_GET["exam_id"];
@@ -98,10 +100,11 @@
                             $sqlResultFinalGrade = getStudentFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]);
                             $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultFinalGrade[0]["final_grade"];
                             $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = $sqlResultFinalGrade[0]["comment"];
+                            $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = $sqlResultFinalGrade[0]["edited_by"];
                         }
                         else 
                         {
-                            if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"]))
+                            if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"], $systemId))
                             {
                                 $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentGradedCats[$theCat]["avg_grade"];
                             }
@@ -114,7 +117,7 @@
                     }
                     else
                     {   
-                        if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"]))
+                        if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"], $systemId))
                         {
                             $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentGradedCats[$theCat]["avg_grade"];
                         }
@@ -149,7 +152,7 @@
                                                                 WHERE exam_id = :exam_id)
         GROUP BY exam_cat_id";*/
 
-        $sqlSelectAvgCatGrade = "SELECT exam_cat_id, name, AVG(grade) as avg_grade, possible_grade
+        $sqlSelectAvgCatGrade = "SELECT exam_cat_id, name, ROUND(AVG(grade),0) as avg_grade, possible_grade
                             FROM category_grade CG JOIN assigned_grader AG USING (grader_exam_cat_id)
                             JOIN exam_category EC USING (exam_cat_id)
                             JOIN category C USING (cat_id)
@@ -210,7 +213,7 @@
         $data = array(':student_id' => $studentId, ':exam_cat_id' => $examCatId);
         $sqlResultComment = sqlExecute($sqlSelectComment, $data, true);
 
-        if(count($sqlResultComment) == 0)
+        if(strcmp($sqlResultComment[0]["comment"], "") == 0)
         {
             return false;
         }
@@ -219,11 +222,11 @@
         }
     }
 
-    function updateFinalCatGrade($studentId, $examCatId, $gradeArr, $avgGrade)
+    function updateFinalCatGrade($studentId, $examCatId, $gradeArr, $avgGrade, $editedBy)
     {
         if(checkGradeDiff($gradeArr))
         {
-            updateStudentFinalCatGrade($studentId, $examCatId, $avgGrade);
+            updateStudentFinalCatGrade($studentId, $examCatId, $avgGrade, $editedBy);
             return true;
         }
         else 

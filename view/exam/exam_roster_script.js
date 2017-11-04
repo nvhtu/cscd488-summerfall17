@@ -322,19 +322,20 @@ function loadRosterTableHasGrades(item)
     var summaryRow = buildItemRow(summaryData, false);
 
     //create info button
-    var $bttnInfo = $('<button type="button" class="btn btn-info" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="sr-only">Info</span></button>');
+    var $bttnInfo = $('<button type="button" class="btn btn-info btn-labeled" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-list-alt"></i></span>View Grades</button>');
     $bttnInfo.attr("data-id", summaryData.id);
     $bttnInfo.click(onclickInfoGrade);
+    /*
     //create edit button
     var $bttnEdit = $('<button type="button" class="btn btn-warning" data-action="edit" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only">Edit</span></button>');
     $bttnEdit.attr("data-id", summaryData.id); //add unique ID from item as a data tag
     $bttnEdit.click(onclickEditGrade);
-
+*/
     if(_selectedTab == "Grading")
     {
         summaryRow.append(
             $('<td class="btns">').append(
-            $('<div class="btn-group" role="group">').append($bttnInfo, $bttnEdit, ' ')
+            $('<div class="btn-group" role="group">').append($bttnInfo, ' ')
             )
         );
     }
@@ -358,8 +359,6 @@ function loadRosterTableHasGrades(item)
     $.each(item["cats"], function(i, theCat)
     {
         detailData[i] = theCat;
-        var avg = checkAvgGrade(theCat);
-        detailData[i]["avg_grade"] = avg;
     });
 
     //console.log(detailData);
@@ -370,36 +369,6 @@ function loadRosterTableHasGrades(item)
     $("#roster-table-wrapper > ." + _tableId).append(detailRow);
 }
 
-function checkAvgGrade(theCat)
-{
-    var sum = 0;
-    var count = 0;
-    var gradeArr = new Array();
-
-    for (var property in theCat.graders_grades)
-    {
-        gradeArr.push(parseInt(theCat.graders_grades[property]));
-        sum += parseInt(theCat.graders_grades[property]);
-        count++;
-    }
-    var avg = sum/count;
-
-
-    //Check grade difference
-    for (var i=0; i<gradeArr.length; i++)
-    {
-        if(i<gradeArr.length-1)
-        {
-            if(Math.abs(gradeArr[i] - gradeArr[i+1]) > parseInt(_settings.pointDiffRange))
-            {
-                return false;
-            }
-        }
-        
-    }
-
-    return avg;
-}
 
 function buildGradeDetailRow(detailData)
 {
@@ -414,29 +383,37 @@ function buildGradeDetailRow(detailData)
     {
         if(i != "id")
         {
-            if (theCat.avg_grade != false)
+            var rowColorClass = "no-color-row";
+            var inputCommentType = "text";
+
+            if(theCat.final_grade == false)
             {
-                detailRowHTML += '<tr class="active parent-detail-row">'
-                + '<th>' + theCat.name + ' final grade: </th>'
-                + '<td> <input type="number" class="cat-grade-input form-control" disabled value="' + theCat.avg_grade + '" data-id="' + theCat.exam_cat_id + '"' + ' min="0" max="' + theCat.possible_grade + '">' + ' / ' + theCat.possible_grade + '</td>'
-                + '</tr>';
+                rowColorClass = "red-row";
             }
-            else
+
+            if(theCat.comment == "")
             {
-                detailRowHTML += '<tr class="active parent-detail-row red-row">'
-                + '<th>' + theCat.name + ' final grade: </th>'
-                + '<td> <input type="number" class="cat-grade-input form-control" disabled value="" data-id="' + theCat.exam_cat_id + '"' + ' min="0" max="' + theCat.possible_grade + '">' + ' / ' + theCat.possible_grade + '</td>'
-                + '</tr>';
+                inputCommentType = "hidden";
             }
+
+
+            detailRowHTML += '<tr class="active parent-detail-row">'
+                            + '<th class="' + rowColorClass + '">' + theCat.name + ' final grade: </th>'
+                            + '<td class="' + rowColorClass + '"><input type="number" class="cat-grade-input form-control" disabled value="' 
+                            + theCat.final_grade + '" data-id="' + theCat.exam_cat_id + '"' 
+                            + ' min="0" max="' + theCat.possible_grade + '">' + ' / ' + theCat.possible_grade 
+                            + '<input type="' + inputCommentType + '" class="cat-comment-input form-control" disabled value="' + theCat.edited_by + ': ' + theCat.comment + '" data-id="' + theCat.exam_cat_id + '"' 
+                            +'</td>'
+                            + '</tr>';
     
             for (var property in theCat.graders_grades)
             {
                 detailRowHTML += '<tr class="active sub-detail-row">'
-                + '<th>' + property + ' : </th>'
-                + '<td>' + theCat.graders_grades[property] + '/' + theCat.possible_grade + '</td>'
-                + '</tr>';
+                                + '<th>' + property + ' : </th>'
+                                + '<td>' + theCat.graders_grades[property] + '/' + theCat.possible_grade + '</td>'
+                                + '</tr>';
             }
-    
+
         }
         
     });

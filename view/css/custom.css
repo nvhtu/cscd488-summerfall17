@@ -222,6 +222,10 @@ body > .container {
    display: flex;
 }
 
+.btn-group {
+    float: right;
+}
+
 .table .btn-group .btn {
    display: inline-block;
    float: none;

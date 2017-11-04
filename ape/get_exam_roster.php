@@ -226,7 +226,7 @@
     {
         if(checkGradeDiff($gradeArr))
         {
-            updateStudentFinalCatGrade($studentId, $examCatId, $avgGrade, $editedBy);
+            updateStudentFinalCatGrade($studentId, $examCatId, $avgGrade, NULL, $editedBy);
             return true;
         }
         else 

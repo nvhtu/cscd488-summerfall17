@@ -22,8 +22,9 @@
 
     function getStudentFinalCatGrade($studentId, $examCatId)
     {
-        $sqlSelectGrade = "SELECT final_grade, comment
-                            FROM student_cat_grade
+        $sqlSelectGrade = "SELECT final_grade, comment, CONCAT(u.f_name,' ',u.l_name) AS edited_by
+                            FROM student_cat_grade scg
+                            JOIN user u ON (scg.edited_by = u.user_id)
                             WHERE student_id LIKE :student_id AND exam_cat_id = :exam_cat_id";
 
         $data = array(':student_id' => $studentId, ':exam_cat_id' => $examCatId);

@@ -17,18 +17,32 @@
         $examCatId = $_POST["exam_cat_id"];
         $finalGrade = $_POST["final_grade"];
         $editedBy = $_POST["edited_by"];
+        $comment = $_POST["comment"];
 
-        updateStudentFinalCatGrade($studentId, $examCatId, $finalGrade, $editedBy);
+        updateStudentFinalCatGrade($studentId, $examCatId, $finalGrade, $comment, $editedBy);
 
     }
 
-    function updateStudentFinalCatGrade($studentId, $examCatId, $finalGrade, $editedBy)
+    function updateStudentFinalCatGrade($studentId, $examCatId, $finalGrade, $comment, $editedBy)
     {
-        $sqlInsertGrade = "INSERT INTO student_cat_grade (student_id, exam_cat_id, final_grade, edited_by)
-                            VALUES (:student_id, :exam_cat_id, :final_grade, :edited_by)
-                            ON DUPLICATE KEY UPDATE final_grade = :final_grade, edited_by = :edited_by";
+        if($comment != NULL)
+        {
+            $sqlInsertGrade = "INSERT INTO student_cat_grade (student_id, exam_cat_id, final_grade, comment, edited_by)
+            VALUES (:student_id, :exam_cat_id, :final_grade, :comment, :edited_by)
+            ON DUPLICATE KEY UPDATE final_grade = :final_grade, comment = :comment, edited_by = :edited_by";
 
-        $data = array(':student_id' => $studentId, ':exam_cat_id' => $examCatId, ':final_grade' => $finalGrade, ':edited_by' => $editedBy);
-        sqlExecute($sqlInsertGrade, $data, false);
+            $data = array(':student_id' => $studentId, ':exam_cat_id' => $examCatId, ':final_grade' => $finalGrade, 'comment' => $comment, ':edited_by' => $editedBy);
+            sqlExecute($sqlInsertGrade, $data, false);
+        }
+        else
+        {
+            $sqlInsertGrade = "INSERT INTO student_cat_grade (student_id, exam_cat_id, final_grade, edited_by)
+            VALUES (:student_id, :exam_cat_id, :final_grade, :edited_by)
+            ON DUPLICATE KEY UPDATE final_grade = :final_grade, edited_by = :edited_by";
+
+            $data = array(':student_id' => $studentId, ':exam_cat_id' => $examCatId, ':final_grade' => $finalGrade, ':edited_by' => $editedBy);
+            sqlExecute($sqlInsertGrade, $data, false);
+        }
+        
     }
 ?>

@@ -16,8 +16,20 @@ var _formId = "main-form";
 var _locData = Array();
 
 var _selectedTab = "";
+var _pageParam = "";
 
-$(document).ready(loaded);
+$(document).ready(function(){
+
+    _pageParam = getURLParameter("page");
+
+    //if URL param page is "student_exam", continue loading.
+    //Else it's "admin_user" or "teacher_user", stop loading because user page include this js file to use its functions to load student history exams
+    if(_pageParam.indexOf("exam") != -1)
+    {
+        loaded();
+    }
+
+});
 
 function loaded() 
 {
@@ -37,7 +49,7 @@ function getStudentInfo()
     request: "get_own"}, 
     function(item){
         _userState = item[0]["state"];
-        checkAccountState();
+        checkStudentAccountState();
         
     },
     "json");
@@ -59,8 +71,8 @@ function init()
             $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
     });
 
-    buildTable();
-    getAllItems();
+    buildStudentTable();
+    getAllStudentItems();
 
     $(".main-table>thead th").not("th:last-of-type")
      .click(onClickSort)
@@ -72,7 +84,7 @@ function init()
     
 }
 
-function buildTable()
+function buildStudentTable()
 {
 
     headersArr = ["Name", "Date", "Start Time", "Overall Grade", "Result", "Action"];
@@ -82,21 +94,21 @@ function buildTable()
     $("#exams-student-table-wrapper").html(table);
 }
 
-function buildItemSummaryRow(item)
+function buildStudentItemSummaryRow(item)
 {
     var passedResult = "";
-    var passedColor = "";
+    var rowColorClass = "";
     var passedTextColor = "";
     if(item.passed == 1)
     {
         passedResult = "Passed";
-        passedColor = "#DFF0D8";
+        rowColorClass = "green-row";
         passedTextColor = "#3D773E";
     }
     else
     {
         passedResult = "Fail";
-        passedColor = "#F2DEDE";
+        rowColorClass = "red-row";
         passedTextColor = "#A94442";
     }
 
@@ -114,13 +126,13 @@ function buildItemSummaryRow(item)
     var row = buildItemRow(summaryData, false);
     var $bttnInfo = $('<button type="button" class="btn btn-primary" data-target="#item-' + summaryData.id + '" data-toggle="collapse">View Detail Grades</button>');
     row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnInfo)));
-    row.css("background-color", passedColor);
+    row.addClass(rowColorClass);
     row.children().eq(4).css("color", passedTextColor);
     row.children().eq(4).css("font-weight", "bold");
     return row;
 }
 
-function buildItemDetailRow(item)
+function buildStudentItemDetailRow(item)
 {
     var detailData = {
         id: item.exam_id
@@ -140,16 +152,16 @@ function buildItemDetailRow(item)
     return detailRow;
 }
 
-function loadTable(data) 
+function loadStudentTable(data) 
 {
     //console.log(data);
     $.each(data, function(i, item) {
 
         //console.log(item);
 
-        var row = buildItemSummaryRow(item);
+        var row = buildStudentItemSummaryRow(item);
 
-        var detailRow = buildItemDetailRow(item);
+        var detailRow = buildStudentItemDetailRow(item);
 
         $("#exams-student-table-wrapper > ." + _tableId).append(row);
         $("#exams-student-table-wrapper > ." + _tableId).append(detailRow);
@@ -162,7 +174,7 @@ function loadTable(data)
 }
 
 
-function getAllItems(state)
+function getAllStudentItems(state)
 {
     
     $.get("../ape/get_all_apes.php", 
@@ -170,13 +182,13 @@ function getAllItems(state)
         requester_type: _userType,
         requester_session_id: _userSessionId,
         request: "get_all"}, 
-        loadTable,
+        loadStudentTable,
         "json");
 }
 
 
 
-function checkAccountState()
+function checkStudentAccountState()
 {
     $homepageBtn = '<button type="button" class="btn btn-primary pull-right" onclick="window.location.href=\'../view/home/\'">View Available Exams</button>';
     switch(_userState)

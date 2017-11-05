@@ -35,9 +35,9 @@
 
     function getExamById()
     {
-        $sqlSelectExam = "SELECT *
+        $sqlSelectExam = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
         FROM exam
-        WHERE exam_id = :exam_id";
+        WHERE exam_id LIKE :exam_id";
         return $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$_GET["exam_id"]), true);
     }
 
@@ -46,24 +46,24 @@
 
         switch($requesterType)
         {
-            case "Admin":  $sqlSelectExams = "SELECT *
+            case "Admin":  $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
                                             FROM exam
-                                            WHERE state = :state";
+                                            WHERE state LIKE :state";
                             return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
                             break;
 
-            case "Teacher":  $sqlSelectExams = "SELECT exam.*
+            case "Teacher":  $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
                                                 FROM exam
                                                 INNER JOIN in_class_exam
                                                 USING (exam_id)
-                                                WHERE teacher_id LIKE :teacher_id AND state = :state";
+                                                WHERE teacher_id LIKE :teacher_id AND state LIKE :state";
                             $data = array(':teacher_id' => $requesterId, ":state"=>$_GET["state"]);
                             return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
                             break;
 
-            case "Student": $sqlSelectExams = "SELECT *
+            case "Student": $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
                             FROM exam
-                            WHERE state = :state AND exam.exam_id NOT IN (SELECT exam_id FROM in_class_exam)";
+                            WHERE state LIKE :state AND exam.exam_id NOT IN (SELECT exam_id FROM in_class_exam)";
                             return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
         }
            
@@ -79,7 +79,7 @@
                             break;
             case "Student": return getStudentExams($requesterId);
                             break;
-            case "Admin": return $sqlResult = sqlExecute("SELECT * FROM exam", array(), true);
+            case "Admin": return $sqlResult = sqlExecute("SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff FROM exam", array(), true);
                             break;
         
         }
@@ -108,7 +108,7 @@
 
     //Gets the number of seats in the location of exam $exam_id
 	function getMaxSeats($exam_id){
-		$sqlResult = sqlExecute("SELECT seats FROM exam JOIN location ON (exam.location = location.loc_id) WHERE exam_id = :exam",
+		$sqlResult = sqlExecute("SELECT seats FROM exam JOIN location ON (exam.location = location.loc_id) WHERE exam_id LIKE :exam",
 					 array(':exam' => $exam_id),
 					 true);
 		return $sqlResult[0]["seats"];
@@ -116,7 +116,7 @@
 
 	//Gets the number of students registered for exam $exam_id
 	function getNumRegistered($exam_id){
-		$sqlResult = sqlExecute("SELECT COUNT(student_id) as count FROM exam_roster WHERE exam_id = :exam",
+		$sqlResult = sqlExecute("SELECT COUNT(student_id) as count FROM exam_roster WHERE exam_id LIKE :exam",
 					 array(':exam' => $exam_id),
 					 true);
 		return $sqlResult[0]["count"];
@@ -124,7 +124,7 @@
 
     function getTeacherExams($requesterType, $requesterId)
     {
-        $sqlSelectExams = "SELECT exam.*
+        $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
         FROM exam
         INNER JOIN in_class_exam
         USING (exam_id)
@@ -135,7 +135,7 @@
 
     function getStudentExams($requesterId)
     {
-        $sqlSelectExams = "SELECT exam.exam_id, name, date, start_time, grade, possible_grade, passed
+        $sqlSelectExams = "SELECT exam.exam_id, name, date, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, grade, possible_grade, passed
                             FROM exam JOIN exam_grade ON exam.exam_id = exam_grade.exam_id
                             WHERE exam_grade.student_id LIKE :student_id";
 

@@ -222,6 +222,10 @@ body > .container {
    display: flex;
 }
 
+.btn-group {
+    float: right;
+}
+
 .table .btn-group .btn {
    display: inline-block;
    float: none;
@@ -294,4 +298,14 @@ body > .container {
 
 input[type=file][hidden] {
     display: none !important;
+}
+
+/*Tu*/
+
+.green-row {
+    background-color: #DFF0D8 !important;
+}
+
+.red-row {
+    background-color: #F2DEDE !important;
 }

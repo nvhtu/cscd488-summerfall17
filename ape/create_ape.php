@@ -26,7 +26,7 @@
     $cutoff = $_POST["cutoff"];
 
     $sqlInsertExam = "INSERT INTO exam (name, quarter, date, location, state, possible_grade, passing_grade, duration, start_time, cutoff)
-                                   VALUES (:name, :quarter, :exam_date, :location, :state, :possible_grade, :passing_grade, :duration, :start_time, :cutoff)";
+                                   VALUES (:name, :quarter, :exam_date, :location, :state, :possible_grade, :passing_grade, :duration, STR_TO_DATE(:start_time, '%h:%i %p'), :cutoff)";
     $data = array(
         ':name' => $name,
         ':quarter' => $quarter,

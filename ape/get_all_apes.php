@@ -142,13 +142,12 @@
         $data = array(':student_id' => $requesterId);
         $sqlResultExams = sqlExecute($sqlSelectExams, $data, true);
 
-        $sqlSelectCats = "SELECT name as cat, grade, exam_id, possible_grade
-                        FROM category_grade AS cg JOIN assigned_grader AS ag ON cg.grader_exam_cat_id = ag.grader_exam_cat_id 
-                        JOIN exam_category AS ec ON ag.exam_cat_id = ec.exam_cat_id
-                        JOIN category as cat ON ec.cat_id = cat.cat_id
-                        WHERE student_id LIKE :student_id";
+        $sqlSelectCats = "SELECT name as cat, final_grade, exam_id, possible_grade
+                            FROM student_cat_grade scg
+                            JOIN exam_category ec USING (exam_cat_id)
+                            JOIN category c USING (cat_id)
+                            WHERE student_id LIKE :student_id";
         
-
         $sqlResultCats = sqlExecute($sqlSelectCats, $data, true);
 
         
@@ -162,7 +161,7 @@
             {
                 if($sqlResultCats[$theCat]["exam_id"] == $sqlResultExams[$theExam]["exam_id"])
                 {
-                    $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
+                    $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["final_grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
                 }
             }
         }

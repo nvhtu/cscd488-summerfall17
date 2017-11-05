@@ -10,7 +10,8 @@ $('.input-group.date').datepicker({
     forceParse: false,
     todayHighlight: true,
     autoclose: true,
-    orientation: "top left"
+    orientation: "top left",
+    enableOnReadonly: false
 }).on('changeDate', autofillQuarter);
 
 $('input[name="date"]').keydown(function(){
@@ -80,7 +81,12 @@ function loadTabExam()
     requester_session_id: _userSessionId,
     exam_id: itemId}, 
     populateExamCats,
-    "json");   
+    "json");
+
+    /*_deletedExamCats = Array();
+    _modifiedExamCats = Array();*/
+   
+    toggleSubmitEdit(true);
 }
 
 function getAllLoc() 
@@ -257,6 +263,8 @@ function getAllLoc()
         "json");
     });
     calcPossibleGrade();
+    
+    $('input, select, button', '#Exam_tab').not('input[type="hidden"], [data-toggle="collapse"]').prop("disabled", true);
 }
 
 function populateGraders(graderData, dataId){
@@ -284,6 +292,8 @@ function populateGraders(graderData, dataId){
             "json");
         }
     });
+
+    $('input, select, button', '#Exam_tab').not('input[type="hidden"], [data-toggle="collapse"]').prop("disabled", true);
 }
 
 

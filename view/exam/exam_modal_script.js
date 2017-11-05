@@ -9,10 +9,12 @@
 var _origClickEvent;
 var _catSectionModified;
 
-$('a[href="#Exam_tab"]').click(function(){onclickTabExam();});
-$('a[href="#Report_tab"]').click(function(){onclickTabReport();});
-$('a[href="#Roster_tab"]').click(function(){onclickTabRoster();});
+$('a[href="#Exam_tab"]').click(onclickTabExam);
+$('a[href="#Report_tab"]').click(onclickTabReport);
+$('a[href="#Roster_tab"]').click(onclickTabRoster);
+$('#discard-button').click(onclickTabExam);
 $("#submit-button").click(submitForm);
+$('#edit-button').click(function(){toggleSubmitEdit(false);});
 
 function onOpenDetailModal(e)
 {
@@ -53,6 +55,9 @@ function submitForm(e) {
          else if (action === "update") {
             updateItem();
          }
+      }
+      else if (tab === "roster") {
+          //Do nothing
       }
       else if (tab === "report") {
            $.get("../ape/get_all_apes.php", 

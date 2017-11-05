@@ -58,7 +58,7 @@ function buildItemRow(summaryData, isBasicBtns)
         //create detail button
         var $btnDetails = $('<button type="button" class="btn btn-info btn-labeled" data-toggle="modal" data-target="#detail-modal"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-list-alt"></i></span>Details</button>');
         $btnDetails.attr("data-id", summaryData.id); //add unique ID from item as a data tag
-        $btnDetails.click(onclickEdit);
+        $btnDetails.click(onclickDetails);
 
         //create delete button
         var $btnDel = $('<button type="button" class="btn btn-danger btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-trash"></i></span>Delete</button>');

@@ -368,7 +368,7 @@ function onclickCreate()
 
 }
 
-function onclickEdit(e) 
+function onclickDetails(e) 
 {
     clearForm();
     $("input[name='user_id']").prop("disabled", true);
@@ -380,21 +380,6 @@ function onclickEdit(e)
     $("#modal-title").html("Edit a User");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
-
-    if(_selectedTab == "Student")
-    {
-        $("#state-form-group").show();
-        $("#type-student-wrap").show();
-        $("input[name='type']").prop('disabled', true);
-        $(".type-nonstudent-wrap").hide();
-    }
-    else
-    {
-        $("#type-student-wrap").hide();
-        $("#state-form-group").hide();
-        $(".type-nonstudent-wrap").show();
-        $("input[name='type']").prop('disabled', false);
-    }
 
     $.get("../account/get_account_info.php", 
     {requester_id: _userId,
@@ -410,8 +395,41 @@ function onclickEdit(e)
     },
     "json");
 
+    if(_selectedTab == "Student")
+    {
+        $("#state-form-group").show();
+        $("#type-student-wrap").show();
+        $("input[name='type']").prop('disabled', true);
+        $(".type-nonstudent-wrap").hide();
+
+        buildStudentHistory(itemId)
+    }
+    else
+    {
+        $("#type-student-wrap").hide();
+        $("#state-form-group").hide();
+        $(".type-nonstudent-wrap").show();
+        $("input[name='type']").prop('disabled', false);
+    }
+
+    
+
 }
 
+function buildStudentHistory(studentId)
+{
+    headersArr = ["Name", "Date", "Start Time", "Overall Grade", "Result", "Action"];
+    var table = buildMainTable(headersArr);
+    
+    $("#exams-student-table-wrapper").html(table);
+
+    $.get("../ape/get_all_apes.php", 
+    {requester_id: studentId,
+    requester_type: "Student",
+    request: "get_all"}, 
+    loadStudentTable,
+    "json");
+}
 
 function onclickDelete(e) 
 {

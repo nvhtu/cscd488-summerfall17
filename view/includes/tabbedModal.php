@@ -57,6 +57,8 @@
 
          <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger hidden" id="discard-button">Discard Changes</button>
+            <button type="button" class="btn btn-warning hidden" id="edit-button" data-action="edit">Make Changes</button>
             <button type="button" class="btn btn-primary" data-dismiss="modal" id="submit-button" data-action="create">Create</button>
          </div>
       </div>

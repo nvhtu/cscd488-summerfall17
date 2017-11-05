@@ -5,6 +5,8 @@ $("#btn-lookup").click(onclickLookup);
 
 function loadTabRoster()
 {
+    toggleSubmitEdit(false, true);
+    $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", true);
     _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
     table = buildMainTable(headersArr);

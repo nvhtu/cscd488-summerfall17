@@ -4,6 +4,7 @@ $("#select-all-checkbox").click(function(){
 
 function loadTabReport()
 {
+    toggleSubmitEdit(false, true);
     $('#submit-button').attr("data-tab", "report").html("Generate &amp; Download");
     $("#Report_tab .archived-only").toggle(_selectedTab == "Archived");
 }

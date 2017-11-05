@@ -8,140 +8,143 @@
     require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
 
-    $systemId = "999999";
-
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
-    $examId = $_GET["exam_id"];
-    $getGrade = $_GET["get_grade"];
+    
     $allowedType = array("Admin", "Teacher");
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 
-    if($getGrade == 0)
+    if(strcmp($requesterType,"System") != 0)
     {
-        $sqlGetRoster = "SELECT student_id, f_name, l_name, seat_num
-        FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
-        WHERE exam_id = :exam_id";
-    
-        $sqlResult = sqlExecute($sqlGetRoster, array(":exam_id"=>$examId), true);
-        echo json_encode($sqlResult);
-    }
-    else 
-    {
-        $_POST["requester_id"] = "999999";
-        $_POST["requester_type"] = "System";
-        require_once "../grade/add_final_cat_grade.php";
+        $examId = $_GET["exam_id"];
+        $getGrade = $_GET["get_grade"];
 
-        $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num, email
-        FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
-        WHERE exam_id = :exam_id";
-    
-        $sqlStudentsResult = sqlExecute($sqlGetRosterStudents, array(":exam_id"=>$examId), true);
-        
-        for ($i=0; $i<count($sqlStudentsResult); $i++)
+        if($getGrade == 0)
         {
-            $studentId = $sqlStudentsResult[$i]["student_id"];
+            $sqlGetRoster = "SELECT student_id, f_name, l_name, seat_num
+            FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
+            WHERE exam_id = :exam_id";
+        
+            $sqlResult = sqlExecute($sqlGetRoster, array(":exam_id"=>$examId), true);
+            echo json_encode($sqlResult);
+        }
+        else 
+        {
+            $_POST["requester_id"] = "999999";
+            $_POST["requester_type"] = "System";
+            require_once "../grade/add_final_cat_grade.php";
 
-            $sqlSelectExams = "SELECT grade, exam.possible_grade, passing_grade, passed, exam.exam_id
-            FROM exam JOIN exam_grade ON exam.exam_id = exam_grade.exam_id
-            WHERE exam_grade.student_id LIKE :student_id AND exam_grade.exam_id = :exam_id";
-
-            $data = array(':student_id' => $studentId, ':exam_id' => $examId);
-            $sqlResultExams = sqlExecute($sqlSelectExams, $data, true);
-
-            if(count($sqlResultExams) != 0)
+            $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num, email
+            FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
+            WHERE exam_id = :exam_id";
+        
+            $sqlStudentsResult = sqlExecute($sqlGetRosterStudents, array(":exam_id"=>$examId), true);
+            
+            for ($i=0; $i<count($sqlStudentsResult); $i++)
             {
-                foreach ($sqlResultExams[0] as $attrName => $attrVal)
+                $studentId = $sqlStudentsResult[$i]["student_id"];
+
+                $sqlSelectExams = "SELECT grade, exam.possible_grade, passing_grade, passed, exam.exam_id
+                FROM exam JOIN exam_grade ON exam.exam_id = exam_grade.exam_id
+                WHERE exam_grade.student_id LIKE :student_id AND exam_grade.exam_id = :exam_id";
+
+                $data = array(':student_id' => $studentId, ':exam_id' => $examId);
+                $sqlResultExams = sqlExecute($sqlSelectExams, $data, true);
+
+                if(count($sqlResultExams) != 0)
                 {
-                    $sqlStudentsResult[$i][$attrName] = $attrVal;
-                }
-    
-
-                $sqlResultStudentGradedCats = getStudentGradedCats($studentId, $examId);
-                $sqlResultCatGrades = getStudentCatGrades($studentId, $examId);
-
-                
-
-                $sqlStudentsResult[$i]["cats"] = array();
-
-                for ($theCat=0; $theCat<count($sqlResultStudentGradedCats); $theCat++)
-                {
-                    $sqlStudentsResult[$i]["cats"][$theCat] = array();
-
-
-                    $sqlStudentsResult[$i]["cats"][$theCat]["exam_cat_id"] = $sqlResultStudentGradedCats[$theCat]["exam_cat_id"];
-                    $sqlStudentsResult[$i]["cats"][$theCat]["name"] = $sqlResultStudentGradedCats[$theCat]["name"];          
-                    $sqlStudentsResult[$i]["cats"][$theCat]["possible_grade"] = $sqlResultStudentGradedCats[$theCat]["possible_grade"];
-                    $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"] = array();
-
-                    $gradeArr = array();
-                    for ($theGraderCat=0; $theGraderCat<count($sqlResultCatGrades); $theGraderCat++)
+                    foreach ($sqlResultExams[0] as $attrName => $attrVal)
                     {
-                        if ($sqlResultCatGrades[$theGraderCat]["exam_cat_id"] == $sqlResultStudentGradedCats[$theCat]["exam_cat_id"])
-                        {
-
-                            $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$sqlResultCatGrades[$theGraderCat]["grader_name"]] = $sqlResultCatGrades[$theGraderCat]["grade"];
-                            array_push($gradeArr, $sqlResultCatGrades[$theGraderCat]["grade"]);
-                        }
-                        
+                        $sqlStudentsResult[$i][$attrName] = $attrVal;
                     }
+        
 
+                    $sqlResultStudentGradedCats = getStudentGradedCats($studentId, $examId);
+                    $sqlResultCatGrades = getStudentCatGrades($studentId, $examId);
 
-                    if(checkStudentCatGradeExists($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]))
+                    
+
+                    $sqlStudentsResult[$i]["cats"] = array();
+
+                    for ($theCat=0; $theCat<count($sqlResultStudentGradedCats); $theCat++)
                     {
-                        if(checkCommentExists($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]))
-                        {
-                            $_GET["requester_id"] = "999999";
-                            $_GET["requester_type"] = "System";
-                            require_once "../grade/get_final_cat_grade.php";
+                        $sqlStudentsResult[$i]["cats"][$theCat] = array();
 
-                            $sqlResultFinalGrade = getStudentFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]);
-                            $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultFinalGrade[0]["final_grade"];
-                            $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = $sqlResultFinalGrade[0]["comment"];
-                            $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = $sqlResultFinalGrade[0]["edited_by"];
-                        }
-                        else 
+
+                        $sqlStudentsResult[$i]["cats"][$theCat]["exam_cat_id"] = $sqlResultStudentGradedCats[$theCat]["exam_cat_id"];
+                        $sqlStudentsResult[$i]["cats"][$theCat]["name"] = $sqlResultStudentGradedCats[$theCat]["name"];          
+                        $sqlStudentsResult[$i]["cats"][$theCat]["possible_grade"] = $sqlResultStudentGradedCats[$theCat]["possible_grade"];
+                        $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"] = array();
+
+                        $gradeArr = array();
+                        for ($theGraderCat=0; $theGraderCat<count($sqlResultCatGrades); $theGraderCat++)
                         {
+                            if ($sqlResultCatGrades[$theGraderCat]["exam_cat_id"] == $sqlResultStudentGradedCats[$theCat]["exam_cat_id"])
+                            {
+
+                                $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$sqlResultCatGrades[$theGraderCat]["grader_name"]] = $sqlResultCatGrades[$theGraderCat]["grade"];
+                                array_push($gradeArr, $sqlResultCatGrades[$theGraderCat]["grade"]);
+                            }
+                            
+                        }
+
+
+                        if(checkStudentCatGradeExists($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]))
+                        {
+                            if(checkCommentExists($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]))
+                            {
+                                $_GET["requester_id"] = "999999";
+                                $_GET["requester_type"] = "System";
+                                require_once "../grade/get_final_cat_grade.php";
+
+                                $sqlResultFinalGrade = getStudentFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"]);
+                                $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultFinalGrade[0]["final_grade"];
+                                $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = $sqlResultFinalGrade[0]["comment"];
+                                $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = $sqlResultFinalGrade[0]["edited_by"];
+                            }
+                            else 
+                            {
+                                if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"], $systemId))
+                                {
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentGradedCats[$theCat]["avg_grade"];
+                                }
+                                else
+                                {
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = "false";
+                                } 
+                                $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
+                                $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
+                            }
+                        }
+                        else
+                        {   
                             if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"], $systemId))
                             {
                                 $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentGradedCats[$theCat]["avg_grade"];
                             }
                             else
                             {
-                                $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = "false";
-                            } 
+                                $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
+                            }  
                             $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
                             $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
                         }
-                    }
-                    else
-                    {   
-                        if(updateFinalCatGrade($studentId, $sqlResultStudentGradedCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentGradedCats[$theCat]["avg_grade"], $systemId))
-                        {
-                            $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentGradedCats[$theCat]["avg_grade"];
-                        }
-                        else
-                        {
-                            $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
-                        }  
-                        $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
-                        $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
-                    }
 
-                    
-                    
+                        
+                        
+                    }
                 }
+                
+                
+
             }
-            
-            
+
+            echo json_encode($sqlStudentsResult);
 
         }
-
-        echo json_encode($sqlStudentsResult);
-
-    }
+    }    
 
     function getStudentGradedCats($studentId, $examId)
     {

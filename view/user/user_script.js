@@ -402,7 +402,9 @@ function onclickDetails(e)
         $("input[name='type']").prop('disabled', true);
         $(".type-nonstudent-wrap").hide();
 
-        buildStudentHistory(itemId)
+        $(".student-exam-history-form").show();
+
+        buildStudentHistory(itemId);
     }
     else
     {
@@ -410,6 +412,8 @@ function onclickDetails(e)
         $("#state-form-group").hide();
         $(".type-nonstudent-wrap").show();
         $("input[name='type']").prop('disabled', false);
+
+        $(".student-exam-history-form").hide();
     }
 
     

@@ -10,8 +10,6 @@ function loadTabReport()
 
 function onclickDownload(rosterData, examData){
     var csvContent = "data:text/csv;charset=utf-8,";
-    console.log(rosterData);
-    console.log(examData);
     var i;
     for(i = 0; _locData[i].loc_id != examData.location; i++);
     var locName = _locData[i].name;
@@ -35,30 +33,24 @@ function onclickDownload(rosterData, examData){
 }
 
 function selectStudentData(rosterData, csvData){
-    //console.log(rosterData);
     var studentHeaders = [];
     var rosterProps = [];
-    //var maxScoreRow = [];
 
     if($("#student-name-checkbox").prop('checked')){
         rosterProps.push("f_name", "l_name");
         studentHeaders.push("First Name", "Last Name");
-       // maxScoreRow.push("", "");
     }
     if($("#student-id-checkbox").prop('checked')){
         rosterProps.push("student_id");
         studentHeaders.push("EWU ID");
-        //maxScoreRow.push("");
     }
     if($("#student-email-checkbox").prop('checked')){
         rosterProps.push("email");
         studentHeaders.push("Email");
-        //maxScoreRow.push("");
     }
     if($("#student-seat-checkbox").prop('checked')){
         rosterProps.push("seat_num");
         studentHeaders.push("Seat Number");
-        //maxScoreRow.push("");
     }
     if($("#student-exam-grade-checkbox").prop('checked')){
         rosterProps.push("grade");
@@ -69,38 +61,47 @@ function selectStudentData(rosterData, csvData){
     if($("#student-result-checkbox").prop('checked')){
         rosterProps.push("passed");
         studentHeaders.push("Pass/Fail");
-        //maxScoreRow.push("");
     }
-    if($("#student-cat-grade-checkbox").prop('checked')){
+    var graderChecked = $("#student-grader-grade-checkbox").prop('checked');
+    var catChecked = $("#student-cat-grade-checkbox").prop('checked');
+
+    if(catChecked || graderChecked){
         $.each(rosterData[0].cats, function(index, cat){
             var catRow = [cat.name + " Max Score", cat.possible_grade,"", "Graders"];
-            $.each(cat.graders_grades, function(name, grade){
-                catRow.push(name);
-                /*studentHeaders.push(catName + " (" + name + ")");
+            if(catChecked){
+                studentHeaders.push(cat.name + " (Final)");
                 rosterProps.push("cats");
                 rosterProps.push(index);
-                rosterProps.push(name);*/
+                rosterProps.push("final_grade");
+            }
+            $.each(cat.graders_grades, function(name, grade){
+                catRow.push(name);
+                if(graderChecked){
+                    studentHeaders.push(cat.name + " (" + name + ")");
+                    rosterProps.push("cats");
+                    rosterProps.push(index);
+                    rosterProps.push(name);
+                }
             });
-            
             csvData.push(catRow);
         });
     }
 
     csvData.push([]);
     csvData.push(studentHeaders);
-    /*if(_selectedTab == "Archived")
-        csvData.push(maxScoreRow);*/
 
     $.each(rosterData, function(index, student){
         var studentData = [];
         for(var i = 0; i < rosterProps.length; i++){
             if(rosterProps[i] == "cats"){
                 i++;
-                studentData.push(student.cats[rosterProps[i]]);// + " out of " + student.cats[rosterProps[i] + " Max"]);
+                var catIndex = rosterProps[i];
+                i++;
+                if(rosterProps[i] != "final_grade")
+                    studentData.push(student.cats[catIndex].graders_grades[rosterProps[i]]);
+                else
+                    studentData.push(student.cats[catIndex]["final_grade"]);
             }
-            /*else if(rosterProps[i] == "grade"){
-                studentData.push(student.grade + " out of " + student.possible_grade);
-            }*/
             else if(rosterProps[i] == "passed"){
                 studentData.push(student.passed == "1" ? "Pass" : "Fail");
             }

@@ -133,7 +133,7 @@ function onclickCreate()
     $("#submit-button").html("Create");
 }
 
-function onclickEdit(e) 
+function onclickDetails(e) 
 {
     clearForm();
     var itemId = e.currentTarget.dataset["id"];

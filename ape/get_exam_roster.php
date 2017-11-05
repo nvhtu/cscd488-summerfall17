@@ -113,6 +113,7 @@
                                 $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = "false";
                             } 
                             $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
+                            $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
                         }
                     }
                     else
@@ -126,6 +127,7 @@
                             $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
                         }  
                         $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
+                        $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
                     }
 
                     

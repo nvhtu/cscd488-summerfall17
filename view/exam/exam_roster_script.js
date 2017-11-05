@@ -1,4 +1,6 @@
 var _isEditing = false;
+var _curGrade = 0;
+var _curGradeComment = "";
 
 $("#btn-lookup").click(onclickLookup);
 
@@ -434,6 +436,7 @@ function buildGradeDetailRow(detailData)
         {
             var rowColorClass = "no-color-row";
             var inputCommentType = "text";
+            var commentString = "";
 
             if(theCat.final_grade == false)
             {
@@ -444,6 +447,11 @@ function buildGradeDetailRow(detailData)
             {
                 inputCommentType = "hidden";
             }
+            else
+            {
+                commentString =  theCat.edited_by + ': ' + theCat.comment;
+            }
+
 
             var editGradeBtn = '<button type="button" class="btn btn-warning btn-labeled edit-grade-btn" data-action="edit" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-pencil"></i></span>Edit Grade</button>';
             var saveGradeBtn = '<button type="button" class="btn btn-warning save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '">Save</button>';
@@ -456,7 +464,7 @@ function buildGradeDetailRow(detailData)
                                     + '<input type="number" class="cat-grade-input form-control" disabled value="' 
                                     + theCat.final_grade + '" data-id="' + theCat.exam_cat_id + '"' 
                                     + ' min="0" max="' + theCat.possible_grade + '">' + ' / ' + theCat.possible_grade 
-                                    + '<input type="' + inputCommentType + '" class="cat-comment-input form-control" disabled value="' + theCat.edited_by + ': ' + theCat.comment + '" data-id="' + theCat.exam_cat_id + '">' 
+                                    + '<input type="' + inputCommentType + '" class="cat-comment-input form-control" disabled value="' + commentString + '" data-id="' + theCat.exam_cat_id + '">' 
                                 + '</td>'
                                 + '<td class="btns ' + rowColorClass + '">'
                                     + '<div class="btn-group edit-grade-btn-group">'+editGradeBtn+'</div>'
@@ -469,6 +477,7 @@ function buildGradeDetailRow(detailData)
                 detailRowHTML += '<tr class="active sub-detail-row">'
                                 + '<th>' + property + ' : </th>'
                                 + '<td>' + theCat.graders_grades[property] + '/' + theCat.possible_grade + '</td>'
+                                + '<td></td>'
                                 + '</tr>';
             }
 
@@ -488,14 +497,20 @@ function onclickEditGrade(e)
     var itemId = e.currentTarget.dataset["id"];
     var parentId = e.currentTarget.dataset["parentId"];
     var passingGrade = e.currentTarget.dataset["passing_grade"];
-    
+    var gradeInputSelector = ".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-grade-input";
+    var commentInputSelector = ".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-comment-input";
+
     if(e.currentTarget.dataset["action"] == "edit")
     {
         _isEditing = true;
         toggleSaveEditBtn(true, parentId, itemId);
 
-        $(".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-comment-input").attr("type", "text");
-        $(".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-comment-input").attr("placeholder", "Comment*"); 
+        $(commentInputSelector).attr("type", "text");
+        $(commentInputSelector).attr("placeholder", "Comment"); 
+        
+        _curGrade = $(gradeInputSelector).val();
+        _curGradeComment = $(commentInputSelector).val();
+    
     }
     else
     {
@@ -507,6 +522,10 @@ function onclickEditGrade(e)
         
             _isEditing = false;
 
+            _curGrade = $(".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-grade-input").val();
+            _curGradeComment = $(commentInputSelector).val();
+        
+
             
         }
 
@@ -514,8 +533,14 @@ function onclickEditGrade(e)
         {
             toggleSaveEditBtn(false, parentId, itemId);
 
-            var comment = $(".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-comment-input").val(); 
+            $(gradeInputSelector).val(_curGrade); 
+            $(commentInputSelector).val(_curGradeComment); 
             
+            if(_curGradeComment == "")
+            {
+                $(commentInputSelector).attr("type","hidden");
+            }
+
             _isEditing = false;
         }
     }
@@ -620,7 +645,7 @@ function onSaveGrade(e)
  
     row[4].innerText = totalGrade + "/" + maxGrade;
 
-    //$("#item-" + studentId + " .cat-grade-input").prop("disabled", true);
+
 
     var passingGrade = parseInt(e.currentTarget.dataset["passingGrade"]);
 

@@ -73,7 +73,7 @@ https://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-java
     function studentType()
     {
         echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/index.php?page=student_home">Home<span class="sr-only">(current)</span></a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php">My Exams</a></li>';
+        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php?page=student_exam">My Exams</a></li>';
     }
 
 ?>

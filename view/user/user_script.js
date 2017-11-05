@@ -53,12 +53,12 @@ function init()
         $("input[name='requester_session']").val(_userSessionId);
     
         //Create import button in Students tab
-        $("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
+        //$("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
         
         if(_userType != "Teacher")
         {
             //Create look up button in Students tab
-            $("#import-students-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
+            $("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
         }
         
         

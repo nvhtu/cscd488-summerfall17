@@ -13,6 +13,7 @@
     
     $allowedType = array("Admin", "Teacher");
 
+    $systemId = "999999";
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
 

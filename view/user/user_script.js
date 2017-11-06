@@ -429,6 +429,7 @@ function onclickDetails(e)
         $(".type-nonstudent-wrap").hide();
 
         $(".student-exam-history-form").show();
+        $(".student-comment-form").show();
 
         buildStudentHistory(itemId);
     }
@@ -440,6 +441,7 @@ function onclickDetails(e)
         $("input[name='type']").prop('disabled', false);
 
         $(".student-exam-history-form").hide();
+        $(".student-comment-form").hide();
     }
 
     

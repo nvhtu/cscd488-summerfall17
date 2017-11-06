@@ -161,9 +161,10 @@
     */
     function getStudentInfo($id)
     {
-        $sqlGetAccount = "SELECT user_id, f_name, l_name, email, state
-                        FROM student JOIN user ON student_id LIKE user_id
-                        WHERE user_id LIKE :id";
+        $sqlGetAccount = "SELECT student_id as user_id, u.f_name, u.l_name, u.email, s.state, s.comment, CONCAT(u2.f_name,' ',u2.l_name) AS edited_by
+                        FROM student s JOIN user u ON s.student_id LIKE u.user_id
+                        JOIN user u2 ON s.edited_by LIKE u2.user_id
+                        WHERE s.student_id LIKE :id";
 
         $sqlResult = sqlExecute($sqlGetAccount, array('id'=>$id), True);
 

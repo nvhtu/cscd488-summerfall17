@@ -312,7 +312,9 @@ function updateItem()
     l_name: $("input[name='l_name']").val(),
     email: $("input[name='email']").val(),
     type: type,
-    state: $("select[name='state']").val()},
+    state: $("select[name='state']").val(),
+    comment: $("input[name='comment']").val(),
+    edited_by: _userId},
     function(){
         $.get("../account/get_account_info.php",
             {
@@ -389,8 +391,32 @@ function onclickDetails(e)
     id: itemId}, 
     function(item){
         $.each(item[0], function(name, val){
-            var el = $('[name="'+name+'"]');
-            el.val(val);
+            if(name != "edited_by" && name != "comment")
+            {
+                $('[name="'+name+'"]').val(val);
+            }
+            else
+            {
+                if(val != "" && val != null && val != "System System")
+                {
+                    $(".student-comment-form").show();
+
+                    if (name == "comment")
+                    {
+                        $('[name="'+name+'"]').val(val);
+                    }
+                    
+                    if (name == "edited_by")
+                    {
+                        $('[name="'+name+'"]').html("by " + val);
+                    }
+                }
+                else
+                {
+                    $(".student-comment-form").hide();
+                }
+            }
+            
         });
     },
     "json");

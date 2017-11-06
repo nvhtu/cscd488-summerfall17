@@ -109,11 +109,13 @@
     {
         $id = $_POST["id"];
         $state = $_POST["state"];
+        $comment = $_POST["comment"];
+        $editedBy = $_POST["edited_by"];
 
         $sqlUpdateStudent = "UPDATE student
-                            SET state = :state
+                            SET state = :state, comment = :comment, edited_by = :edited_by
                             WHERE student_id LIKE :id";
 
-        sqlExecute($sqlUpdateStudent, array(':state'=>$state, ':id'=>$id), False);
+        sqlExecute($sqlUpdateStudent, array(':state'=>$state, ':id'=>$id, ':comment'=>$comment, ':edited_by'=>$editedBy), False);
     }
 ?>

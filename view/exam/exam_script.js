@@ -159,13 +159,7 @@ function onclickDetails(e)
     onOpenDetailModal(e);
 }
 
-function toggleSubmitEdit(isReadonly, hideDiscard) {
-    $('#submit-button').toggleClass('hidden', isReadonly);
-    $('#edit-button').toggleClass('hidden', !isReadonly);
-    $('#discard-button').toggleClass('hidden', hideDiscard === undefined ? isReadonly : hideDiscard);
-    $('input, select, button', '#Exam_tab').not('input[type="hidden"], [data-toggle="collapse"]').prop("disabled", isReadonly);
-    $('.input-group.date').attr("readonly", isReadonly);
-}
+
 
 function onclickDelete(e) 
 {

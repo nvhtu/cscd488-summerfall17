@@ -22,13 +22,13 @@
                             'userFname' => 'Tu',
                             'userLname' => 'Nguyen',
                             'userEmail' => 'abc@xyz.com' );
-            /*
-           $userInfo = array('userId' => '111', 
+
+           $userInfo = array('userId' => 'y', 
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
-                            'userFname' => 'Tu',
-                            'userLname' => 'Nguyen',
-                            'userEmail' => 'abc@xyz.com' );
+                            'userFname' => 'Stu',
+                            'userLname' => 'Steiner',
+                            'userEmail' => 'ssteiner@ewu.edu' );
             /*$userInfo = array('userId' => '3333', 
             'userType' => array('Student'), 
             'userSession' => '111111',

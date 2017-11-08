@@ -7,63 +7,61 @@
 
     if(count($userInfo) != 0)
     {
+        echo '<a href="https://www.ewu.edu" class="list-group-item">
+            <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
+        </a>
+
+        <div class="list-group-item media user">
+            <div class="media-left media-middle">
+                <svg viewBox="0 0 75 75" id="avatar" class="img-circle">
+                    <circle r="27%" cx="50%" cy="35%"></circle>
+                    <circle cy="100%" cx="50%" r="45%"></circle>
+                </svg>
+            </div>
+            <div class="media-body media-middle">
+                <h4 id="username">'. $userInfo["userFname"] . ' ' . $userInfo["userLname"] . '</h4>
+            </div>
+        </div>';
 
 
-    echo '<a href="https://www.ewu.edu" class="list-group-item">
-        <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
-    </a>
+        switch (count($userInfo["userType"]))
+        {
+            case 1: switch ($userInfo["userType"][0])
+                    {
+                        case "Admin": adminType(); break;
+                        case "Teacher": teacherType(); break;
+                        case "Grader": graderType(); break;
+                        case "Student": studentType(); break;
+                    }
+                    break;
 
-    <div class="list-group-item media user">
-        <div class="media-left media-middle">
-            <svg viewBox="0 0 75 75" id="avatar" class="img-circle">
-                <circle r="27%" cx="50%" cy="35%"></circle>
-                <circle cy="100%" cx="50%" r="45%"></circle>
-            </svg>
-        </div>
-        <div class="media-body media-middle">
-            <h4 id="username">'. $userInfo["userFname"] . ' ' . $userInfo["userLname"] . '</h4>
-        </div>
-    </div>';
+            case 2:
+                    if(in_array("Admin", $userInfo["userType"]) && in_array("Teacher", $userInfo["userType"]))
+                    {
+                        adminType();
+                        teacherType();
+                    }
+                
+                    if(in_array("Admin", $userInfo["userType"]) && in_array("Grader", $userInfo["userType"]))
+                    {
+                        adminType();
+                        graderType();
+                    }
 
+                    if(in_array("Teacher", $userInfo["userType"]) && in_array("Grader", $userInfo["userType"]))
+                    {
+                        teacherType();
+                        graderType();
+                    }
+                    break;
 
-    switch (count($userInfo["userType"]))
-    {
-        case 1: switch ($userInfo["userType"][0])
-                {
-                    case "Admin": adminType(); break;
-                    case "Teacher": teacherType(); break;
-                    case "Grader": graderType(); break;
-                    case "Student": studentType(); break;
-                }
-                break;
-
-        case 2:
-                if(in_array("Admin", $userInfo["userType"]) && in_array("Teacher", $userInfo["userType"]))
-                {
+            case 3: 
                     adminType();
                     teacherType();
-                }
-            
-                if(in_array("Admin", $userInfo["userType"]) && in_array("Grader", $userInfo["userType"]))
-                {
-                    adminType();
                     graderType();
-                }
-
-                if(in_array("Teacher", $userInfo["userType"]) && in_array("Grader", $userInfo["userType"]))
-                {
-                    teacherType();
-                    graderType();
-                }
-                break;
-
-        case 3: 
-                adminType();
-                teacherType();
-                graderType();
-                break;
+                    break;
+        }
     }
-
     //"/home/index.php?page=admin_home" put a "page" variable into $_GET for view/index.php to display the correct requested home
 
     function adminType()
@@ -108,5 +106,5 @@
         <a class="list-group-item' . (strstr($page, 'exam') ? ' active':'') . '" href="/cscd488-summerfall17/view/exam/index.php?page=student_exam"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>My Exams</a>';
     }
 
-    }
+    
 ?>

@@ -47,6 +47,7 @@ function init()
     
         $("#upload-button").click(onsubmitUploadForm);
         $("#lookup-button").click(onsubmitLookupForm);
+        $("select[name='state']").on("change", function(){$(".student-comment-form").show()});
     
         $("input[name='requester_id']").val(_userId);
         $("input[name='requester_type']").val(_userType);

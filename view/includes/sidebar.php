@@ -47,11 +47,12 @@
 
     function adminType()
     {
-        echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/index.php?page=admin_home">Admin Dashboard<span class="sr-only">(current)</span></a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php?page=admin_exam">Exams</a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/user/index.php?page=admin_user">Users</a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/category/index.php">Categories</a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/location/index.php">Locations</a></li>';
+        echo '<li class="active parent-home"><a href="/cscd488-summerfall17/view/home/index.php?page=admin_home">Admin Dashboard<span class="sr-only">(current)</span></a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/exam/index.php?page=admin_exam">Exams</a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/user/index.php?page=admin_user">Users</a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/category/index.php">Categories</a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/location/index.php">Locations</a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/settings/index.php">Admin Settings</a></li>';
     }
 
     /*
@@ -59,21 +60,21 @@ https://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-java
     */
     function teacherType()
     {
-        echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/index.php?page=teacher_home">Teacher Dashboard<span class="sr-only">(current)</span></a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php?page=teacher_exam">In-class Exams</a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/user/index.php?page=teacher_user">Students</a></li>';
+        echo '<li class="active parent-home"><a href="/cscd488-summerfall17/view/home/index.php?page=teacher_home">Teacher Dashboard<span class="sr-only">(current)</span></a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/exam/index.php?page=teacher_exam">In-class Exams</a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/user/index.php?page=teacher_user">Students</a></li>';
     }
 
     function graderType()
     {
-        echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/index.php?page=grader_home">Grader Dashboard<span class="sr-only">(current)</span></a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/grade/index.php">Grading</a></li>';
+        echo '<li class="active parent-home"><a href="/cscd488-summerfall17/view/home/index.php?page=grader_home">Grader Dashboard<span class="sr-only">(current)</span></a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/grade/index.php">Grading</a></li>';
     }
 
     function studentType()
     {
-        echo '<li class="active parent-home"><a href="http://localhost/cscd488-summerfall17/view/home/index.php?page=student_home">Home<span class="sr-only">(current)</span></a></li>
-        <li class="child-list"><a href="http://localhost/cscd488-summerfall17/view/exam/index.php?page=student_exam">My Exams</a></li>';
+        echo '<li class="active parent-home"><a href="/cscd488-summerfall17/view/home/index.php?page=student_home">Home<span class="sr-only">(current)</span></a></li>
+        <li class="child-list"><a href="/cscd488-summerfall17/view/exam/index.php?page=student_exam">My Exams</a></li>';
     }
 
 ?>

@@ -20,37 +20,46 @@ function loaded()
 
 function loadUserInfo(data)
 {
-    _userId = data.userId;
-    _userType = data.userType;
-    _userSessionId = data.userSession;
-
-    //Check all types of the user
-    //_userType variable is used for authentication only. On each operation that requires
-    //different type other than the one set in _userType, programmer needs to set requester_id parameter manually on an Ajax request
-    
-    //"Admin" type supercedes all other type therefore _userType gets "Admin"
-    //"Teacher" supercedes "Grader"
-    //"Student" type never has other type in data.userType array
-    if(data.userType.indexOf("Admin") != -1)
+    if (data.length == 0)
     {
-        _userType = "Admin";
+        _userId = "000";
+        _userType = "000";
+        _userSessionId = "000";
     }
-    else 
-        if(data.userType.indexOf("Teacher") != -1)
+    else
+    {
+
+        _userId = data.userId;
+        _userType = data.userType;
+        _userSessionId = data.userSession;
+
+        //Check all types of the user
+        //_userType variable is used for authentication only. On each operation that requires
+        //different type other than the one set in _userType, programmer needs to set requester_id parameter manually on an Ajax request
+        
+        //"Admin" type supercedes all other type therefore _userType gets "Admin"
+        //"Teacher" supercedes "Grader"
+        //"Student" type never has other type in data.userType array
+        if(data.userType.indexOf("Admin") != -1)
         {
-            _userType = "Teacher";
+            _userType = "Admin";
         }
-        else
-            if(data.userType.indexOf("Grader") != -1)
+        else 
+            if(data.userType.indexOf("Teacher") != -1)
             {
-                _userType = "Grader";
+                _userType = "Teacher";
             }
             else
-                if(data.userType.indexOf("Student") != -1)
+                if(data.userType.indexOf("Grader") != -1)
                 {
-                    _userType = "Student";
+                    _userType = "Grader";
                 }
-
+                else
+                    if(data.userType.indexOf("Student") != -1)
+                    {
+                        _userType = "Student";
+                    }
+    }
     init();    
 }
 

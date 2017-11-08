@@ -24,7 +24,20 @@ function loaded()
 
 function init()
 {
-    getStudentInfo();
+    if(_userId != "000")
+    {
+        getStudentInfo();
+    }
+    else
+    {
+        getAllLoc();
+        
+        buildTable();
+        $(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
+    }
+    
 
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
@@ -65,7 +78,17 @@ function populateLocation(data)
 
 function buildTable()
 {
-    var headersArr = ["Name", "Date", "Start Time", "Duration", "Location", "Available Seats", "Action"];
+    var headersArr = Array();
+
+    if(_userId != "000")
+    {
+        headersArr = ["Name", "Date", "Start Time", "Duration", "Location", "Available Seats", "Action"];
+    }
+    else
+    {
+        headersArr = ["Name", "Date", "Start Time", "Duration", "Location", "Available Seats"];
+    }
+   
     var table = buildMainTable(headersArr);
     $(".table-reponsive").html(table);
     
@@ -99,7 +122,10 @@ function loadTable(data)
         $("." + _tableId).append(row);
         //$("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
 
+        if(_userId != "000")
+        {
         checkAccountState();
+        }
     });
 }
 
@@ -126,41 +152,45 @@ function buildItemSummaryRow(item)
     };
 
     var row = buildItemRow(summaryData, false);
-    var $bttnRegister = "";
 
-    $.each(_userRegisteredExam, function(i,theExam){
-        if(item.exam_id == theExam) //Registered by user
-        {
-            if(item.remaining_seats == "FULL") //Exam full
-            {
-                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-id="' + summaryData.id + '">Register</button>');
-                
-            }
-            else
-            {
-                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn registered" data-id="' + summaryData.id + '">Register</button>');
-            }
-            row.css("font-weight", "bold");
-            $bttnRegister.click(onclickUnregister);
-        }
-        else //Not registered
-        {
-            if(item.remaining_seats == "FULL") //Exam full
-            {
-                $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
-                
-            }
-            else
-            {
-                $bttnRegister = $('<button type="button" class="btn btn-primary register-btn " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
-            }
-            
-            $bttnRegister.click(onclickRegister);
-        }
-    });
+    if(_userId != "000")
+    {
 
-    
-    return row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnRegister)));
+        var $bttnRegister = "";
+
+        $.each(_userRegisteredExam, function(i,theExam){
+            if(item.exam_id == theExam) //Registered by user
+            {
+                if(item.remaining_seats == "FULL") //Exam full
+                {
+                    $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-id="' + summaryData.id + '">Register</button>');
+                    
+                }
+                else
+                {
+                    $bttnRegister = $('<button type="button" class="btn btn-primary register-btn registered" data-id="' + summaryData.id + '">Register</button>');
+                }
+                row.css("font-weight", "bold");
+                $bttnRegister.click(onclickUnregister);
+            }
+            else //Not registered
+            {
+                if(item.remaining_seats == "FULL") //Exam full
+                {
+                    $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
+                    
+                }
+                else
+                {
+                    $bttnRegister = $('<button type="button" class="btn btn-primary register-btn " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
+                }
+                
+                $bttnRegister.click(onclickRegister);
+            }
+        });
+        row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnRegister)));
+    }
+    return row;
     
 }
 

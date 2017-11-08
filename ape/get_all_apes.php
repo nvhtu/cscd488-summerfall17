@@ -10,7 +10,7 @@
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
     $request = $_GET["request"];
-    $allowedType = array("Admin", "Teacher", "Student", "Grader");
+    $allowedType = array("Admin", "Teacher", "Student", "Grader", "000");
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
@@ -61,10 +61,12 @@
                             return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
                             break;
 
+            case "000":
             case "Student": $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
                             FROM exam
                             WHERE state LIKE :state AND exam.exam_id NOT IN (SELECT exam_id FROM in_class_exam)";
                             return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
+                            break;
         }
            
 

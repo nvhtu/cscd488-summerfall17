@@ -48,7 +48,7 @@
     function adminType()
     {
         global $page;
-        echo '<p class="list-group-item"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>Admin</p>
+        echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>Admin</p>
         <div class="list-group">
             <a class="list-group-item' . (isset($_GET["page"]) && strstr($_GET["page"], 'admin_home') ? ' active':'') . '" href="/cscd488-summerfall17/view/home/index.php?page=admin_home"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>Dashboard</a>
             <a class="list-group-item' . (isset($_GET["page"]) && strstr($_GET["page"], 'admin_exam') ? ' active':'') . '" href="/cscd488-summerfall17/view/exam/index.php?page=admin_exam"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>Exams</a>
@@ -62,7 +62,7 @@
     function teacherType()
     {
         global $page;
-        echo '<p class="list-group-item"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span>Teacher</p>
+        echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-apple" aria-hidden="true"></span>Teacher</p>
         <div class="list-group">
             <a class="list-group-item' . (isset($_GET["page"]) && strstr($_GET["page"], 'teacher_home') ? ' active':'') . '" href="/cscd488-summerfall17/view/home/index.php?page=teacher_home"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>Dashboard</a>
             <a class="list-group-item' . (isset($_GET["page"]) && strstr($_GET["page"], 'teacher_exam') ? ' active':'') . '" href="/cscd488-summerfall17/view/exam/index.php?page=teacher_exam"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>In-class Exams</a>
@@ -73,7 +73,7 @@
     function graderType()
     {
         global $page;
-        echo '<p class="list-group-item"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Grader</p>
+        echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Grader</p>
         <div class="list-group">
             <a class="list-group-item' . (isset($_GET["page"]) && strstr($_GET["page"], 'grader_home') ? ' active':'') . '" href="/cscd488-summerfall17/view/home/index.php?page=grader_home"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>Dashboard</a>
             <a class="list-group-item' . (!isset($_GET["page"]) && strstr($page, 'grade') ? ' active':'') . '" href="/cscd488-summerfall17/view/grade/index.php"><span class="glyphicon glyphicon-erase" aria-hidden="true"></span>Grading</a>

@@ -3,42 +3,42 @@
  * @author: Aaron Griffis
  * @version: 1.0
  */
+
+@import url('//assets.ewu.edu/css/ewuserif.css');
+@import url('https://fonts.googleapis.com/css?family=Lato');
  
- html {
+html {
    position: relative;
    min-height: 100%;
 }
 
 body {
    margin-bottom: 70px;
+   font-family: 'Lato', sans-serif;
 }
 
 body > .container {
    padding: 60px 15px 0;
 }
 
-.navbar-brand {
-   padding-top: 0px;
-}
-
-.navbar-brand img {
-   height: 50px
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: 'EWUserif300', Lato, sans-serif;
 }
 
 /*
  * Top navigation
  */
-.navbar-default {
+.navbar {
    background-color: #a10022;
-   border-color: #80001b;
+   border: 0;
 }
 
-.navbar-default .navbar-text {
+.navbar .navbar-text {
    color: white;
 }
 
-.navbar-fixed-top {
-   border: 0;
+.navbar .btn {
+    margin: 8px 0;
 }
 
 /*
@@ -55,25 +55,39 @@ body > .container {
 @media (min-width: 768px) {
     .sidebar {
         position: fixed;
-        top: 50px;
+        top: 0;
         bottom: 0;
         left: 0;
-        z-index: 1000;
+        z-index: 1050;
         display: block;
         padding: 0px;
         overflow-x: hidden;
         overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-        width: 180px;
+        width: 200px;
     }
 
     .main {
         padding-right: 15px;
-        padding-left: 195px;
+        padding-left: 215px;
+    }
+
+    .navbar>.container, .footer>.container {
+        padding-left: 200px;
     }
 }
 
-.sidebar img {
-    margin: 15px;
+.sidebar a img {
+    margin: 15px auto;
+}
+
+#avatar {
+    width: 50px;
+    background: #444;
+    fill: #292929;
+}
+
+#username {
+    margin: 0;
 }
 
 .sidebar .list-group {
@@ -84,8 +98,18 @@ body > .container {
     border-radius: 0;
     color: #ccc;
     background-color: #333;
-    border: 1px solid #303030;
+    border: 1px solid #292929;
+    border-left: 0;
     border-right: 0;
+}
+
+.sidebar>.list-group-item:first-child {
+    background: #a10022;
+    border-top: 0;
+}
+
+.sidebar>.list-group-item:first-child:hover, .sidebar>.list-group-item:first-child:focus {
+    background: #790016;
 }
 
 .sidebar .list-group-item:last-child {
@@ -93,18 +117,23 @@ body > .container {
 }
 
 .sidebar .list-group-item:hover, .sidebar .list-group-item:focus {
-    /* color: #ccc;
-    background-color: #444; */
     color: #ccc;
     background-color: #444;
 }
 
-.sidebar>.list-group-item {
-    background-color: #444;
+.sidebar .list-group-item.user {
+    padding: 20px 15px;
+    margin: 0;
+    border: 0;
 }
 
-.sidebar>.list-group-item:first-child {
-    border-top-width: 0;
+.sidebar .list-group-item.user:hover, .sidebar .list-group-item.user:focus {
+    color: #ccc;
+    background-color: inherit;
+}
+
+.sidebar>.user-cat {
+    background-color: #444;
 }
 
 .sidebar>.list-group>.list-group-item {
@@ -112,12 +141,8 @@ body > .container {
 }
 
 .sidebar .list-group-item.active {
-    /* background-color: #444; */
     color: #a10022;
     background-color: #fff;
-    padding-left: 10px;
-    margin-left: 35px;
-    border-radius: 4px 0px 0px 4px;
 }
 
 .sidebar .list-group-item.active:hover {
@@ -342,7 +367,7 @@ body > .container {
 }
 
 .footer li {
-   border-right: 1px solid #660014;
+   border-right: 1px solid #790016;
    padding: 0 10px;
 }
 

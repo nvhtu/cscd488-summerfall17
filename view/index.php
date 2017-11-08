@@ -29,20 +29,27 @@
 <html lang="en">
 
 <head>
-   <meta charset="utf-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-   <title><?php echo $title; ?></title>
+    <title><?php echo $title; ?></title>
 
-   <base href="/<?php echo $projectDirName ?>/view/">
-   <link rel="icon" href="img/cropped-cropped-Eagle_512x512-32x32.png">
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous">
-   <link rel="stylesheet" href="css/custom.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.min.css"/>
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+    <base href="/<?php echo $projectDirName ?>/view/">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
 
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="img/favicon/manifest.json">
+    <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#a10022">
+    <link rel="shortcut icon" href="img/favicon/favicon.ico">
+    <meta name="msapplication-config" content="img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
 <body>
@@ -66,9 +73,22 @@
     <div class="container">
         <div class="row">
             <div class="sidebar list-group">
-                <a href="https://www.ewu.edu">
+                <a href="https://www.ewu.edu" class="list-group-item">
                     <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
                 </a>
+
+                <div class="list-group-item media user">
+                    <div class="media-left media-middle">
+                        <svg viewBox="0 0 75 75" id="avatar" class="img-circle">
+                            <circle r="27%" cx="50%" cy="35%"></circle>
+                            <circle cy="100%" cx="50%" r="45%"></circle>
+                        </svg>
+                    </div>
+                    <div class="media-body media-middle">
+                        <h4 id="username">Stu Steiner</h4>
+                    </div>
+                </div>
+
                 <?php require_once $absPath . '/includes/sidebar.php'; ?>
             </div>
 

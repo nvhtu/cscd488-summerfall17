@@ -55,9 +55,6 @@
         <li class="child-list"><a href="/cscd488-summerfall17/view/settings/index.php">Admin Settings</a></li>';
     }
 
-    /*
-https://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript
-    */
     function teacherType()
     {
         echo '<li class="active parent-home"><a href="/cscd488-summerfall17/view/home/index.php?page=teacher_home">Teacher Dashboard<span class="sr-only">(current)</span></a></li>

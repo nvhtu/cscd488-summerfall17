@@ -17,13 +17,18 @@
         if($isDev)
         {
             $userInfo = array('userId' => '111', 
-                            'userType' => array("Admin"), 
+                            'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Tu',
                             'userLname' => 'Nguyen',
                             'userEmail' => 'abc@xyz.com' );
+<<<<<<< HEAD
 
            /*$userInfo = array('userId' => 'y', 
+=======
+/*
+           $userInfo = array('userId' => 'y', 
+>>>>>>> 36225caff8a2cf4c5de05940d0deea644a23e97d
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Stu',

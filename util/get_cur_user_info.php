@@ -11,24 +11,19 @@
     function getCurUserInfo($isClient)
     {
 
-        $isDev = true;
+        $isDev = false;
         $userInfo = array();
 
         if($isDev)
         {
-            $userInfo = array('userId' => '111', 
+            /*$userInfo = array('userId' => '111', 
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Tu',
                             'userLname' => 'Nguyen',
                             'userEmail' => 'abc@xyz.com' );
-<<<<<<< HEAD
 
            /*$userInfo = array('userId' => 'y', 
-=======
-/*
-           $userInfo = array('userId' => 'y', 
->>>>>>> 36225caff8a2cf4c5de05940d0deea644a23e97d
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Stu',
@@ -49,14 +44,20 @@
         }
         else 
         {
-            session_start();
-            
-            $userInfo = array('userId' => $_SESSION['ewuid'], 
-                              'userType' => $_SESSION["phpCAS"]["attributes"]["UserType"], 
-                              'userSession' => session_id(),
-                              'userFname' => $_SESSION["phpCAS"]["attributes"]["FirstName"],
-                              'userLname' => $_SESSION["phpCAS"]["attributes"]["LastName"],
-                              'userEmail' => $_SESSION["phpCAS"]["attributes"]["Email"] );
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+                }
+
+            if(isset($_SESSION['ewuid']))
+            {
+                $userInfo = array('userId' => $_SESSION['ewuid'], 
+                'userType' => $_SESSION["phpCAS"]["attributes"]["UserType"], 
+                'userSession' => session_id(),
+                'userFname' => $_SESSION["phpCAS"]["attributes"]["FirstName"],
+                'userLname' => $_SESSION["phpCAS"]["attributes"]["LastName"],
+                'userEmail' => $_SESSION["phpCAS"]["attributes"]["Email"] );
+            }
+
         }
 
         //user_auth($userInfo['userId'], $userInfo['userType'], array("Admin", "Teacher", "Student", "System"));

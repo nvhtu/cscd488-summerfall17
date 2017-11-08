@@ -12,7 +12,7 @@
 	function openDB()
 	{
 		$server="localhost";
-		$user="root";
+		$user="ape_user";
 		$pass="";
 		$database="ape_database";
 		$conn = null;

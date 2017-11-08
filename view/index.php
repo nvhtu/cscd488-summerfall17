@@ -46,94 +46,95 @@
 </head>
 
 <body>
-   <?php 
-      if (isset($modalTabsArr))
-      {
-         require_once $absPath . '/includes/tabbedModal.php';
-      }
+    <?php 
+    if (isset($modalTabsArr))
+    {
+        require_once $absPath . '/includes/tabbedModal.php';
+    }
 
-      if (isset($modalsArr))
-      {
+    if (isset($modalsArr))
+    {
         foreach($modalsArr as $theModal)
         {
-          require_once $theModal . "_modal.html";
+            require_once $theModal . "_modal.html";
         }  
-      }
+    }
 
-      require_once $absPath . '/includes/navbar.html';
-   ?>
+    require_once $absPath . '/includes/navbar.html';
+    ?>
    
-   <div class="container">
-      <div class="row">
-         <div class="col-sm-3 col-md-2 sidebar list-group">
-            <?php require_once $absPath . '/includes/sidebar.php'; ?>
-         </div>
+    <div class="container">
+        <div class="row">
+            <div class="sidebar list-group">
+                <a href="https://www.ewu.edu">
+                    <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
+                </a>
+                <?php require_once $absPath . '/includes/sidebar.php'; ?>
+            </div>
 
-         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="col-sm-12 main">
+                <div class="msg-box alert alert-dismissible fade in">
+                    <a href="#" class="close" id="msg-close" data-dismiss="alert">&times;</a>
+                    <p id="msg-box-text"></p>
+                </div>
 
-          <div class="msg-box alert alert-dismissible fade in">
-            <a href="#" class="close" id="msg-close" data-dismiss="alert">&times;</a>
-            <p id="msg-box-text"></p>
-          </div>
-
-            <?php 
-               if (strstr($page, 'home')) 
-               {
-                 if(isset($isError) && $isError)
-                 {
-                   ?><div class="error-page-msg"><?php echo $errorMsg?></div><?php
-                 }
-                 else 
-                 {
+                <?php 
+                if (strstr($page, 'home')) 
+                {
+                    if(isset($isError) && $isError)
+                    {
+                    ?><div class="error-page-msg"><?php echo $errorMsg?></div><?php
+                    }
+                    else 
+                    {
                     /*if(isset($_GET["page"]))
                     {
-                      $page = $_GET["page"];
+                        $page = $_GET["page"];
                     }*/
                     require_once $path . $page . ".html";
-                 }
-                  
-               } 
-               else 
-               {
-                  if (isset($tableTabs)) 
-                  {
-                     require_once $tabbedTablePath;
-                  } 
-                  else 
-                  {
-                     require_once $tablePath;
-                  }
-               }
-             ?>
-         </div>
-      </div>
-   </div>
+                    }
+                    
+                } 
+                else 
+                {
+                    if (isset($tableTabs)) 
+                    {
+                        require_once $tabbedTablePath;
+                    } 
+                    else 
+                    {
+                        require_once $tablePath;
+                    }
+                }
+                ?>
+            </div>
+        </div>
+    </div>
 
-   <?php require_once $absPath . '/includes/footer.html'; ?>
+    <?php require_once $absPath . '/includes/footer.html'; ?>
 
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
-   <script src="js/script.js"></script>
-   <script src="js/build_table.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/build_table.js"></script>
    
    
-   <?php 
-   if (isset($jsArr))
-   {
+    <?php 
+    if (isset($jsArr))
+    {
         if (strstr($page, 'home'))
         {
-          ?> <script src="<?php echo "home/" . $page . "_script.js";?>"></script> 
+            ?> <script src="<?php echo "home/" . $page . "_script.js";?>"></script> 
         <?php
         }
         foreach($jsArr as $theScript)
         {
-          ?> <script src="<?php echo $page . "/" . $theScript . "_script.js";?>"></script>
+            ?> <script src="<?php echo $page . "/" . $theScript . "_script.js";?>"></script>
         <?php
         }
     }  
-   ?>
+    ?>
 </body>
-
 </html>

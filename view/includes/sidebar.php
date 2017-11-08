@@ -5,6 +5,27 @@
 
     $userInfo = getCurUserInfo(False);
 
+    if(count($userInfo) != 0)
+    {
+
+
+    echo '<a href="https://www.ewu.edu" class="list-group-item">
+        <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
+    </a>
+
+    <div class="list-group-item media user">
+        <div class="media-left media-middle">
+            <svg viewBox="0 0 75 75" id="avatar" class="img-circle">
+                <circle r="27%" cx="50%" cy="35%"></circle>
+                <circle cy="100%" cx="50%" r="45%"></circle>
+            </svg>
+        </div>
+        <div class="media-body media-middle">
+            <h4 id="username">'. $userInfo["userFname"] . ' ' . $userInfo["userLname"] . '</h4>
+        </div>
+    </div>';
+
+
     switch (count($userInfo["userType"]))
     {
         case 1: switch ($userInfo["userType"][0])
@@ -87,4 +108,5 @@
         <a class="list-group-item' . (strstr($page, 'exam') ? ' active':'') . '" href="/cscd488-summerfall17/view/exam/index.php?page=student_exam"><span class="glyphicon glyphicon-book" aria-hidden="true"></span>My Exams</a>';
     }
 
+    }
 ?>

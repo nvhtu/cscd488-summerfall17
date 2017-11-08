@@ -73,25 +73,8 @@
     <div class="container">
         <div class="row">
             <div class="sidebar list-group">
-                <a href="https://www.ewu.edu" class="list-group-item">
-                    <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
-                </a>
-
-                <div class="list-group-item media user">
-                    <div class="media-left media-middle">
-                        <svg viewBox="0 0 75 75" id="avatar" class="img-circle">
-                            <circle r="27%" cx="50%" cy="35%"></circle>
-                            <circle cy="100%" cx="50%" r="45%"></circle>
-                        </svg>
-                    </div>
-                    <div class="media-body media-middle">
-                        <h4 id="username">Stu Steiner</h4>
-                    </div>
-                </div>
-
                 <?php require_once $absPath . '/includes/sidebar.php'; ?>
             </div>
-
             <div class="col-sm-12 main">
                 <div class="msg-box alert alert-dismissible fade in">
                     <a href="#" class="close" id="msg-close" data-dismiss="alert">&times;</a>

@@ -1,8 +1,5 @@
 <?php 
-
   $projectDirName = "cscd488-summerfall17";
-  require_once "../../util/get_cur_user_info.php";
-  $userInfo = getCurUserInfo(false);
 
    if ( !isset($page) ) {
       $page = "home";

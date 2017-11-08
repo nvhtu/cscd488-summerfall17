@@ -38,7 +38,7 @@
 
    <title><?php echo $title; ?></title>
 
-   <base href="http://localhost/cscd488-summerfall17/view/">
+   <base href="/<?php echo $projectDirName ?>/view/">
    <link rel="icon" href="img/cropped-cropped-Eagle_512x512-32x32.png">
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous">

@@ -17,11 +17,15 @@ phpCAS::setCasServerCACert($cas_server_ca_cert_path);
 phpCAS::handleLogoutRequests(true, $cas_real_hosts);
 phpCAS::forceAuthentication();
 
+session_start();
+
 $_SESSION['loggedIn'] = true;
 //get all attributes from returned object.
 //Array includes: "UserType", "Email", "FirstName", "Ewuid", "LastName"
 $userAttr = phpCAS::getAttributes();
 $_SESSION['ewuid'] = $userAttr["Ewuid"];
+
+//$_SESSION["phpCAS"]["attributes"]["UserType"] = "Teacher";
 //echo $_SESSION['ewuid'];
 //echo $_SESSION["phpCAS"]["attributes"]["UserType"];
 
@@ -29,7 +33,9 @@ if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
 {
     if(checkStudentExists($_SESSION['ewuid']))
     {
-        header('Location: ../view/');
+        $_SESSION["phpCAS"]["attributes"]["UserType"] = array();
+        array_push($_SESSION["phpCAS"]["attributes"]["UserType"], "Student");
+        header('Location: ../view/home/');
     }
     else 
     {
@@ -40,7 +46,7 @@ if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
 else 
 {
     $_SESSION["phpCAS"]["attributes"]["UserType"] = checkFacultyTypes();
-    header('Location: ../view/');
+    header('Location: ../view/home/');
 }
 
 function checkFacultyTypes()

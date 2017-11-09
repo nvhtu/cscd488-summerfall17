@@ -62,11 +62,13 @@
                     break;
         }
 
-        echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>Feedback</p>
-        <div class="list-group">
-            <a class="list-group-item" href="mailto:tunguyen@eagles.ewu.edu?subject=Team 1 APE Website feedback"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Email the team</a>
-        </div>';
+        
     }
+
+    echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>Feedback</p>
+    <div class="list-group">
+        <a class="list-group-item" href="mailto:tunguyen@eagles.ewu.edu?subject=Team 1 APE Website feedback"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Email the team</a>
+    </div>';
     //"/home/index.php?page=admin_home" put a "page" variable into $_GET for view/index.php to display the correct requested home
 
     function adminType()

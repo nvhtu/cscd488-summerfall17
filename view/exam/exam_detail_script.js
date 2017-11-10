@@ -69,7 +69,8 @@ function loadTabExam()
             var el = $('[name="'+name+'"]');
             el.val(val);
         });
-        $('.input-group.date').triggerHandler('changeDate');
+        
+        $("#quarter").html(item[0].quarter);
         $('input[name="start_time"]').timepicker('setTime', $('input[name="start_time"]').val());
         $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
     },

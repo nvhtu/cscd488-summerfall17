@@ -69,7 +69,7 @@ function loadTabExam()
             var el = $('[name="'+name+'"]');
             el.val(val);
         });
-        
+
         $("#quarter").html(item[0].quarter);
         $('input[name="start_time"]').timepicker('setTime', $('input[name="start_time"]').val());
         $("#Report_tab #file-name").val(item[0].name.split(' ').join('_'));
@@ -84,8 +84,7 @@ function loadTabExam()
     populateExamCats,
     "json");
 
-    /*_deletedExamCats = Array();
-    _modifiedExamCats = Array();*/
+
    
     toggleSubmitEdit(true);
 }
@@ -220,21 +219,27 @@ function getAllLoc()
                  addExamCats($("#item-id").val());
              });
          }
+
+         if($("[name='state']").val() != _selectedTab){
+            $("tr[data-id='item-" + $("#item-id").val() + "']").remove();
+         }
  
-         $.get("../ape/get_all_apes.php", 
-         {requester_id: _userId,
-         requester_type: _userType,
-         requester_session_id: _userSessionId,
-         request: "get_by_id",
-         exam_id: $("#item-id").val()}, 
-         function(item){
-             var row = buildItemSummaryRow(item[0]);
-             // var detailRow = buildItemDetailRow(item[0]);
-             //$("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
-             // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
-             $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(row);
-         },
-         "json");
+         else{
+            $.get("../ape/get_all_apes.php", 
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            request: "get_by_id",
+            exam_id: $("#item-id").val()}, 
+            function(item){
+                var row = buildItemSummaryRow(item[0]);
+                // var detailRow = buildItemDetailRow(item[0]);
+                //$("tr[data-target='#item-" + item[0].exam_id + "']").replaceWith(row);
+                // $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(detailRow);
+                $("tr[data-id='item-" + item[0].exam_id + "']").replaceWith(row);
+            },
+            "json");
+        }
      }); 
  }
 

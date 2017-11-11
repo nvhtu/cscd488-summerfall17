@@ -31,7 +31,11 @@ function onOpenDetailModal(e)
 
 function onclickTabExam() 
 {
-      loadTabExam();
+      if (_isCreateClicked == false)
+      {
+            loadTabExam();
+      }
+      
 }
 
 function onclickTabRoster()   
@@ -50,6 +54,7 @@ function submitForm(e) {
    
       if (tab === "exam") {
          if (action === "create") {
+            _isCreateClicked = false;
             createItem();
          }
          else if (action === "update") {

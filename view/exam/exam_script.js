@@ -20,6 +20,8 @@ var _graderData = Array();
 
 var _selectedTab = "Open";
 
+var _isCreateClicked = false;
+
 
 
 /*var _deletedExamCats;
@@ -40,6 +42,13 @@ function loaded() {
     $("a[href='#Hidden-panel']").click(function(){getAllItems("Hidden"); _selectedTab = "Hidden";});
 
     $("#create-button").click(onclickCreate);
+
+    $('#detail-modal').on('hidden.bs.modal', function () {
+        if(_isCreateClicked)
+        {
+            _isCreateClicked = false;
+        }
+    })
 }
 
 
@@ -139,6 +148,7 @@ function loadTable(data, state)
 function onclickCreate()
 {
     clearForm();
+    _isCreateClicked = true;
     $('a[href="#Exam_tab"]').tab('show');
     $("#modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");

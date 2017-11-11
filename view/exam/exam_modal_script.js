@@ -57,7 +57,7 @@ function submitForm(e) {
          }
       }
       else if (tab === "roster") {
-          //Do nothing
+          finalizeGrades();
       }
       else if (tab === "report") {
            $.get("../ape/get_all_apes.php", 

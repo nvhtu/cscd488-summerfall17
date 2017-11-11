@@ -4,11 +4,12 @@ var _curGradeComment = "";
 
 $("#btn-lookup").click(onclickLookup);
 
-
 function loadTabRoster()
 {
     toggleSubmitEdit(false, true);
-    $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", true);
+
+    $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", false);
+    
     _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
     table = buildMainTable(headersArr);
@@ -373,22 +374,12 @@ function loadRosterTableHasGrades(item)
     $bttnInfo.attr("data-id", summaryData.id);
     $bttnInfo.click(onclickInfoGrade);
 
-    if(_selectedTab == "Grading")
-    {
         summaryRow.append(
             $('<td class="btns">').append(
             $('<div class="btn-group" role="group">').append($bttnInfo, ' ')
             )
         );
-    }
-    else if(_selectedTab == "Archived" || _selectedTab == "Hidden")
-    {
-        summaryRow.append(
-            $('<td class="btns">').append(
-            $('<div class="btn-group" role="group">').append($bttnInfo, ' ')
-            )
-        );
-    }
+   
 
     
     
@@ -415,8 +406,18 @@ function loadRosterTableHasGrades(item)
     $(".save-grade-btn").click(onclickEditGrade);
     $(".discard-grade-btn").click(onclickEditGrade);
 
-    $(".edit-grade-btn-group").show();
-    $(".save-discard-grade-btn-group").hide();
+    if(_selectedTab == "Archived")
+    {
+        $(".edit-grade-btn-group").remove();
+        $(".save-discard-grade-btn-group").remove();
+    }
+    else
+    {
+        $(".edit-grade-btn-group").show();
+        $(".save-discard-grade-btn-group").hide();
+    }
+
+
     
 }
 
@@ -675,4 +676,25 @@ function onSaveGrade(e)
         passed: 0,
         student_id: studentId});
     }
+
+    $(".item-detail-row[data-id='item-" + studentId + "'] tr[data-id='" + examCatId + "'] .red-row").removeClass("red-row");
+}
+
+function finalizeGrades(e)
+{
+    examId = _origClickEvent.currentTarget.dataset["id"];
+    if(window.confirm("Are you sure you want to finalize all grades of this exam? All students will be notified and this exam will be archived."))
+    {
+        $.post("../ape/update_ape.php",
+        {
+            requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            exam_id: examId,
+            state: "Archived",
+            request: "update_state"
+        });
+    }
+
+    
 }

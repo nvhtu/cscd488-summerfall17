@@ -351,7 +351,7 @@ function onclickAddCat(isUserClick) {
  }
  
  function onclickAddGrader(e) {
-    var catId = e.currentTarget.dataset["id"],
+    var catId = e.currentTarget.dataset["id"];
     $curRow = $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]');
     _catSectionModified = true;
  

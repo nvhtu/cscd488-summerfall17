@@ -258,14 +258,17 @@ function onclickRegisterStudent(e)
 function onclickEditSeat(e)
 {
     var itemId = e.currentTarget.dataset["id"];
-    $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",false);
+    
 
     if(e.currentTarget.dataset["action"] == "edit")
     {
         //console.log("edit");
         _isEditing = true;
-        toggleSaveEditBtn(true, itemId);
-        
+        //toggleSaveEditBtn(true, itemId);
+
+        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",false);
+        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit'] .glyphicon").removeClass("glyphicon-pencil").addClass("glyphicon-floppy-disk");
+        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit']").attr("data-action", "save");
     }
     else
         if(e.currentTarget.dataset["action"] == "save")
@@ -273,8 +276,9 @@ function onclickEditSeat(e)
             //console.log("save");
 
             onSaveSeat(e);
-
-            toggleSaveEditBtn(false, itemId);
+            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",true);
+            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save'] .glyphicon").removeClass("glyphicon-floppy-disk").addClass("glyphicon-pencil");
+            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit");
             _isEditing = false;
             
         }
@@ -292,9 +296,6 @@ function onSaveSeat(e)
     exam_id: examId,
     student_id: studentId,
     seat_num: seatNum});
-
-    $("#roster-table-wrapper tr[data-id='item-" + studentId + "'] .student-seat-input").prop("disabled",true);
-
 }
 
 

@@ -321,19 +321,24 @@ function updateItem()
     comment: $("input[name='comment']").val(),
     edited_by: _userId},
     function(){
-        $.get("../account/get_account_info.php",
-            {
-                requester_id: _userId,
-                requester_type: _userType,
-                requester_session_id: _userSessionId,
-                request: "get_by_id",
-                id: $("#item-id").val()
-            }, function(item){
-                var row = buildItemSummaryRow(item[0], _selectedTab);
-                //console.log($("tr[data-id='#item-" + item[0].user_id + "']"));
-                $("tr[data-id='item-" + item[0].user_id + "']").replaceWith(row);
-                $(".btn-group > .btn-danger").remove();
-            }, "json");
+        if($(".type-checkbox[value='" + _selectedTab + "']").prop("checked")){
+            $.get("../account/get_account_info.php",
+                {
+                    requester_id: _userId,
+                    requester_type: _userType,
+                    requester_session_id: _userSessionId,
+                    request: "get_by_id",
+                    id: $("#item-id").val()
+                }, function(item){
+                    var row = buildItemSummaryRow(item[0], _selectedTab);
+                    //console.log($("tr[data-id='#item-" + item[0].user_id + "']"));
+                    $("tr[data-id='item-" + item[0].user_id + "']").replaceWith(row);
+                    $(".btn-group > .btn-danger").remove();
+                }, "json");
+        }
+        else{
+            $("tr[data-id='item-" + $("#item-id").val() + "']").remove();
+        }
     });
 
     

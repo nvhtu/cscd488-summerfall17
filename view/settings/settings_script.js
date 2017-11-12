@@ -81,7 +81,7 @@ function populateForm(){
 function submitForm(){
     $.each(_settings, function(name, val){
         var input = $('#' + name).val();
-        if(input !== val){
+        if(typeof input !== "undefined" && input !== val){
             _settings[name] = input;
             $.post("../settings/update_setting.php", 
                 {requester_id: _userId,

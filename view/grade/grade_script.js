@@ -152,7 +152,7 @@ function onclickGrade(e)
     });    
     
     //change modal title
-    $("#modal-title").html("Grading " + $(btn).attr("exam-name") + ": " + $(btn).attr("cat-name"));
+    $(".modal-title").html("Grading " + $(btn).attr("exam-name") + ": " + $(btn).attr("cat-name"));
 }
 
 function getAllItems()

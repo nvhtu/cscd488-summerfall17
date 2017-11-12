@@ -12,6 +12,8 @@ var _targetModal = "detail-modal";
 var _tableId = "main-table";
 var _formId = "main-form";
 
+var _validator;
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -38,6 +40,8 @@ function init()
     $("#requester-session").val(_userSessionId);
 
     $(".msg-box").hide();
+
+    _validator = $("#main-form").validate();
 
     getAllItems();
 
@@ -80,16 +84,17 @@ function loadTable(data)
 
 function submitForm (e)
 {
-    if(e.currentTarget.dataset["action"] == "create")
+    if(e.currentTarget.dataset["action"] == "create" && $("#main-form").valid())
     {
         createItem();
+        $("#detail-modal").modal("hide");
     }
         
-    if(e.currentTarget.dataset["action"] == "update")
+    if(e.currentTarget.dataset["action"] == "update" && $("#main-form").valid())
     {
         updateItem();
-    }
-        
+        $("#detail-modal").modal("hide");
+    }  
 }
 
 function createItem()
@@ -177,6 +182,7 @@ function onclickDelete(e)
 function clearForm()
 {
     $("#" + _formId).find("input[type=text], textarea").val(""); 
+    _validator.resetForm();
 }
 
 function getAllItems()

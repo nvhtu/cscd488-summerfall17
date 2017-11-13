@@ -161,6 +161,7 @@ function buildItemSummaryRow(item)
         $.each(_userRegisteredExam, function(i,theExam){
             if(item.exam_id == theExam) //Registered by user
             {
+                row.addClass("grey-row");
                 if(item.remaining_seats == "FULL") //Exam full
                 {
                     $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-id="' + summaryData.id + '">Register</button>');

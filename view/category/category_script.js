@@ -41,7 +41,19 @@ function init()
 
     $(".msg-box").hide();
 
-    _validator = $("#main-form").validate();
+    _validator = $("#main-form").validate({
+        invalidHandler: function(form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                validator.errorList[0].element.focus();
+            }
+        },
+        rules: {
+            name: {
+                maxlength: 20
+            }
+        }
+    });
 
     getAllItems();
 

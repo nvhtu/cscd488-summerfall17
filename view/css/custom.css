@@ -407,6 +407,20 @@ input[type=file][hidden] {
     background-color: #F2DEDE !important;
 }
 
+.grey-row {
+    background-color: #f5f5f5;
+}
+
+.red-bold-text {
+    color: #A94442 !important;
+    font-weight: bold;
+}
+
+.green-bold-text {
+    color: #3D773E !important;
+    font-weight: bold;
+}
+
 .cat-comment-input {
     float: right;
 }

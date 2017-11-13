@@ -18,6 +18,8 @@ var _isEditing = false;
 
 var _selectedTab = "Open";
 
+var _isCreateClicked = false;
+
 $(document).ready(loaded);
 
 function loaded()

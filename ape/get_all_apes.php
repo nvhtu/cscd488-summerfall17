@@ -137,12 +137,30 @@
 
     function getStudentExams($requesterId)
     {
-        $sqlSelectExams = "SELECT exam.exam_id, name, date, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, grade, possible_grade, passed
+        $sqlSelectExams = "SELECT exam.exam_id, name, date, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, grade, possible_grade, passed, state
                             FROM exam JOIN exam_grade ON exam.exam_id = exam_grade.exam_id
                             WHERE exam_grade.student_id LIKE :student_id";
 
         $data = array(':student_id' => $requesterId);
         $sqlResultExams = sqlExecute($sqlSelectExams, $data, true);
+
+        $sqlSelectExamsState = "SELECT exam.exam_id, name, date, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, possible_grade, state
+                                FROM exam_roster JOIN exam ON exam_roster.exam_id = exam.exam_id
+                                WHERE student_id LIKE :student_id
+                                AND exam.exam_id NOT IN (SELECT exam_grade.exam_id
+                                                        FROM exam_grade
+                                                        WHERE exam_grade.student_id LIKE :student_id)";
+
+        $sqlResultState = sqlExecute($sqlSelectExamsState, $data, true);
+
+
+        //Add grade N/A, and passed N/A to sqlResultState exams; and add the exam to sqlResultExams
+        for ($theExam=0; $theExam<count($sqlResultState); $theExam++)
+        {
+            $sqlResultState[$theExam]["grade"] = NULL;
+            $sqlResultState[$theExam]["passed"] = NULL;
+            array_push($sqlResultExams, $sqlResultState[$theExam]);
+        }
 
         $sqlSelectCats = "SELECT name as cat, final_grade, exam_id, possible_grade
                             FROM student_cat_grade scg
@@ -152,6 +170,7 @@
         
         $sqlResultCats = sqlExecute($sqlSelectCats, $data, true);
 
+        
         
 
         //Add categories grades to each exam

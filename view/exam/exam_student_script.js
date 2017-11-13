@@ -99,17 +99,40 @@ function buildStudentItemSummaryRow(item)
     var passedResult = "";
     var rowColorClass = "";
     var passedTextColor = "";
-    if(item.passed == 1)
+    var overallGrade = "";
+    var isButtonDisabled = true;
+
+    if (item.state == "Archived")
     {
-        passedResult = "Passed";
-        rowColorClass = "green-row";
-        passedTextColor = "#3D773E";
+        if(item.passed == 1)
+        {
+            passedResult = "Passed";
+            rowColorClass = "green-row";
+            passedTextColor = "green-bold-text";
+        }
+        else if (item.passed == 0)
+            {
+                passedResult = "Fail";
+                rowColorClass = "red-row";
+                passedTextColor = "red-bold-text";
+            }
+        
+        overallGrade = item.grade + "/" + item.possible_grade;
+        isButtonDisabled = false;
     }
     else
     {
-        passedResult = "Fail";
-        rowColorClass = "red-row";
-        passedTextColor = "#A94442";
+        if(item.state == "Open" || item.state == "In_Progress")
+        {
+            passedResult = "Registered";
+        }
+        else if (item.state == "Grading")
+        {
+            passedResult = "Grading";
+        }
+
+        overallGrade = "N/A"
+        isButtonDisabled = true;
     }
 
     var summaryData = {
@@ -117,7 +140,7 @@ function buildStudentItemSummaryRow(item)
         name: item.name,
         date: item.date,
         start_time: item.start_time,
-        overall_grade: item.grade + "/" + item.possible_grade,
+        overall_grade: overallGrade,
         passed: passedResult
     };
 
@@ -125,9 +148,13 @@ function buildStudentItemSummaryRow(item)
 
     var row = buildItemRow(summaryData, false);
     var $bttnInfo = $('<button type="button" class="btn btn-primary" data-target="#item-' + summaryData.id + '" data-toggle="collapse">View Detail Grades</button>');
+    if(isButtonDisabled)
+    {
+        $bttnInfo.addClass("disabled");
+    }
     row.append($('<td>').append($('<div class="btn-group" role="group">').append($bttnInfo)));
     row.addClass(rowColorClass);
-    row.children().eq(4).css("color", passedTextColor);
+    row.children().eq(4).addClass(passedTextColor);
     row.children().eq(4).css("font-weight", "bold");
     return row;
 }

@@ -2,18 +2,20 @@
     require_once "../pdoconfig.php";
 
     
-
+	/**
+	 * receiver array contains: fname, lname, email.
+	 */
     function sendMail ($receiver, $subject, $message)
     {
         global $_siteEmail, $_siteEmailPass;
 
-        $headers['To'] = $receiver["fname"] . ' ' . $receiver["lname"] . ' <' . $receiver["email"] . '>';	 
+        $headers['To'] = $receiver["f_name"] . ' ' . $receiver["l_name"] . ' <' . $receiver["email"] . '>';	 
 		$headers['From'] = 'EWU APE <s-ewuape@ewu.edu>';
 		$headers['Date'] = date('r', time());
 		$headers['Subject'] = $subject;
 		$headers['Content-type'] = 'text/html; charset=iso-8859-1';
 		
-		$msg = "<html><head></head><body>Hi " . $receiver["fname"] . 
+		$msg = "<html><head></head><body>Hi " . $receiver["f_name"] . 
 				",<br><br>" .
 				$message .
 				"<br><br>" .
@@ -28,7 +30,7 @@
 		$params['username'] = $_siteEmail;
 		$params['password'] = $_siteEmailPass;
 
-		require_once 'Mail.php';
+		/*require_once 'Mail.php';
 
 		$mail = new Mail();	
 		$smtp =& $mail->factory('smtp', $params);
@@ -36,6 +38,6 @@
 		
 		if (PEAR::isError($sent)) {
 			echo('<p>' . $sent->getMessage() . '</p>');
-		}
+		}*/
     }
 ?>

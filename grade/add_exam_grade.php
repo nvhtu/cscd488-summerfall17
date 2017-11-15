@@ -5,19 +5,15 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
-    $allowedType = array("Admin", "Teacher");
+    $allowedType = array("Admin", "Teacher", "System");
 
-    $examId = $_POST["exam_id"];
-    $studentId = $_POST["student_id"];
-    $grade = $_POST["grade"];
-    $passed = $_POST["passed"];
-    $possibleGrade = $_POST["possible_grade"];
+    
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType);
@@ -25,15 +21,68 @@
     //Validate strings not empty
 
     //Validate strings
+    if(strcmp($requesterType,"System") != 0)
+    {
+        $examId = $_POST["exam_id"];
+        $studentId = $_POST["student_id"];
+        $grade = $_POST["grade"];
+        $passed = $_POST["passed"];
+        $possibleGrade = $_POST["possible_grade"];
 
-    checkExamExists($examId);
-    checkStudentExists($studentId);
+        checkExamExists($examId);
+        checkStudentExists($studentId);
 
+        addExamGrade($examId, $studentId, $grade, $passed);
+
+    }
+
+
+    function addExamGrade($examId, $studentId, $grade, $passed)
+    {
     //Add student exam grade
-    $sqlAddExamGrade = "INSERT INTO exam_grade(exam_id, student_id, grade, passed, possible_grade)
-                        VALUES (:exam_id, :student_id, :grade, :passed, :possible_grade)";
+    $sqlAddExamGrade = "INSERT INTO exam_grade(exam_id, student_id, grade, passed)
+                        VALUES (:exam_id, :student_id, :grade, :passed)
+                        ON DUPLICATE KEY UPDATE grade = :grade, passed = :passed";
     
-    sqlExecute($sqlAddExamGrade, array('exam_id'=>$examId, 'student_id'=>$studentId, 'grade'=>$grade, 'passed'=>$passed, 'possible_grade'=>$possibleGrade), False);
+    sqlExecute($sqlAddExamGrade, array(':exam_id'=>$examId, ':student_id'=>$studentId, ':grade'=>$grade, ':passed'=>$passed), False);
 
+    }
+
+    function calculateExamTotalGrade($examId, $studentId)
+    {
+        $sqlGetFinalCatGrades = "SELECT SUM(final_grade) as total_grade
+                                FROM student_cat_grade
+                                WHERE student_id LIKE :student_id AND exam_cat_id IN (SELECT exam_cat_id
+                                                                                    FROM exam_category ec
+                                                                                    WHERE ec.exam_id = :exam_id)";
+
+        $sqlResultFinalCatGrades = sqlExecute($sqlGetFinalCatGrades, array(':exam_id'=>$examId, ':student_id'=>$studentId), True);
+        if(count($sqlResultFinalCatGrades) != 0 && $sqlResultFinalCatGrades[0]["total_grade"] != null)
+        {
+            return $sqlResultFinalCatGrades[0]["total_grade"];
+        }
+        else {
+            return -1;
+        }
+    }
+
+    function isExamGradePassed($examId, $totalGrade)
+    {
+        if($totalGrade >= 0)
+        {
+            $sqlGetExamPassGrade = "SELECT passing_grade
+                                    FROM exam
+                                    WHERE exam_id = :exam_id";
+            $sqlResultExamPassGrade = sqlExecute($sqlGetExamPassGrade, array("exam_id"=>$examId), true);
+            if ($totalGrade < $sqlResultExamPassGrade[0]["passing_grade"])
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    }
 
 ?>    

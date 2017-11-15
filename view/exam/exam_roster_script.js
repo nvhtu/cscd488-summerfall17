@@ -9,6 +9,7 @@ function loadTabRoster()
     toggleSubmitEdit(false, true);
 
     $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", false);
+    $("#submit-button").html("Finalize All Grades");
     
     _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];

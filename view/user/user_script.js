@@ -16,6 +16,8 @@ var _locData = Array();
 
 var _selectedTab = "";
 
+var _validator;
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -93,6 +95,7 @@ function init()
     
         $(".type-checkbox").click(function(){
             $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled", false);
+            _validator.element("[name='checkboxes'");
             
             if($("#type-student-checkbox").prop("checked"))
             {
@@ -123,6 +126,51 @@ function init()
             $(".msg-box").addClass("alert-danger");
             $(".msg-box").fadeIn();
             $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
+        });
+
+        jQuery.validator.addMethod("isName", function(value, element) {
+            return this.optional(element) || /^[a-z ,.'-]+$/i.test(value);
+            }, "Please enter a valid name");
+
+        jQuery.validator.addMethod("alphaNum", function(value, element) {
+            return this.optional(element) || /^[a-z0-9]+$/i.test(value);
+            }, "Please enter only digits and letters");
+
+        _validator = $("#main-form").validate({
+            invalidHandler: function(form, validator) {
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    validator.errorList[0].element.focus();
+                }
+            },
+            ignore: [],
+            rules: {
+                user_id: {
+                    alphaNum: true
+                },
+                f_name: {
+                    isName: true
+                },
+                l_name: {
+                    isName: true
+                },
+                email: {
+                    email: true
+                },
+                checkboxes: {
+                    required: function (element) {
+                        if ($('[type="checkbox"]:checked').length == 0) {
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                state: {
+                    required: function (element) {
+                        return $("#type-student-checkbox").prop("checked");
+                    }
+                }
+            }
         });
 }
 
@@ -240,14 +288,16 @@ function loadTable(data, type)
 
 function submitForm (e)
 {
-    if(e.currentTarget.dataset["action"] == "create")
+    if(e.currentTarget.dataset["action"] == "create" && $("#main-form").valid())
     {
         createItem();
+        $("#detail-modal").modal("hide");
     }
         
-    if(e.currentTarget.dataset["action"] == "update")
+    if(e.currentTarget.dataset["action"] == "update" && $("#main-form").valid())
     {
         updateItem();
+        $("#detail-modal").modal("hide");
     }
         
 }
@@ -486,7 +536,8 @@ function onclickDelete(e)
 function clearForm()
 {
     $("input[type=text]").val("");
-    $("input[type=checkbox]").prop("checked", false); 
+    $("input[type=checkbox]").prop("checked", false);
+    _validator.resetForm(); 
 }
 
 function getAllItems(type)

@@ -351,6 +351,7 @@ function loadRosterTableHasGrades(item)
 {
     //console.log(item);
     var passedResult = "";
+    var gradeStr = "";
     if(item.passed == 1)
     {
         passedResult = "Passed";
@@ -359,19 +360,31 @@ function loadRosterTableHasGrades(item)
     {
         passedResult = "Fail";
     }
+
+    if (typeof item.grade === "undefined") 
+    {
+        gradeStr = "N/A";
+        passedResult = "N/A";
+    }
+    else
+    {
+        gradeStr = item.grade + "/" + item.possible_grade;
+    }
+
     var summaryData = {
         id: item.student_id,
         studentid: item.student_id,
         fname: item.f_name,
         lname: item.l_name,
         seatnum: item.seat_num,
-        grade: item.grade + "/" + item.possible_grade,
+        grade: gradeStr,
         result: passedResult
     };
     var summaryRow = buildItemRow(summaryData, false);
+    summaryRow.attr("data-possible-grade", item.possible_grade);
 
     //create info button
-    var $bttnInfo = $('<button type="button" class="btn btn-info btn-labeled" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-exam-id="' + item.exam_id + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-list-alt"></i></span>View Grades</button>');
+    var $bttnInfo = $('<button type="button" class="btn btn-info btn-labeled" data-target="#item-' + summaryData.id + '" data-toggle="collapse" data-passing-grade="' + item.passing_grade + '" data-max-grade="' + item.possible_grade + '" data-exam-id="' + item.exam_id + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-list-alt"></i></span>View Grades</button>');
     $bttnInfo.attr("data-id", summaryData.id);
     $bttnInfo.click(onclickInfoGrade);
 
@@ -624,8 +637,9 @@ function onSaveGrade(e)
     var finalGrade = $(".parent-detail-row[data-parent-id='item-" + studentId + "'][data-id='" + examCatId + "'] .cat-grade-input").val();
     var comment = $(".parent-detail-row[data-parent-id='item-" + studentId + "'][data-id='" + examCatId + "'] .cat-comment-input").val();
     var catArrs = $(".parent-detail-row[data-parent-id='item-" + studentId + "'] .cat-grade-input"); 
+    var possibleGrade = $("#roster-table-wrapper .item-row[data-id='item-" + studentId + "']").data("possibleGrade");
     var totalGrade = 0;
-
+    var isGradingFinished = true;
     
     $.post("../grade/add_final_cat_grade.php", 
     {requester_id: _userId,
@@ -637,49 +651,70 @@ function onSaveGrade(e)
     comment: comment, 
     edited_by: _userId});
 
-    $.each(catArrs, function(i, theCat){
-        totalGrade += parseInt(theCat.value);
+    $.each(catArrs, function(i, theCat)
+    {
+        if(theCat.value == "")
+        {
+            isGradingFinished = false;
+        }
+        else
+        {
+            totalGrade += parseInt(theCat.value);
+        }
+        
     });
 
-    //Get and parse the max total grade 
     var row = $("#roster-table-wrapper tr[class='item-row'][data-id='item-" + studentId + "']").children();
-    var maxGrade = parseInt(((row[4].innerText).split("/"))[1]);
- 
-    row[4].innerText = totalGrade + "/" + maxGrade;
 
-
-
-    var passingGrade = parseInt(e.currentTarget.dataset["passingGrade"]);
-
-    if(totalGrade >= passingGrade)
+    if(isGradingFinished)
     {
-        row[5].innerText = "Passed";
+        //Get and parse the max total grade 
+        
+        var maxGrade = parseInt(possibleGrade);
+    
+        row[4].innerText = totalGrade + "/" + maxGrade;
 
-        $.post("../grade/update_exam_grade.php", 
-        {requester_id: _userId,
-        requester_type: _userType,
-        requester_session_id: _userSessionId,
-        exam_id: examId,
-        grade: totalGrade,
-        passed: 1,
-        student_id: studentId});
+        
+        var passingGrade = parseInt(e.currentTarget.dataset["passingGrade"]);
+    
+        if(totalGrade >= passingGrade)
+        {
+            row[5].innerText = "Passed";
+    
+            $.post("../grade/add_exam_grade.php", 
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            exam_id: examId,
+            grade: totalGrade,
+            passed: 1,
+            student_id: studentId});
+        }
+        else
+        {
+            row[5].innerText = "Fail";
+    
+            $.post("../grade/add_exam_grade.php", 
+            {requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            exam_id: examId,
+            grade: totalGrade,
+            passed: 0,
+            student_id: studentId});
+        }
     }
     else
     {
-        row[5].innerText = "Fail";
-
-        $.post("../grade/update_exam_grade.php", 
-        {requester_id: _userId,
-        requester_type: _userType,
-        requester_session_id: _userSessionId,
-        exam_id: examId,
-        grade: totalGrade,
-        passed: 0,
-        student_id: studentId});
+        row[4].innerText = "N/A";
+        row[5].innerText = "N/A";
     }
+
+
 
     $(".item-detail-row[data-id='item-" + studentId + "'] tr[data-id='" + examCatId + "'] .red-row").removeClass("red-row");
 }
+
 
 function finalizeGrades(e)
 {

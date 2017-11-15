@@ -12,6 +12,8 @@ var _targetModal = "detail-modal";
 var _tableId = "main-table";
 var _formId = "main-form";
 
+var _validators = Array();
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -94,22 +96,27 @@ function loadTable(data)
 //!submitMultiple means submit only the grade corresponding to the button clicked
 function submitForm (e, submitMultiple)
 {
-    if(window.confirm("Only administrator accounts can change submitted grades.\nClick 'OK' to continue:"))
+    var confirmMsg = "Only administrator accounts can change submitted grades.\nClick 'OK' to continue:";
+
+    if(submitMultiple)
     {
-        if(submitMultiple)
-        {
+        if(window.confirm(confirmMsg)){
             var submittableBtns = $("[name='submit-button']:not(:disabled, :hidden)");
             $.each(submittableBtns, function(i, btn){
-                submitSingleGrade($(btn));
-            })
+                if($(btn).closest("form").valid())
+                    submitSingleGrade($(btn));
+            });
         }
-        else
-        {
-            var btn = $(e.currentTarget);
-            submitSingleGrade(btn);
+    }
+    else
+    {
+        var btn = $(e.currentTarget);
+        if(btn.closest("form").valid()){
+            if(window.confirm(confirmMsg))
+                submitSingleGrade(btn);
         }
-                
-    }     
+    }
+                   
 }
 
 function submitSingleGrade(btn)
@@ -126,7 +133,13 @@ function submitSingleGrade(btn)
     };
 
     $.post("../grade/add_cat_grade_by_seat.php", sendData, function(){
-        //remove entry in modal
+        var val = btn.closest("form").data("validator");
+        var index = _validators.indexOf(val);
+        //remove validator from array
+        _validators.splice(index, 1);
+        //destroy validator for this form
+        val.destroy();
+        //remove form from modal
         btn.closest(".form-horizontal").remove();
 
         //if modal is empty, hide it and disable grade button for this exam_cat
@@ -141,18 +154,26 @@ function onclickGrade(e)
 {
     var btn = e.currentTarget;
 
+    $("input").val("");
+    $("#detail-modal").find(".btn-primary").prop("disabled", true);
+    $.each(_validators, function(i, val){
+        val.resetForm();
+    });
     //hide grade forms for other exams/categories from the modal
     $("[name='submit-button']:not([grader-exam-cat-id='" + btn.dataset["id"] + "'])").closest(".form-horizontal").hide();
     //make sure grade forms for this exam_cat are shown in the modal
     var currentForms = $("[name='submit-button'][grader-exam-cat-id='" + btn.dataset["id"] + "']").closest(".form-horizontal");
     currentForms.show();
 
+
+    $('#detail-modal').off('shown.bs.modal');
     $('#detail-modal').on('shown.bs.modal', function() {
         currentForms.first().find("input").focus();
     });    
     
+    var possGrade = currentForms.first().find("button").attr("possible-grade");
     //change modal title
-    $(".modal-title").html("Grading " + $(btn).attr("exam-name") + ": " + $(btn).attr("cat-name"));
+    $(".modal-title").html("Grading " + $(btn).attr("exam-name") + ": " + $(btn).attr("cat-name") + " (Max " + possGrade + ")");
 }
 
 function getAllItems()
@@ -208,10 +229,10 @@ function buildModalForm(ungradedSeats, graderExamCat)
                             "<div class='form-group'>" +
                                 "<label for='name' class='col-sm-4 control-label'>Seat Number " + sNum + " Grade:</label>" +
                                 "<div class='col-sm-3'>" +
-                                    "<input type='text' class='form-control' name='grade'></input>" +
+                                    "<input type='text' class='form-control' name='grade' required></input>" +
                                 "</div>" +
                                 "<button type='button' class='btn btn-primary col-sm-3' name='submit-button' seat='" + sNum + 
-                                "' grader-exam-cat-id='" + gecid + "' exam-id='" + exam + "'>Submit</button>" +
+                                "' grader-exam-cat-id='" + gecid + "' exam-id='" + exam + "' possible-grade='" + possGrade + "'>Submit</button>" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -226,6 +247,21 @@ function buildModalForm(ungradedSeats, graderExamCat)
 
             //avoid default form submission behavior
             bttnSubmit.closest("form").submit(function(){return false;});
+
+            _validators.push(bttnSubmit.closest("form").validate({
+                invalidHandler: function(form, validator) {
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        validator.errorList[0].element.focus();
+                    }
+                },
+                rules: {
+                    grade: {
+                        digits: true,
+                        range: [0, possGrade]
+                    }
+                }
+            }));
 
             //runs on every keyup in grade textboxes
             bttnSubmit.closest(".form-group").find("input").keyup(function(e){

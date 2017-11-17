@@ -10,6 +10,8 @@ var _userSessionId = "";
 
 var _formId = "main-form";
 
+var _validator;
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -62,7 +64,29 @@ function buildForm(){
         $("input").on("input", function(){
             $("#submit-button").prop("disabled", false);
         });
+
         $("#submit-button").click(submitForm);
+
+        jQuery.validator.addMethod("myDate", function(value, element) {
+            return this.optional(element) || /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(value);
+            }, "Please enter a date in YYYY-MM-DD format");
+
+        _validator = $("#main-form").validate({
+            rules: {
+                catGraderLimit: {
+                    required: true,
+                    digits: true
+                },
+                pointDiffRange: {
+                    required: true,
+                    digits: true
+                },
+                date: {
+                    required: true,
+                    myDate: true
+                }
+            }
+        });
     });
 }
 
@@ -81,9 +105,26 @@ function populateForm(){
 }
 
 function submitForm(){
+    var toSubmit = {};
+    var success = true;
+
     $.each(_settings, function(name, val){
         var input = $('#' + name).val();
         if(typeof input !== "undefined" && input !== val){
+            var valid = _validator.element($('#' + name));
+            if(valid)
+                toSubmit[name] = input;
+            else{
+                if(success){
+                    $('#' + name).focus();
+                    success = false;
+                }
+            }
+        }
+    });
+
+    if(success){
+        $.each(toSubmit, function(name, input){
             _settings[name] = input;
             $.post("../settings/update_setting.php", 
                 {requester_id: _userId,
@@ -92,10 +133,18 @@ function submitForm(){
                 name: name,
                 value: input}
             );
-        }
-    });
-    $(".msg-box").addClass("alert-success");
-    $(".msg-box").fadeIn();
-    $("#msg-box-text").html("Settings successfully saved!");
-    $("#submit-button").prop("disabled", true);
+        });
+        
+        $(".msg-box").removeClass("alert-danger");
+        $(".msg-box").addClass("alert-success");
+        $(".msg-box").fadeIn();
+        $("#msg-box-text").html("Settings successfully saved!");
+        $("#submit-button").prop("disabled", true);
+    }
+    else{
+        $(".msg-box").removeClass("alert-success");
+        $(".msg-box").addClass("alert-danger");
+        $(".msg-box").fadeIn();
+        $("#msg-box-text").html("Settings were not saved, please enter valid input.");
+    }
 }

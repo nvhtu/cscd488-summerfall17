@@ -14,8 +14,8 @@ $('.input-group.date').datepicker({
     enableOnReadonly: false
 }).on('changeDate', autofillQuarter);
 
-$('input[name="date"]').keydown(function(){
-    return false;
+$('input[name="date"]').keydown(function(e){
+     return e.keyCode === 9;
 });
 
 $('.timepicker input').timepicker({

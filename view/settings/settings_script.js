@@ -46,15 +46,17 @@ function buildForm(){
             forceParse: false,
             todayHighlight: true,
             autoclose: true,
-            orientation: "top left"
+            orientation: "top left",
+            keyboardNavigation: false
         };
         $('.input-group.date').datepicker(options)
-        .on("changeDate", function(){
+        .on("hide", function(){
+            if($(this).find("input").val() != _settings[$(this).find("input").attr("id")])
             $("#submit-button").prop("disabled", false);
         });
 
-        $('input[name="date"]').keydown(function(){
-            return false;
+        $('input[name="date"]').keydown(function(e){
+            return e.keyCode === 9;
         });
     
         $("input").on("input", function(){

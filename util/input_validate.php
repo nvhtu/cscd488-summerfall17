@@ -7,8 +7,8 @@
     }
 
     function validate_name($name){
-        //Must be letters and spaces
-        check_input_format("`^[a-zA-Z ]+$`", $name);
+        //Must only contain letters, spaces, commas, periods, apostraphes, and hyphens
+        check_input_format("`^[a-zA-Z ,.'-]+$`", $name);
         return true;
     }
 
@@ -33,7 +33,7 @@
     }
 
     function validate_exam_state($state){
-        check_input_format("`^(hidden|open|in_progress|grading|archived)$`", $state);
+        check_input_format("`^(Hidden|Open|In_Progress|Grading|Archived)$`", $state);
         return true;
     }
 

@@ -159,10 +159,7 @@ function init()
                 },
                 checkboxes: {
                     required: function (element) {
-                        if ($('[type="checkbox"]:checked').length == 0) {
-                            return true;
-                        }
-                        return false;
+                        return $('[type="checkbox"]:checked').length == 0;
                     }
                 },
                 state: {
@@ -170,6 +167,9 @@ function init()
                         return $("#type-student-checkbox").prop("checked");
                     }
                 }
+            },
+            messages: {
+                checkboxes: "Please select a user type"
             }
         });
 }

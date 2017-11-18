@@ -22,10 +22,7 @@ var _selectedTab = "Open";
 
 var _isCreateClicked = false;
 
-
-
-/*var _deletedExamCats;
-var _modifiedExamCats;*/
+var _reportValidator;
 
 
 $(document).ready(loaded);
@@ -93,7 +90,33 @@ function init()
      .click(onClickSort)
      .mousedown(function(e){ e.preventDefault(); });
 
-     
+     jQuery.validator.addMethod("fileName", function(value, element) {
+        return this.optional(element) || /^[a-zA-Z0-9._]([a-zA-Z0-9._-]+)?$/.test(value);
+        }, "Please enter a valid file name");
+
+    _reportValidator = $("#report-form").validate({
+        invalidHandler: function(form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                validator.errorList[0].element.focus();
+            }
+        },
+        ignore: [],
+        rules: {
+            "file-name": {
+                required: true,
+                fileName: true
+            },
+            checkboxes: {
+                required: function (element) {
+                    return $('[type="checkbox"]:checked').length == 0;
+                }
+            }
+        },
+        messages: {
+            checkboxes: "Please select data to include"
+        }
+    });
 }
 
 function buildTable()

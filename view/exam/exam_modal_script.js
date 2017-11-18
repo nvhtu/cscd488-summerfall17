@@ -90,7 +90,7 @@ function submitForm(e) {
    function clearForm()
    {
        $("#" + _formId).find("select, input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
-         $('#Report_tab').find("input[type='checkbox']").prop("checked", false);
+       $('#Report_tab').find("input[type='checkbox']").prop("checked", false);
        $("#quarter").html("(Select valid date)");
        $("#possible-grade").html("(Sum of categories)");
        $("#cat-table > tbody").empty();
@@ -99,6 +99,7 @@ function submitForm(e) {
        $('#cat-heading').toggleClass('empty-panel-fix', true);
        //$('a[href="#Exam_tab"]').tab('show');
        _catSectionModified = false;
+       _reportValidator.resetForm();
    }
    
    function toggleSubmitEdit(isReadonly, hideDiscard) {

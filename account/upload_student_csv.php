@@ -9,19 +9,23 @@
 	require_once "../util/sql_exe.php";
 	require_once "../util/check_id.php";
 	require_once "../settings/init_settings.php";
-
+	require_once "../util/input_validate.php";
 
 
 	$requesterId = $_POST["requester_id"];
 	$teacherId = $requesterId;
 	$requesterType = $_POST["requester_type"];
-    $allowedType = array("Admin", "Teacher", "System");
-
-    //if searchStr contains white space, split it into f_name and l_name
-
+	$requesterSessionId = $_POST["requester_session_id"];
+	$allowedType = array("Admin", "Teacher", "System");
+	
+	//Sanitize the input
+	$teacherId = sanitize_input($teacherId);
+    
+	//Ensure input is well-formed
+	validate_numbers_letters($teacherId);
 
     //User authentication
-	user_auth($requesterId, $requesterType, $allowedType);
+	user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     //Validate strings not empty
 

@@ -15,20 +15,18 @@
 	}
 
 	$requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+    $requesterType = $_POST["requester_type"];$requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin");
 
 	$name = $_POST["name"];
     $value = $_POST["value"];
 	
 	//Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-	$requesterType = sanitize_input($requesterType);
 	$name = sanitize_input($name);
 	$value = sanitize_input($value);
 
 	//Ensure input is well-formed
-	validate_numbers_letters($requesterId);
+    
     if(strpos($name, "Start") !== false || strpos($name, "End") !== false){
         validate_date($value);
     }
@@ -37,7 +35,7 @@
     }
 
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
 	sqlExecute("UPDATE admin_setting SET value = :value WHERE name = :name",
 				array(':name' => $name, ':value' => $value),

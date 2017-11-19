@@ -6,14 +6,20 @@
  */
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
 
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
     $request = $_GET["request"];
     $allowedType = array("Admin", "Teacher", "Student", "Grader", "000");
 
+
+     //Sanitize the input
+    $request = sanitize_input($request);
+
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     $sqlResult = array();
 
@@ -26,6 +32,8 @@
                             break;
         case ("get_all"): $sqlResult = getAllExam($requesterType, $requesterId);
                             break;
+        case ("get_student_apes"): $sqlResult = getStudentExams($_GET["student_id"]);
+                                    break;
         default: http_response_code(400);
                 echo "Unrecognized request string.";
     }

@@ -33,7 +33,7 @@
     }
 
     function validate_exam_state($state){
-        check_input_format("`^(hidden|open|in_progress|grading|archived)$`", $state);
+        check_input_format("`^(Hidden|Open|In_Progress|Grading|Archived)$`", $state);
         return true;
     }
 

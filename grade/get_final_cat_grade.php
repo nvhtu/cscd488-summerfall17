@@ -2,19 +2,28 @@
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
+    require_once "../util/input_validate.php";
 
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
    
     $allowedType = array("Admin", "Teacher", "System");
 
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     if(strcmp($requesterType,"System") != 0)
     {
         $studentId = $_GET["student_id"];
         $examCatId = $_GET["exam_cat_id"];
+
+          //Sanitize the input
+          $studentId = sanitize_input($studentId);
+          $examCatId = sanitize_input($examCatId);
+  
+          //Ensure input is well-formed
+          validate_numbers_letters($studentId);
 
         echo json_encode(getStudentFinalCatGrade($studentId, $examCatId));
 

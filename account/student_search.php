@@ -5,32 +5,32 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
 
     
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
+    $searchStrInput = $_GET["search_str"];
     $allowedType = array("Admin", "Teacher", "System");
 
     //if searchStr contains white space, split it into f_name and l_name
 
-    $searchStr = explode(" ", $_GET["search_str"]);
+    $searchStr = explode(" ", $searchStrInput);
 
     for($i=0; $i<count($searchStr); $i++)
     {
+        $searchStr[$i] = sanitize_input($searchStr[$i]);
         $searchStr[$i] = "%" . $searchStr[$i] . "%";
     }
 
-
+    //Sanitize the input
+    $searchStrInput = sanitize_input($searchStrInput);
 
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
-
-
-    //Validate strings not empty
-
-    //Validate strings
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     
     if(count($searchStr) == 1)

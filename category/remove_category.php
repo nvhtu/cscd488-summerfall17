@@ -14,22 +14,20 @@
 	}
 
 	$requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+	$requesterType = $_POST["requester_type"];
+	$requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin");
 	
 	$id = $_POST["cat_id"];
 	
 	//Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-	$requesterType = sanitize_input($requesterType);
 	$id = sanitize_input($id);
 
 	//Ensure input is well-formed
 	validate_only_numbers($id);
-	validate_numbers_letters($requesterId);
-
+	
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
 	sqlExecute("DELETE FROM category WHERE cat_id = :id",
 				array(':id' => $id),

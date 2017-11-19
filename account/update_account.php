@@ -5,17 +5,22 @@
  * @version: 1.2
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher");
 
     $request = $_POST["request"];
 
+    //Sanitize the input
+    $request = sanitize_input($request);
+
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
 
     /*
@@ -64,6 +69,13 @@
 
         $requesterType = $_POST["requester_type"];
 
+        //Sanitize the input
+        $id = sanitize_input($id);
+        $type = sanitize_input($type);
+        
+        //Ensure input is well-formed
+        validate_numbers_letters($id);
+
         //Validate only admin can change admin account
         if(strcmp($requesterType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
         {
@@ -98,6 +110,18 @@
         $lname = $_POST["l_name"];
         $email = $_POST["email"];
 
+        //Sanitize the input
+        $id = sanitize_input($id);
+        $fname = sanitize_input($fname);
+        $lname = sanitize_input($lname);
+        $email = sanitize_input($email);
+        
+        //Ensure input is well-formed
+        validate_numbers_letters($id);
+        validate_email($email);
+        validate_numbers_letters($fname);
+        validate_numbers_letters($lname);
+
         $sqlUpdateUser = "UPDATE user
                         SET f_name = :fname, l_name = :lname, email = :email
                         WHERE user_id LIKE :id";
@@ -111,6 +135,17 @@
         $state = $_POST["state"];
         $comment = $_POST["comment"];
         $editedBy = $_POST["edited_by"];
+
+        //Sanitize the input
+        $id = sanitize_input($id);
+        $state = sanitize_input($state);
+        $comment = sanitize_input($comment);
+        $editedBy = sanitize_input($editedBy);
+        
+        //Ensure input is well-formed
+        validate_numbers_letters($id);
+        validate_numbers_letters($editedBy);
+
 
         $sqlUpdateStudent = "UPDATE student
                             SET state = :state, comment = :comment, edited_by = :edited_by

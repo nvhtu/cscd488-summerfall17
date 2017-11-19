@@ -13,7 +13,7 @@
     $_POST["requester_id"] = $systemId;
     $_POST["requester_type"] = $systemType;
 
-    var_dump($_POST);
+    //var_dump($_POST);
 
     include "create_account.php";
 ?>    

@@ -5,18 +5,20 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
-    require "../settings/init_settings.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
+    require_once "../settings/init_settings.php";
     
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "Student");
 
     $request = $_GET["request"];
 
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     //Validate strings not empty
 
@@ -109,7 +111,7 @@
 
         if(strcmp($type, "Student") == 0)
         {
-            $requesterType = $_GET["requester_type"];
+            $requesterType = $_GET["requester_type"];$requesterSessionId = $_GET["requester_session_id"];
             
             //If requester is a Teacher, only get students belong to them. They are who uploaded
             //by that Teacher. A Teacher is prevented from getting students from previous quarters.

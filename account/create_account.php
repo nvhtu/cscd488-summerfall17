@@ -7,16 +7,16 @@
     //require "../pdoconfig.php";
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
 
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "System");
 
-
-
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     /*
     //Validate only admin can create admin account
@@ -27,11 +27,6 @@
         die("Unauthorized access. You must be an admin to create an admin account.");
     }
     */
-
-    //Validate strings not empty
-
-    //Validate strings
-
     
     if(strcmp($requesterType,"System") != 0)
     {

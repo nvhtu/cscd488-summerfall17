@@ -6,15 +6,24 @@
  */
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
 
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher");
+    $examId = $_POST["exam_id"];
+
+    //Sanitize the input
+    $examId = sanitize_input($examId);
+
+    //Ensure input is well-formed
+    validate_only_numbers($examId);
 
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
-    $examId = $_POST["exam_id"];
+    
 
     if(strcmp($requesterType, 'Teacher') == 0)
     {

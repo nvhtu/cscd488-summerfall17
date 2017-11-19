@@ -520,9 +520,11 @@ function buildStudentHistory(studentId)
     $("#exams-student-table-wrapper").html(table);
 
     $.get("../ape/get_all_apes.php", 
-    {requester_id: studentId,
-    requester_type: "Student",
-    request: "get_all"}, 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    student_id: studentId,
+    request: "get_student_apes"}, 
     loadStudentTable,
     "json");
 }

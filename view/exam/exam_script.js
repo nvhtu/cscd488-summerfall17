@@ -67,7 +67,8 @@ function init()
 
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
-        requester_type: _userType
+        requester_type: _userType,
+        requester_session_id: _userSessionId
         }, function(data){_settings = data;}, "json");
 
     $("#requester-id").val(_userId);

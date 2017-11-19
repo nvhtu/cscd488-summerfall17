@@ -29,7 +29,8 @@ function init()
 function loadGradingProgress(){
     $.get("../grade/get_num_students_per_exam_cat.php",
         {requester_id: _userId,
-        requester_type: _userType},
+        requester_type: _userType,
+        requester_session_id: _userSessionId},
         getUngradedSeats,
         "json");
 }
@@ -39,6 +40,7 @@ function getUngradedSeats(data){
         $.get("../grade/get_ungraded_seats.php",
             {requester_id: _userId,
             requester_type: _userType,
+            requester_session_id: _userSessionId,
             grader_exam_cat_id: item.grader_exam_cat_id,
             exam_id: item.exam_id},
             function(ungradedSeats){
@@ -53,6 +55,7 @@ function getExamInfo(ungradedSeats, item){
     $.get("../ape/get_all_apes.php",
         {requester_id: _userId,
         requester_type: _userType,
+        requester_session_id: _userSessionId,
         request: "get_by_id",
         exam_id: item.exam_id},
         function(examInfo){
@@ -67,6 +70,7 @@ function getCatInfo(examInfo, ungradedSeats, item){
     $.get("../category/get_all_categories.php",
     {requester_id: _userId,
     requester_type: _userType,
+    requester_session_id: _userSessionId,
     cat_id: item.cat_id},
     function(catInfo){
         generateProgressBar(catInfo, examInfo, ungradedSeats, item);

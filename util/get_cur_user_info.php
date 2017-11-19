@@ -23,24 +23,30 @@
                             'userLname' => 'Capaul',
                             'userEmail' => 'abc@xyz.com' );
 
-           /*$userInfo = array('userId' => 'y', 
+            /*$userInfo = array('userId' => 'y', 
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Stu',
                             'userLname' => 'Steiner',
-                            'userEmail' => 'ssteiner@ewu.edu' );*/
+                            'userEmail' => 'ssteiner@ewu.edu' );
+            $userInfo = array('userId' => 'x', 
+                            'userType' => array("Admin", "Teacher", "Grader"), 
+                            'userSession' => '111111',
+                            'userFname' => 'Tom',
+                            'userLname' => 'Capaul',
+                            'userEmail' => 'tcapaul@ewu.edu' );
             /*$userInfo = array('userId' => '3333', 
-            'userType' => array('Student'), 
-            'userSession' => '111111',
-            'userFname' => 'A333AAA',
-            'userLname' => 'B333',
-            'userEmail' => '1233Abc@xyz.c' );/
+                            'userType' => array('Student'), 
+                            'userSession' => '111111',
+                            'userFname' => 'A333AAA',
+                            'userLname' => 'B333',
+                            'userEmail' => '1233Abc@xyz.c' );/
             $userInfo = array('userId' => '2223', 
-            'userType' => array('Grader'), 
-            'userSession' => '111111',
-            'userFname' => 'A3AAA',
-            'userLname' => 'B3BBB',
-            'userEmail' => '12Abc@xyz.c' );*/
+                            'userType' => array('Grader'), 
+                            'userSession' => '111111',
+                            'userFname' => 'A3AAA',
+                            'userLname' => 'B3BBB',
+                            'userEmail' => '12Abc@xyz.c' );*/
         }
         else 
         {

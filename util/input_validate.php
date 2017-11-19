@@ -7,8 +7,8 @@
     }
 
     function validate_name($name){
-        //Must be letters and spaces
-        check_input_format("`^[a-zA-Z ]+$`", $name);
+        //Must only contain letters, spaces, commas, periods, apostraphes, and hyphens
+        check_input_format("`^[a-zA-Z ,.'-]+$`", $name);
         return true;
     }
 

@@ -9,16 +9,19 @@
  */
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
+    require_once "../util/input_validate.php";
     require_once "../util/check_id.php";
 
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
     
     $allowedType = array("Admin", "Teacher");
 
     $systemId = "999999";
+    
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     if(strcmp($requesterType,"System") != 0)
     {
@@ -38,10 +41,11 @@
         {
             $_POST["requester_id"] = "999999";
             $_POST["requester_type"] = "System";
+            $_POST["requester_session_id"] = "000";
             require_once "../grade/add_final_cat_grade.php";
             require_once "../grade/add_exam_grade.php";
 
-            $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num, email, possible_grade, passing_grade
+            $sqlGetRosterStudents = "SELECT student_id, f_name, l_name, seat_num, email, possible_grade, passing_grade, exam.state
             FROM exam_roster JOIN user ON exam_roster.student_id LIKE user.user_id
             JOIN exam ON exam_roster.exam_id = exam.exam_id
             WHERE exam_roster.exam_id = :exam_id";
@@ -106,6 +110,32 @@
                             }
                             else 
                             {
+                                if(strcmp($sqlStudentsResult[$i]["state"],"Archived") != 0)
+                                {
+                                    if(updateFinalCatGrade($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentAllCats[$theCat]["avg_grade"], $systemId))
+                                    {
+                                        $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
+                                    }
+                                    else
+                                    {
+                                        $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
+                                    } 
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
+                                }
+                                else
+                                {
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
+                                    $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
+                                }
+
+                               
+                            }
+                        }
+                        else
+                        {   if(strcmp($sqlStudentsResult[$i]["state"],"Archived") != 0)
+                            {
                                 if(updateFinalCatGrade($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentAllCats[$theCat]["avg_grade"], $systemId))
                                 {
                                     $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
@@ -113,23 +143,16 @@
                                 else
                                 {
                                     $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
-                                } 
+                                }  
                                 $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
                                 $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
                             }
-                        }
-                        else
-                        {   
-                            if(updateFinalCatGrade($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentAllCats[$theCat]["avg_grade"], $systemId))
-                            {
-                                $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
-                            }
                             else
                             {
-                                $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
-                            }  
-                            $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
-                            $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
+                                $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
+                                $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
+                                $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
+                            }
                         }
 
                         

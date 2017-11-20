@@ -38,6 +38,7 @@ function onclickDownload(rosterData, examData){
         link.attr("download", $("[name='file-name']").val() + ".csv");
 
         link[0].click();
+        $("#detail-modal").modal("hide");
     }
 }
 

@@ -58,7 +58,8 @@ function init()
 
     $.get("../settings/get_settings.php", {
         requester_id: _userId,
-        requester_type: _userType
+        requester_type: _userType,
+        requester_session_id: _userSessionId
         }, function(data){_settings = data;}, "json");
 
         $("#requester-id").val(_userId);
@@ -89,7 +90,7 @@ function loadUpcomingExams()
 
 function buildExamsTable()
 {
-    headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats", "Action"];
+    headersArr = ["Name", "Date", "Start Time", "Location", "Available Seats", "Action"];
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
@@ -181,6 +182,7 @@ function getExamRoster(exams)
         {
             requester_id: _userId,
             requester_type: _userType,
+            requester_session_id: _userSessionId,
             exam_id: theExam.exam_id,
             get_grade: 0
         },
@@ -199,6 +201,7 @@ function getGradersPerExam(theExam, studentsNum)
         $.get("../grade/get_graders.php",
             {requester_id: _userId,
             requester_type: _userType,
+            requester_session_id: _userSessionId,
             request: "get_by_exam_id",
             exam_id: theExam.exam_id},
             function(graders){
@@ -215,6 +218,7 @@ function getGradedSeats(graders, theExam, studentsNum)
         $.get("../grade/get_graded_seats_per_grader.php",
         {requester_id: _userId,
         requester_type: _userType,
+        requester_session_id: _userSessionId,
         grader_exam_cat_ids: theGrader["grader_exam_cat_id"]},
         function(gradedSeats){
             generateProgressBar(theExam, theGrader, gradedSeats, studentsNum);

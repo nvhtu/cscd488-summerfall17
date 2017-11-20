@@ -6,18 +6,28 @@
  */
 	require_once "../util/sql_exe.php";
 	require_once "../auth/user_auth.php";
+	require_once "../util/input_validate.php";
 	require_once "../util/send_mail.php";
 	
 	$requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+	$requesterType = $_POST["requester_type"];
+	$requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "Student");
 	
 	//TODO: validate id is set/valid
 	$student_id = $_POST["student_id"];
 	$exam_id = $_POST["exam_id"];
 	
+	//Sanitize the input
+    $exam_id = sanitize_input($exam_id);
+    $student_id = sanitize_input($student_id);
+
+    //Ensure input is well-formed
+	validate_numbers_letters($student_id);
+	validate_only_numbers($exam_id);
+	
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
 	//Authenticate student being registered
 	$allowedType = array("Student");

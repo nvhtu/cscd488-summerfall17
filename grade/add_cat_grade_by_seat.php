@@ -11,24 +11,22 @@
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "Grader");
 
     $seatNum = $_POST["seat_num"];
     $examId = $_POST["exam_id"];
 
     //Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-    $requesterType = sanitize_input($requesterType);
     $seatNum = sanitize_input($seatNum);
     $examId = sanitize_input($examId);
 
 	//Ensure input is well-formed
-    validate_numbers_letters($requesterId);
     validate_only_numbers($seatNum);
     validate_only_numbers($examId);
     
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     
     $sql = "SELECT student_id

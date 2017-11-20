@@ -294,6 +294,7 @@ function onSaveSeat(e)
     $.post("../ape/update_student_seat.php", 
     {requester_id: _userId,
     requester_type: _userType,
+    requester_session_id: _userSessionId,
     exam_id: examId,
     student_id: studentId,
     seat_num: seatNum});

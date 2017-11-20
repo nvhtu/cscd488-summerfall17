@@ -14,24 +14,22 @@
 	}
 
 	$requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+	$requesterType = $_POST["requester_type"];
+	$requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher");
 
 	$id = $_POST["cat_id"];
 	$name = $_POST["name"];
 	
 	//Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-	$requesterType = sanitize_input($requesterType);
 	$name = sanitize_input($name);
 	$id = sanitize_input($id);
 
 	//Ensure input is well-formed
 	validate_only_numbers($id);
-	validate_numbers_letters($requesterId);
 
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
 	sqlExecute("UPDATE category SET name = :name WHERE cat_id = :id",
 				array(':name' => $name, ':id' => $id),

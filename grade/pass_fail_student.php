@@ -5,22 +5,32 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
+    require_once "../util/input_validate.php";
 
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin");
 
     $examId = $_POST["exam_id"];
     $studentId = $_POST["student_id"];
     $passed = $_POST["passed"];
 
+    //Sanitize the input
+    $studentId = sanitize_input($studentId);
+    $examId = sanitize_input($examId);
+    $passed = sanitize_input($passed);
+
+    //Ensure input is well-formed
+    validate_numbers_letters($studentId);
+    validate_only_numbers($examId);
 
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     //Validate strings not empty
 

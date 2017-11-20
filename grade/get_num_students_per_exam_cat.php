@@ -11,17 +11,12 @@
     
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
+    
     $allowedType = array("Grader","Admin", "Teacher");
-
-    //Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-    $requesterType = sanitize_input($requesterType);
-
-	//Ensure input is well-formed
-    validate_numbers_letters($requesterId);
     
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     
     $sql = "SELECT grader_exam_cat_id, exam_id, cat_id, (SELECT COUNT(student_id)

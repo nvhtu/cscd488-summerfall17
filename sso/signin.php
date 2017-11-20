@@ -25,7 +25,7 @@ $_SESSION['loggedIn'] = true;
 $userAttr = phpCAS::getAttributes();
 $_SESSION['ewuid'] = $userAttr["Ewuid"];
 
-//$_SESSION["phpCAS"]["attributes"]["UserType"] = "Teacher";
+//$_SESSION["phpCAS"]["attributes"]["UserType"] = "Admin";
 //echo $_SESSION['ewuid'];
 //echo $_SESSION["phpCAS"]["attributes"]["UserType"];
 

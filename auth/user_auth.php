@@ -8,6 +8,8 @@
  */
 
     require_once "../pdoconfig.php";
+    require_once "../util/get_cur_user_info.php";
+    require_once "../util/input_validate.php";
 
     /**
      * Checks account is existed and type is allowed
@@ -16,10 +18,30 @@
      * @param array $allowedType type(s) that allowed to use the caller function
      * @return boolean
      */
-    function user_auth($requesterId, $requesterType, $allowedType)
+    function user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId)
     {
+            //Sanitize the input
+            $requesterId = sanitize_input($requesterId);
+            $requesterType = sanitize_input($requesterType);
+            $requesterSessionId = sanitize_input($requesterSessionId);
+
+            //Ensure input is well-formed
+            validate_numbers_letters($requesterId);
+            
             $conn = openDB();
             $isAuth = False;
+
+            //Check session id exists and matched. Don't check this with System account
+            if(strcmp($requesterType, "System") != 0)
+            {
+                $userInfo = getCurUserInfo(False);
+                if(strcmp($requesterSessionId, $userInfo["userSession"]) != 0)
+                {
+                    http_response_code(400);
+                    $conn = null;
+                    die("Unauthorized access. Account is not signed in.");
+                }
+            }
 
             if(strcmp($requesterType, "Student") == 0) //Student account
             {

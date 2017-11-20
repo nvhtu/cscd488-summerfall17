@@ -14,24 +14,21 @@
 	}
 
 	$requesterId = $_POST["requester_id"];
-    $requesterType = $_POST["requester_type"];
+    $requesterType = $_POST["requester_type"];$requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher");
 	
 	$name = $_POST["name"];
 	$seats = $_POST["seats"];
 
 	//Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-	$requesterType = sanitize_input($requesterType);
 	$name = sanitize_input($name);
 	$seats = sanitize_input($seats);
 
 	//Ensure input is well-formed
 	validate_only_numbers($seats);
-	validate_numbers_letters($requesterId);
 	
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
 	$lastInsertId = sqlExecute("INSERT INTO location (name, seats) VALUES (:name, :seats)",
 				array(':name' => $name, ':seats' => $seats),

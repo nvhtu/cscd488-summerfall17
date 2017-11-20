@@ -5,21 +5,27 @@
  * @version: 1.0
  */
     //require "../pdoconfig.php";
-    require "../auth/user_auth.php";
-    require "../util/sql_exe.php";
+    require_once "../auth/user_auth.php";
+    require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
+    require_once "../util/input_validate.php";
     
     $requesterId = $_GET["requester_id"];
     $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
+ 
     $allowedType = array("Admin", "Teacher", "Student");
 
     $studentId = $_GET["student_id"];
+
+      //Sanitize the input
+      $studentId = sanitize_input($studentId);
+      
+      //Ensure input is well-formed
+      validate_numbers_letters($studentId);
+
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
-
-    //Validate strings not empty
-
-    //Validate strings
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     checkStudentExists($studentId);
 

@@ -2,14 +2,17 @@
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
+    require_once "../util/input_validate.php";
 
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
+
    
     $allowedType = array("Admin", "Teacher", "System");
 
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     if(strcmp($requesterType,"System") != 0)
     {
@@ -18,6 +21,19 @@
         $finalGrade = $_POST["final_grade"];
         $editedBy = $_POST["edited_by"];
         $comment = $_POST["comment"];
+
+         //Sanitize the input
+        $studentId = sanitize_input($studentId);
+        $examCatId = sanitize_input($examCatId);
+        $finalGrade = sanitize_input($finalGrade);
+        $editedBy = sanitize_input($editedBy);
+        $comment = sanitize_input($comment);
+
+        //Ensure input is well-formed
+        validate_numbers_letters($studentId);
+        validate_only_numbers($examCatId);
+        validate_only_numbers($finalGrade);
+        validate_numbers_letters($editedBy);
 
         updateStudentFinalCatGrade($studentId, $examCatId, $finalGrade, $comment, $editedBy);
 

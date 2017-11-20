@@ -8,19 +8,16 @@
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
     require_once "../util/check_id.php";
+    require_once "../util/input_validate.php";
     
     $requesterId = $_POST["requester_id"];
     $requesterType = $_POST["requester_type"];
+    $requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "System");
 
-    
-
     //User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
-    //Validate strings not empty
-
-    //Validate strings
     if(strcmp($requesterType,"System") != 0)
     {
         $examId = $_POST["exam_id"];
@@ -28,6 +25,19 @@
         $grade = $_POST["grade"];
         $passed = $_POST["passed"];
         $possibleGrade = $_POST["possible_grade"];
+
+        //Sanitize the input
+        $examId = sanitize_input($examId);
+        $studentId = sanitize_input($studentId);
+        $grade = sanitize_input($grade);
+        $passed = sanitize_input($passed);
+        $possibleGrade = sanitize_input($possibleGrade);
+
+        //Ensure input is well-formed
+        validate_numbers_letters($studentId);
+        validate_only_numbers($examId);
+        validate_only_numbers($grade);
+        validate_only_numbers($possibleGrade);
 
         checkExamExists($examId);
         checkStudentExists($studentId);

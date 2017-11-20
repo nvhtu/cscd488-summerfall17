@@ -14,18 +14,12 @@
 	}
 
 	$requesterId = $_GET["requester_id"];
-    $requesterType = $_GET["requester_type"];
+	$requesterType = $_GET["requester_type"];
+	$requesterSessionId = $_GET["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "Grader");
 	
-	//Sanitize the input
-	$requesterId = sanitize_input($requesterId);
-	$requesterType = sanitize_input($requesterType);
-
-	//Ensure input is well-formed
-	validate_numbers_letters($requesterId);
-
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType);
+    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	if(!empty($_GET["cat_id"]))
 	{
 		$sqlResult = sqlExecute("SELECT * FROM category WHERE cat_id = :id",

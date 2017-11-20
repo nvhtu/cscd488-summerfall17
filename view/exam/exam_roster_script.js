@@ -8,9 +8,17 @@ function loadTabRoster()
 {
     toggleSubmitEdit(false, true);
 
-    $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", false);
-    $("#submit-button").html("Finalize All Grades");
-    
+    if(_selectedTab == "Grading")
+    {
+        $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", false);
+        $("#submit-button").html("Finalize All Grades");
+    }
+    else
+    {
+        $('#submit-button').toggleClass("hidden", true);
+    }
+
+
     _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
     table = buildMainTable(headersArr);
@@ -731,6 +739,14 @@ function finalizeGrades(e)
             exam_id: examId,
             state: "Archived",
             request: "update_state"
+        });
+
+        $.post("../grade/finalize_all_grade.php",
+        {
+            requester_id: _userId,
+            requester_type: _userType,
+            requester_session_id: _userSessionId,
+            exam_id: examId
         });
     }
 

@@ -58,6 +58,19 @@ function loadTabExam()
     $("#submit-button").html("Save changes");
     $('a[href="#Report_tab"]').add('a[href="#Roster_tab"]').parent().toggleClass('hidden', false);
 
+    if(_selectedTab == "Grading" || _selectedTab == "Archived")
+    {
+        $('#edit-button').toggleClass("hidden", true);
+        $('#discard-button').toggleClass("hidden", true);
+        $('#submit-button').toggleClass("hidden", true);
+    }
+    else
+    {
+        $('#edit-button').toggleClass("hidden", false);
+        toggleSubmitEdit(true);
+    }
+
+
     $.get("../ape/get_all_apes.php", 
     {requester_id: _userId,
     requester_type: _userType,
@@ -87,7 +100,7 @@ function loadTabExam()
 
 
    
-    toggleSubmitEdit(true);
+    
 }
 
 function getAllLoc() 

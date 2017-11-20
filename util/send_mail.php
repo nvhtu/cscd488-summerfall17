@@ -1,6 +1,8 @@
 <?php
     require_once "../pdoconfig.php";
 
+	$_siteEmail = "";
+	$_siteEmailPass = "";
     
 	/**
 	 * receiver array contains: fname, lname, email.

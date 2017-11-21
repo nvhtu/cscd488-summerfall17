@@ -50,6 +50,9 @@ function init()
         $("#upload-button").click(onsubmitUploadForm);
         $("#lookup-button").click(onsubmitLookupForm);
         
+        $('#lookup-string').on("keypress", function (e) {
+            if (e.which == 13) $('#lookup-button').trigger('click');
+        });
     
         $("input[name='requester_id']").val(_userId);
         $("input[name='requester_type']").val(_userType);
@@ -61,7 +64,7 @@ function init()
         if(_userType != "Teacher")
         {
             //Create look up button in Students tab
-            $("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
+            $("#create-button").after('<button type="button" class="btn btn-primary pull-left btn-labeled students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-search"></i></span>Look up Students</button>');
         }
         else
         {

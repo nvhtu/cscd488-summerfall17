@@ -20,7 +20,7 @@ function loadTabRoster()
 
 
     _isEditing = false;
-    headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
+    headersArr = ["ID", "First Name", "Last Name", "State", "Action"];
     table = buildMainTable(headersArr);
     $("#lookup-results").html(table);
     $("#lookup-string").val("");
@@ -192,7 +192,6 @@ function loadLookupTable(data)
             ewu_id: item.user_id,
             f_name: item.f_name,
             l_name: item.l_name,
-            email: item.email,
             state: item.state
         };
     
@@ -237,7 +236,7 @@ function onclickRegisterStudent(e)
     function(data){
         alert("Student has been added to the exam successfully.");
 
-        $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Registered");
+        $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(4)").html("Registered");
         $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",true);
 
         var item = {

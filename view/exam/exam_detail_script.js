@@ -78,7 +78,7 @@ function loadTabExam()
     request: "get_by_id",
     exam_id: itemId}, 
     function(item){
-        $("#modal-title").html(item[0].name);
+        $(".modal-title").html(item[0].name);
         $.each(item[0], function(name, val){
             var el = $('[name="'+name+'"]');
             el.val(val);

@@ -418,7 +418,7 @@ function onclickCreate()
 {
     
     //getAllLoc();
-    $("#modal-title").html("Create a User");
+    $(".modal-title").html("Create a User");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 
@@ -446,7 +446,7 @@ function onclickDetails(e)
 
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
-    $("#modal-title").html("Edit a User");
+    $(".modal-title").html("Edit a User");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 

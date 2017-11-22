@@ -151,7 +151,7 @@ function onclickCreate()
     clearForm();
     _isCreateClicked = true;
     $('a[href="#Exam_tab"]').tab('show');
-    $("#modal-title").html("Create an Exam");
+    $(".modal-title").html("Create an Exam");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").attr("data-tab", "exam");
 	$("#submit-button").html("Create");

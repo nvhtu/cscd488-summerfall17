@@ -80,7 +80,7 @@ function init()
                 _selectedTab = "Student"; 
     
         $(".btn-group > .btn-danger").remove();
-        $("#state-form-group").hide();
+        $(".state-form-group").hide();
     
     
     
@@ -102,7 +102,7 @@ function init()
             
             if($("#type-student-checkbox").prop("checked"))
             {
-                $("#state-form-group").fadeIn(100);
+                $(".state-form-group").fadeIn(100);
                 $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", true);
     
             } 
@@ -118,7 +118,7 @@ function init()
                     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", false);
                 }
                 
-                $("#state-form-group").fadeOut(100);
+                $(".state-form-group").fadeOut(100);
             }
     
         });
@@ -424,7 +424,7 @@ function onclickCreate()
 
     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     $("input[name='user_id']").prop("disabled", false);
-    $("#state-form-group").hide();
+    $(".state-form-group").hide();
     $("#type-student-wrap").show();
     $(".type-nonstudent-wrap").show();
     $(".student-exam-history-form").hide();
@@ -490,7 +490,7 @@ function onclickDetails(e)
 
     if(_selectedTab == "Student")
     {
-        $("#state-form-group").show();
+        $(".state-form-group").show();
         $("#type-student-wrap").show();
         $("input[name='type']").prop('disabled', true);
         $(".type-nonstudent-wrap").hide();
@@ -503,7 +503,7 @@ function onclickDetails(e)
     else
     {
         $("#type-student-wrap").hide();
-        $("#state-form-group").hide();
+        $(".state-form-group").hide();
         $(".type-nonstudent-wrap").show();
         $("input[name='type']").prop('disabled', false);
 

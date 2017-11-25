@@ -35,19 +35,23 @@ if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
     {
         $_SESSION["phpCAS"]["attributes"]["UserType"] = array();
         array_push($_SESSION["phpCAS"]["attributes"]["UserType"], "Student");
-        header('Location: ../view/home/');
+        
     }
     else 
     {
-        echo "student doesn't exists. Go to create new student account";
-        header('Location: create_student.html');
+        $_POST["requester_id"] = "999999";
+        $_POST["requester_type"] = "System";
+        require_once "create_account.php";
+        
+        createStudentAccount($_SESSION['ewuid'], "Ready");
     }
 }
 else 
 {
     $_SESSION["phpCAS"]["attributes"]["UserType"] = checkFacultyTypes();
-    header('Location: ../view/home/');
 }
+
+header('Location: ../view/home/');
 
 function checkFacultyTypes()
 {
@@ -61,7 +65,8 @@ function checkFacultyTypes()
     $sqlResult = sqlExecute($sqlCheckFaculty, array('faculty_id'=>$userId), True);
     if(count($sqlResult) == 0)
     {
-        
+        http_response_code(400);
+        die("You don't have an account in the APE system. Please contact Stu Steiner to setup an account");
     }
     else 
     {

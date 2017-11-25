@@ -18,6 +18,8 @@ var _selectedTab = "";
 
 var _validator;
 
+var _isCreateClicked = false;
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -103,6 +105,11 @@ function init()
             if($("#type-student-checkbox").prop("checked"))
             {
                 $(".state-form-group").fadeIn(100);
+                if(_isCreateClicked)
+                {
+                    $(".student-exam-history-form").hide();
+                    $(".student-comment-form").hide();
+                }
                 $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", true);
     
             } 
@@ -424,7 +431,7 @@ function buildTypeString()
 
 function onclickCreate()
 {
-    
+    _isCreateClicked = true;
     //getAllLoc();
     $(".modal-title").html("Create a User");
     $("#submit-button").attr("data-action", "create");
@@ -446,6 +453,7 @@ function onclickCreate()
 
 function onclickDetails(e) 
 {
+    _isCreateClicked = false;
     clearForm();
     $("select[name='state']").on("change", function(){$(".student-comment-form").show()});
     //$("input[name='user_id']").prop("disabled", true);

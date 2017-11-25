@@ -56,7 +56,7 @@ function init()
     
         $("input[name='requester_id']").val(_userId);
         $("input[name='requester_type']").val(_userType);
-        $("input[name='requester_session']").val(_userSessionId);
+        $("input[name='requester_session_id']").val(_userSessionId);
     
         //Create import button in Students tab
         //$("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
@@ -307,6 +307,14 @@ function submitForm (e)
 
 function createItem()
 {
+    var isInclass = false;
+    var teacherId = null;
+
+    if (_userType == "Teacher")
+    {
+        isInclass = true;
+        teacherId = _userId;
+    }
 
     var type = buildTypeString();
 
@@ -319,7 +327,9 @@ function createItem()
         l_name: $("input[name='l_name']").val(),
         email: $("input[name='email']").val(),
         type: type,
-        state: $("select[name='state']").val()}, 
+        state: $("select[name='state']").val(),
+        is_inclass: isInclass,
+        teacher_id: teacherId}, 
         function(lastInsertId){
             $.get("../account/get_account_info.php", 
             {requester_id: _userId,
@@ -328,8 +338,6 @@ function createItem()
             request: "get_by_id",
             id: lastInsertId},
             function(item){
-                console.log(xhr.status);
-                //console.log(item);
                 $.each(type, function(i, theType){
                     loadTable(item, theType);
                 });

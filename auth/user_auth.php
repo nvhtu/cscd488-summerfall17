@@ -32,7 +32,7 @@
             $isAuth = False;
 
             //Check session id exists and matched. Don't check this with System account
-            if(strcmp($requesterType, "System") != 0)
+            if(strcmp($requesterType, "System") != 0 && strcmp($requesterType, "000") != 0)
             {
                 $userInfo = getCurUserInfo(False);
                 if(strcmp($requesterSessionId, $userInfo["userSession"]) != 0)

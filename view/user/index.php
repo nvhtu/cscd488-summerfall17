@@ -14,7 +14,7 @@
 
     //Strings in $jsArr are the JS file names minus "_script.js" E.g. "exam_student_script.js" -> "exam_student"
     //Do not change order of exam_student because later scripts will need to overide the init function in exam_student_script.js
-    $jsArr = array("../exam/exam_student","user","lookup_students","import_students");
+    $jsArr = array("../exam/exam_student","user");
 
     if(in_array("Grader", $userInfo["userType"]) && count($userInfo["userType"]) == 1)
     {

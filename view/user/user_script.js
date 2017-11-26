@@ -16,6 +16,8 @@ var _locData = Array();
 
 var _selectedTab = "";
 
+var _statechanged = false; 
+
 var _validator;
 
 var _isCreateClicked = false;
@@ -95,6 +97,11 @@ function init()
         $("a[href='#Students-panel']").click(function(){_selectedTab = "Student"; $(".students-specific-btn").show()});
     
         //$("#btn-search").click(function(){search($("#search").val())});
+
+        $("[name='state']").change(function(){
+            if($("#submit-button").attr("data-action") == "update")
+                _statechanged = true;
+        });
     
         //show/hide student state select when check/uncheck student type
     
@@ -169,17 +176,23 @@ function init()
                 },
                 checkboxes: {
                     required: function (element) {
-                        if ($('[type="checkbox"]:checked').length == 0) {
-                            return true;
-                        }
-                        return false;
+                        return $('[type="checkbox"]:checked').length == 0;
                     }
                 },
                 state: {
                     required: function (element) {
                         return $("#type-student-checkbox").prop("checked");
                     }
+                },
+                comment: {
+                    required: function (element) {
+                        return _statechanged;
+                    }
                 }
+            },
+            messages: {
+                checkboxes: "Please select a user type",
+                comment:    "Comment required for state change"
             }
         });
 }
@@ -558,6 +571,7 @@ function clearForm()
 {
     $("input[type=text]").val("");
     $("input[type=checkbox]").prop("checked", false);
+    _statechanged = false;
     _validator.resetForm(); 
 }
 

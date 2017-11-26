@@ -1,5 +1,11 @@
 $("#select-all-checkbox").click(function(){
     $("#report-form").find("input[type='checkbox']:visible").prop('checked', $("#select-all-checkbox").prop('checked'));
+    _reportValidator.element("[name='checkboxes']");
+});
+
+$("[type='checkbox']:not(#select-all-checkbox)").click(function(){
+    $("#select-all-checkbox").prop('checked', false);
+    _reportValidator.element("[name='checkboxes']");
 });
 
 function loadTabReport()
@@ -10,27 +16,30 @@ function loadTabReport()
 }
 
 function onclickDownload(rosterData, examData){
-    var csvContent = "data:text/csv;charset=utf-8,";
-    var i;
-    for(i = 0; _locData[i].loc_id != examData.location; i++);
-    var locName = _locData[i].name;
+    if($("#report-form").valid()){
+        var csvContent = "data:text/csv;charset=utf-8,";
+        var i;
+        for(i = 0; _locData[i].loc_id != examData.location; i++);
+        var locName = _locData[i].name;
 
-    var csvData = [["Exam Name", examData.name],["Quarter", examData.quarter],["Date", examData.date],
-        ["Time", examData.start_time],["Location", locName]];
+        var csvData = [["Exam Name", examData.name],["Quarter", examData.quarter],["Date", examData.date],
+            ["Time", examData.start_time],["Location", locName]];
 
-    csvData = selectStudentData(rosterData, csvData);
-    
-    csvData.forEach(function(infoArray, index){
-        dataString = infoArray.join(",");
-        csvContent += index < csvData.length ? dataString + "\n" : dataString;
-    }); 
+        csvData = selectStudentData(rosterData, csvData);
+        
+        csvData.forEach(function(infoArray, index){
+            dataString = infoArray.join(",");
+            csvContent += index < csvData.length ? dataString + "\n" : dataString;
+        }); 
 
-    var encodedUri = encodeURI(csvContent);
-    var link = $("#download-link");
-    link.attr("href", encodedUri);
-    link.attr("download", $("[name='file-name']").val() + ".csv");
+        var encodedUri = encodeURI(csvContent);
+        var link = $("#download-link");
+        link.attr("href", encodedUri);
+        link.attr("download", $("[name='file-name']").val() + ".csv");
 
-    link[0].click();
+        link[0].click();
+        $("#detail-modal").modal("hide");
+    }
 }
 
 function selectStudentData(rosterData, csvData){

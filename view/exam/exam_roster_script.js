@@ -434,9 +434,9 @@ function loadRosterTableHasGrades(item)
     $("#roster-table-wrapper > ." + _tableId).append(summaryRow);
     $("#roster-table-wrapper > ." + _tableId).append(detailRow);
 
-    $(".edit-grade-btn").click(onclickEditGrade);
-    $(".save-grade-btn").click(onclickEditGrade);
-    $(".discard-grade-btn").click(onclickEditGrade);
+    $(".item-detail-row[data-id='item-" + detailData.id + "']").find(".edit-grade-btn").click(onclickEditGrade);
+    $(".item-detail-row[data-id='item-" + detailData.id + "']").find(".save-grade-btn").click(onclickEditGrade);
+    $(".item-detail-row[data-id='item-" + detailData.id + "']").find(".discard-grade-btn").click(onclickEditGrade);
 
     if(_selectedTab == "Archived")
     {
@@ -549,17 +549,28 @@ function onclickEditGrade(e)
     {
         if(e.currentTarget.dataset["action"] == "save")
         {
-            onSaveGrade(e);
+            var gradeInput = $(gradeInputSelector);
+            if(/^[0-9]+$/.test(gradeInput.val()) && gradeInput.val() <= parseInt(gradeInput.attr("max")) && gradeInput.val() >= 0){
+                if($(commentInputSelector).val() !== ""){
+                    onSaveGrade(e);
 
-            toggleSaveEditBtn(false, parentId, itemId);
+                    toggleSaveEditBtn(false, parentId, itemId);
+                
+                    _isEditing = false;
+
+                    _curGrade = gradeInput.val();
+                    _curGradeComment = $(commentInputSelector).val();
+                }
+                else{
+                    //Should probably be error message box instead of alert
+                    alert("Comment required for grade change");
+                }
+            }
         
-            _isEditing = false;
-
-            _curGrade = $(".parent-detail-row[data-parent-id='item-" + parentId + "'][data-id='" + itemId + "'] .cat-grade-input").val();
-            _curGradeComment = $(commentInputSelector).val();
-        
-
-            
+            else{
+                //Should probably be error message box instead of alert
+                alert("Grade must be an integer between 0 and " + gradeInput.attr("max"));
+            }
         }
 
         if(e.currentTarget.dataset["action"] == "discard")
@@ -589,7 +600,8 @@ function onclickInfoGrade(e)
     {
         if (confirm("Are you sure you want to discard unsaved changes?"))
         {
-            $("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
+            //$("#item-" + itemId + " .cat-grade-input").prop("disabled", true);
+            $(".discard-grade-btn:visible").click();
             
                 
                 //Disable Edit button collapse when the detail row has been expanded earlier by Info button
@@ -736,27 +748,39 @@ function onSaveGrade(e)
 
 function finalizeGrades(e)
 {
-    examId = _origClickEvent.currentTarget.dataset["id"];
-    if(window.confirm("Are you sure you want to finalize all grades of this exam? All students will be notified and this exam will be archived."))
-    {
-        $.post("../ape/update_ape.php",
+    var gradesAreValid = true;
+    $(".cat-grade-input").each(function(){
+        //if(!/^[0-9]+$/.test($(this).val()) || $(this).val() > parseInt($(this).attr("max")) || $(this).val() < 0)
+        if($(this).val() == "" || $(this).prop("disabled") == false)
+            gradesAreValid = false;
+    });
+    
+    if(gradesAreValid){
+        examId = _origClickEvent.currentTarget.dataset["id"];
+        if(window.confirm("Are you sure you want to finalize all grades of this exam? All students will be notified and this exam will be archived."))
         {
-            requester_id: _userId,
-            requester_type: _userType,
-            requester_session_id: _userSessionId,
-            exam_id: examId,
-            state: "Archived",
-            request: "update_state"
-        });
+            $.post("../ape/update_ape.php",
+            {
+                requester_id: _userId,
+                requester_type: _userType,
+                requester_session_id: _userSessionId,
+                exam_id: examId,
+                state: "Archived",
+                request: "update_state"
+            });
+            
+            $("#detail-modal").modal("hide");
 
-        $.post("../grade/finalize_all_grade.php",
-        {
-            requester_id: _userId,
-            requester_type: _userType,
-            requester_session_id: _userSessionId,
-            exam_id: examId
-        });
+            $.post("../grade/finalize_all_grade.php",
+            {
+                requester_id: _userId,
+                requester_type: _userType,
+                requester_session_id: _userSessionId,
+                exam_id: examId
+            });
+        }
     }
 
-    
+    else
+        alert("All final grades must be submitted before finalizing");    
 }

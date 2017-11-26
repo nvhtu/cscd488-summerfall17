@@ -23,6 +23,9 @@ var _selectedTab = "Open";
 var _isCreateClicked = false;
 
 var _reportValidator;
+var _examValidator;
+var _catValidators = Array();
+var _graderValidators = Array();
 
 
 $(document).ready(loaded);
@@ -91,7 +94,77 @@ function init()
      .click(onClickSort)
      .mousedown(function(e){ e.preventDefault(); });
 
-     jQuery.validator.addMethod("fileName", function(value, element) {
+    $("form, input").attr("autocomplete", "off");
+
+    jQuery.validator.addMethod("myDate", function(value, element) {
+        return /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(value);
+        }, "Please enter a date in YYYY-MM-DD format");
+
+    jQuery.validator.addMethod("myQuarter", function(value, element) {
+        return /^(Fall|Winter|Spring|Summer)$/.test(value);
+        }, "Please enter a date within a quarter");
+
+    jQuery.validator.addMethod("myTime", function(value, element) {
+        return /^((([1-9])|(1[0-2])):([0-5])([0-9])\s(A|P)M)$/.test(value);
+        }, "Please enter a valid time");
+
+    jQuery.validator.addMethod("passingGrade", function(value, element) {
+        if($("[name='max-score']").filter(function(){return $(this).val() != "";}).length > 0)
+            return parseInt(value, 10) <= parseInt($("[name='possible_grade']").val(), 10);
+        return true;
+        }, "Passing grade cannot exceed possible grade");
+
+    _examValidator = $("#main-form").validate({
+        ignore: [],
+        rules: {
+            name: {
+                required: true
+            },
+            date: {
+                required: true,
+                myDate: true
+            },
+            quarter: {
+                required: true,
+                myQuarter: true
+            },
+            start_time: {
+                required: true,
+                myTime: true
+            },
+            duration: {
+                required: true,
+                digits: true
+            },
+            cutoff: {
+                required: true,
+                digits: true
+            },
+            location: {
+                required: true
+            },
+            state: {
+                required: true
+            },
+            passing_grade: {
+                required: true,
+                digits: true,
+                passingGrade: true
+            },
+            possible_grade: {
+                required: true,
+                digits: true
+            }
+        },
+        messages: {
+            quarter: {
+                required: "Select valid date to add quarter"
+            },
+            possible_grade: "Fill out category info to add possible grade"
+        }
+    });
+
+    jQuery.validator.addMethod("fileName", function(value, element) {
         return this.optional(element) || /^[a-zA-Z0-9._]([a-zA-Z0-9._-]+)?$/.test(value);
         }, "Please enter a valid file name");
 

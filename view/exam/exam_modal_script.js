@@ -51,15 +51,37 @@ function onclickTabReport()
 function submitForm(e) {
       var tab = e.currentTarget.dataset["tab"],
       action = e.currentTarget.dataset["action"];
-   
+
       if (tab === "exam") {
-         if (action === "create") {
-            _isCreateClicked = false;
-            createItem();
-         }
-         else if (action === "update") {
-            updateItem();
-         }
+            var graderValid = true;
+            $(".grader-form").each(function(){
+                  if(!$(this).valid())
+                        graderValid = false;
+            });
+      
+            var catValid = true;
+            $(".cat-form").each(function(){
+                  if(!$(this).valid())
+                        catValid = false;
+            });
+      
+            var mainValid = $("#main-form").valid();
+
+            if(mainValid && catValid && graderValid){
+
+                  if (action === "create") {
+                        _isCreateClicked = false;
+                        createItem();
+                        $("#detail-modal").modal("hide");
+                  }
+                  else if (action === "update") {
+                        updateItem();
+                        $("#detail-modal").modal("hide");
+                  }
+            }
+            else{
+                  $(".error:visible:not(label)").first().focus();
+            }
       }
       else if (tab === "roster") {
           finalizeGrades();
@@ -89,6 +111,15 @@ function submitForm(e) {
 
    function clearForm()
    {
+      $.each(_catValidators, function(index, val){
+            val.destroy();
+       });
+       _catValidators = Array();
+       $.each(_graderValidators, function(index, val){
+            val.destroy();
+       });
+       _graderValidators = Array();
+
        $("#" + _formId).find("select, input[type=text], input[type=hidden]:not(#requester-id, #requester-type, #requester-session), textarea").val("");
        $('#Report_tab').find("input[type='checkbox']").prop("checked", false);
        $("#quarter").html("(Select valid date)");
@@ -100,6 +131,7 @@ function submitForm(e) {
        //$('a[href="#Exam_tab"]').tab('show');
        _catSectionModified = false;
        _reportValidator.resetForm();
+       _examValidator.resetForm();
    }
    
    function toggleSubmitEdit(isReadonly, hideDiscard) {

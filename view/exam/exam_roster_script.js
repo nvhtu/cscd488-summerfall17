@@ -752,6 +752,7 @@ function finalizeGrades(e)
                 state: "Archived",
                 request: "update_state"
             });
+            $("#detail-modal").modal("hide");
         }
     }
 

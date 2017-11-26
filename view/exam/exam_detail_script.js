@@ -12,7 +12,11 @@ $('.input-group.date').datepicker({
     autoclose: true,
     orientation: "top left",
     enableOnReadonly: false
-}).on('changeDate', autofillQuarter);
+}).on('changeDate', function(){
+    autofillQuarter();
+    _examValidator.element("[name='date']");
+    _examValidator.element("[name='quarter']");
+});
 
 $('input[name="date"]').keydown(function(e){
      return e.keyCode === 9;
@@ -24,6 +28,8 @@ $('.timepicker input').timepicker({
     showInputs: false
 }).focus(function() {
     $(this).timepicker('showWidget');
+}).on('hide.timepicker', function(){
+    _examValidator.element("[name='start_time']");
 });
 
 $('#add-cat-btn').click(function(){
@@ -155,20 +161,20 @@ function getAllLoc()
 
  function createItem()
  {
-     $.post("../ape/create_ape.php", $("#" + _formId).serialize(), function(lastInsertId){
-         $.get("../ape/get_all_apes.php", 
-         {requester_id: _userId,
-         requester_type: _userType,
-         requester_session_id: _userSessionId,
-         request: "get_by_id",
-         exam_id: lastInsertId}, 
-         function(item){
-             loadTable(item);
-         },
-         "json");
- 
-         addExamCats(lastInsertId);        
-     });
+    $.post("../ape/create_ape.php", $("#" + _formId).serialize(), function(lastInsertId){
+        $.get("../ape/get_all_apes.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        request: "get_by_id",
+        exam_id: lastInsertId}, 
+        function(item){
+            loadTable(item);
+        },
+        "json");
+
+        addExamCats(lastInsertId);        
+    });
  }
  
  function addExamCats(examId)
@@ -329,11 +335,65 @@ function onclickAddCat(isUserClick) {
         graderRow.find(".btn-primary").click();
         graderRow.find("select").find("option[value='" + _userId + "']").prop("selected", true);
     }
+
+    jQuery.validator.addMethod("uniqueCategory", function(value, element) {
+            var count = 0;
+            $("select[name='category']").each(function(){
+                if($(this).val() === value)
+                    count++;
+            });
+            return count === 1;
+        }, "Must be unique");
+
+    $table.find(".cat-row").last().find(".cat-form").each(function(){
+        var newVal = $(this).validate({
+            ignore: [],
+            rules: {
+                category: {
+                    required: true,
+                    uniqueCategory: true
+                },
+                "max-score": {
+                    required: true,
+                    digits: true
+                }
+            },
+            messages: {
+                category: {
+                    required: "Required"
+                },
+                "max-score": {
+                    required: "Required"
+                }               
+            }
+        });
+        _catValidators.push(newVal);
+    })
  }
  
  function onclickDeleteCat(e) {
     var catId = e.currentTarget.dataset["id"];
     _catSectionModified = true;
+
+    //remove and destroy validators for the forms in this cat-row
+    $(e.currentTarget).closest("tr").find(".cat-form").each(function(){
+        var val = $(this).data("validator");
+        var index = _catValidators.indexOf(val);
+        //remove validator from array
+        _catValidators.splice(index, 1);
+        //destroy validator for this form
+        val.destroy();
+    });
+
+    //remove and destroy validators for each grader of this category
+    $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]').find(".grader-form").each(function(){
+        var val = $(this).data("validator");
+        index = _graderValidators.indexOf(val);
+        //remove validator from array
+        _graderValidators.splice(index, 1);
+        //destroy validator for this form
+        val.destroy();
+    });
     
     $('#cat-table tr.cat-row[data-id="cat-' + catId + '"]').remove();
     $('#cat-table tr.cat-grader-row[data-id="cat-' + catId + '"]').remove();
@@ -360,16 +420,18 @@ function onclickAddCat(isUserClick) {
     $btnDel.click(onclickDeleteGrader);
  
     $curRow.find('td.graders').append(
-       $('<div class="input-group">').append(
-          $('<select class="form-control" name="grader">').append(
-             _graderOptions
-          ),
-          $('<span class="input-group-btn">').append(
-             $btnDel
-          )
-       )
+        $('<form class="grader-form">').append(
+            $('<div class="input-group">').append(
+                $('<select class="form-control" name="grader">').append(
+                    _graderOptions
+                ),
+                $('<span class="input-group-btn">').append(
+                    $btnDel
+                )
+            )
+        )
     );
- 
+
     var graderCount = $curRow.find('td.graders select').length;
     if (graderCount > 0) {
        $curRow.find('td.graders').show();
@@ -378,11 +440,45 @@ function onclickAddCat(isUserClick) {
     if (graderCount >= Math.min(_graderData.length, _settings.catGraderLimit)) {
        $curRow.find('button.btn-primary').prop("disabled",true);
     }
+
+    jQuery.validator.addMethod("uniqueGrader", function(value, element) {
+        var count = 0;
+        
+        $(element).closest("td").find("select[name='grader']").each(function(){
+            if($(this).val() === value)
+                count++;
+        });
+        return count === 1;
+    }, "Must be unique");
+
+    var newVal = $curRow.find('.grader-form').last().validate({
+        ignore: [],
+        rules: {
+            grader: {
+                required: true,
+                uniqueGrader: true
+            }
+        },
+        messages: {
+            grader: {
+                required: "Required"
+            }
+        }
+    });
+ 
+    _graderValidators.push(newVal);
  }
  
  function onclickDeleteGrader(e) {
     _catSectionModified = true;
- 
+
+    var val = $(e.currentTarget).closest("form").data("validator");
+    var index = _graderValidators.indexOf(val);
+    //remove validator from array
+    _graderValidators.splice(index, 1);
+    //destroy validator for this form
+    val.destroy();
+
     var catId = e.currentTarget.dataset["id"];
     $(e.currentTarget).parent().parent().remove();
     
@@ -410,21 +506,25 @@ function onclickAddCat(isUserClick) {
     $btnDel.attr("data-id", _catCount);
     $btnDel.click(onclickDeleteCat);
  
-    return $('<tr class="cat-row" aria-expanded="true">').attr("data-id", "cat-" + _catCount).attr("data-target", "#cat-" + _catCount).append(
-          $('<td>').append(
-             $('<select class="form-control" name="category">').append(
-                _catOptions
-             )
-          ),
-          $('<td>').append(
-             $maxScore
-          ),
-          $('<td>').append(
-             $('<div class="btn-group" role="group">').append(
+    return $('<tr class="cat-row" aria-expanded="true">').attr("data-id", "cat-" + _catCount).attr("data-target", "#cat-" + _catCount).append(  
+        $('<td>').append(
+            $('<form class="cat-form">').append(            
+                $('<select class="form-control" name="category">').append(
+                    _catOptions
+                )
+            )
+        ),
+        $('<td>').append(
+            $('<form class="cat-form">').append(
+                $maxScore
+            )
+        ),
+        $('<td>').append(
+            $('<div class="btn-group" role="group">').append(
                 $btnGraders, $btnDel, ' '
-             )
-          )
-       );
+            )
+        )
+    );
  }
  
  function buildCatGraderRow() {
@@ -511,6 +611,9 @@ function onclickAddCat(isUserClick) {
  
     $('#possible-grade').text(possibleGrade);
     $('input[name="possible_grade"]').val(possibleGrade);
+
+    if($("[name='passing_grade']").hasClass("error"))
+        _examValidator.element("[name='passing_grade']");
  }
 
  function buildOptions(data, type) {

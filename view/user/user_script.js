@@ -267,26 +267,37 @@ function buildItemSummaryRow(item, type)
     $btnDetails.attr("data-id", summaryData.id);
     $btnDetails.click(onclickDetails);
 
-    var $btnDisable;
-
-    if(item.disabled == 0)
+    if(_userType == "Teacher")
     {
-        $btnDisable = $('<button type="button" class="btn btn-danger btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ban-circle"></i></span>Disable</button>');
+        row.append(
+            $('<td class="btns">').append(
+               $('<div class="btn-group" role="group">').append($btnDetails, ' ')
+             )
+          );
     }
     else
     {
-        $btnDisable = $('<button type="button" class="btn btn-success btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ok-circle"></i></span>&nbsp;Enable&nbsp;</button>');
+        var $btnDisable;
+
+        if(item.disabled == 0)
+        {
+            $btnDisable = $('<button type="button" class="btn btn-danger btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ban-circle"></i></span>Disable</button>');
+        }
+        else
+        {
+            $btnDisable = $('<button type="button" class="btn btn-success btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ok-circle"></i></span>&nbsp;Enable&nbsp;</button>');
+        }
+
+        $btnDisable.attr("data-id", summaryData.id);
+        $btnDisable.attr("data-disabled", item.disabled);
+        $btnDisable.click(onclickDisable);
+
+        row.append(
+            $('<td class="btns">').append(
+            $('<div class="btn-group" role="group">').append($btnDetails, $btnDisable, ' ')
+            )
+        );
     }
-
-    $btnDisable.attr("data-id", summaryData.id);
-    $btnDisable.attr("data-disabled", item.disabled);
-    $btnDisable.click(onclickDisable);
-
-    row.append(
-        $('<td class="btns">').append(
-           $('<div class="btn-group" role="group">').append($btnDetails, $btnDisable, ' ')
-         )
-      );
 
     return row;
 }

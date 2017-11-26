@@ -24,20 +24,17 @@
         $studentId = $_POST["student_id"];
         $grade = $_POST["grade"];
         $passed = $_POST["passed"];
-        $possibleGrade = $_POST["possible_grade"];
 
         //Sanitize the input
         $examId = sanitize_input($examId);
         $studentId = sanitize_input($studentId);
         $grade = sanitize_input($grade);
         $passed = sanitize_input($passed);
-        $possibleGrade = sanitize_input($possibleGrade);
 
         //Ensure input is well-formed
         validate_numbers_letters($studentId);
         validate_only_numbers($examId);
         validate_only_numbers($grade);
-        validate_only_numbers($possibleGrade);
 
         checkExamExists($examId);
         checkStudentExists($studentId);

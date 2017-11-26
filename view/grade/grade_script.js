@@ -51,7 +51,7 @@ function init()
 
 function buildTable()
 {
-    var headersArr = ["Exam", "Category"];
+    var headersArr = ["Exam", "Category", "Action"];
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
 }

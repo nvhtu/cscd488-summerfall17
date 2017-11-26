@@ -141,7 +141,7 @@ function loadTable(data, state)
         $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(row);
       //   $("#" + item.state + "-panel > .table-responsive > ." + _tableId).append(detailRow);
     });
-    //$(".tab-pane.active .main-table>thead th:nth-of-type(1)").trigger('click');
+    $(".tab-pane.active .main-table>thead th:nth-of-type(2)").trigger('click');
 }
 
 

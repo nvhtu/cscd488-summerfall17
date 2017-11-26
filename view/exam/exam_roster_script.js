@@ -3,6 +3,9 @@ var _curGrade = 0;
 var _curGradeComment = "";
 
 $("#btn-lookup").click(onclickLookup);
+$('#lookup-string').on("keypress", function (e) {
+    if (e.which == 13) $('#btn-lookup').trigger('click');
+});
 
 function loadTabRoster()
 {
@@ -22,7 +25,10 @@ function loadTabRoster()
     _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "State", "Action"];
     table = buildMainTable(headersArr);
-    $("#lookup-results").html(table);
+    $("#lookup-results").html(table)
+        .find(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
     $("#lookup-string").val("");
 
     headersArr = new Array();
@@ -68,7 +74,10 @@ function loadTabRoster()
     }
     
     var table = buildMainTable(headersArr);
-    $("#roster-table-wrapper").html(table);
+    $("#roster-table-wrapper").html(table)
+        .find(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
 
     var itemId = _origClickEvent.currentTarget.dataset["id"];
     

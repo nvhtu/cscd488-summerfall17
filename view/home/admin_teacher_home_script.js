@@ -93,7 +93,10 @@ function buildExamsTable()
     headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats", "Action"];
 
     var table = buildMainTable(headersArr);
-    $(".table-responsive").html(table);
+    $(".table-responsive").html(table)
+        .find(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
 
     getOpenExams();
 }

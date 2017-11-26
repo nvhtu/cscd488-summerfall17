@@ -11,7 +11,7 @@
     function getCurUserInfo($isClient)
     {
 
-        $isDev = true;
+        $isDev = false;
         $userInfo = array();
 
         if($isDev)

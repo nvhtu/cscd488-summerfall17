@@ -3,6 +3,9 @@ var _curGrade = 0;
 var _curGradeComment = "";
 
 $("#btn-lookup").click(onclickLookup);
+$('#lookup-string').on("keypress", function (e) {
+    if (e.which == 13) $('#btn-lookup').trigger('click');
+});
 
 function loadTabRoster()
 {
@@ -22,7 +25,10 @@ function loadTabRoster()
     _isEditing = false;
     headersArr = ["ID", "First Name", "Last Name", "State", "Action"];
     table = buildMainTable(headersArr);
-    $("#lookup-results").html(table);
+    $("#lookup-results").html(table)
+        .find(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
     $("#lookup-string").val("");
 
     headersArr = new Array();
@@ -68,7 +74,10 @@ function loadTabRoster()
     }
     
     var table = buildMainTable(headersArr);
-    $("#roster-table-wrapper").html(table);
+    $("#roster-table-wrapper").html(table)
+        .find(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
 
     var itemId = _origClickEvent.currentTarget.dataset["id"];
     
@@ -88,8 +97,29 @@ function loadTabRoster()
     get_grade: getGrade}, 
     loadRosterTable,
     "json");
+
+    $.get("../ape/get_all_apes.php",
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_by_id",
+    exam_id: itemId},
+    function(exam){
+        $.get("../location/get_all_locations.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        loc_id: exam[0].location}, 
+        addMaxSeats,
+        "json");
+    },
+    "json");
 }
 
+function addMaxSeats(location){
+    $("#roster-table-wrapper").attr("max-seats", location[0].seats);
+    console.log($("#roster-table-wrapper"));
+}
 
 function loadRosterTable(data)
 {
@@ -276,19 +306,19 @@ function onclickEditSeat(e)
 
         $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",false);
         $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit'] .glyphicon").removeClass("glyphicon-pencil").addClass("glyphicon-floppy-disk");
-        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit']").attr("data-action", "save");
+        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit']").attr("data-action", "save").removeClass("btn-warning").addClass("btn-primary");
     }
     else
         if(e.currentTarget.dataset["action"] == "save")
         {
             //console.log("save");
 
-            onSaveSeat(e);
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",true);
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save'] .glyphicon").removeClass("glyphicon-floppy-disk").addClass("glyphicon-pencil");
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit");
-            _isEditing = false;
-            
+            if(onSaveSeat(e)){
+                $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",true);
+                $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save'] .glyphicon").removeClass("glyphicon-floppy-disk").addClass("glyphicon-pencil");
+                $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit").removeClass("btn-primary").addClass("btn-warning");
+                _isEditing = false;
+            }            
         }
 }
 
@@ -297,14 +327,32 @@ function onSaveSeat(e)
     var studentId = e.currentTarget.dataset["id"];
     var examId = _origClickEvent.currentTarget.dataset["id"];
     var seatNum = $("#roster-table-wrapper tr[data-id='item-" + studentId + "'] .student-seat-input").val();
+    var maxSeats = $("#roster-table-wrapper").attr("max-seats");
+    console.log(parseInt(maxSeats));
 
-    $.post("../ape/update_student_seat.php", 
-    {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    exam_id: examId,
-    student_id: studentId,
-    seat_num: seatNum});
+    var count = 0;
+    $(".student-seat-input").each(function(){
+        if($(this).val() === seatNum)
+            count++;
+    });
+
+    if(/^[0-9]+$/.test(seatNum) && count === 1 && parseInt(seatNum) > 0 && parseInt(seatNum) <= parseInt(maxSeats)){
+        $.post("../ape/update_student_seat.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId,
+        student_id: studentId,
+        seat_num: seatNum});
+
+        return true;
+    }
+    else{
+        //should be a message box instead
+        alert("Seat numbers must be unique integers between 1 and " + maxSeats);
+
+        return false;
+    }
 }
 
 
@@ -341,7 +389,7 @@ function loadRosterTableNoGrades(item)
     $bttnDel.attr("data-id", summaryData.id);
     $bttnDel.click(onclickDeleteStudent);
 
-    var $bttnEditSeat = $('<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only"></span></button>');
+    var $bttnEditSeat = $('<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>');
     $bttnEditSeat.attr("data-id", summaryData.id);
     $bttnEditSeat.attr("data-action", "edit");
     $bttnEditSeat.click(onclickEditSeat);
@@ -478,8 +526,8 @@ function buildGradeDetailRow(detailData)
 
 
             var editGradeBtn = '<button type="button" class="btn btn-warning btn-labeled edit-grade-btn" data-action="edit" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-pencil"></i></span>Edit Grade</button>';
-            var saveGradeBtn = '<button type="button" class="btn btn-warning btn-labeled save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-floppy-disk"></i></span>Save</button>';
-            var discardGradeBtn = '<button type="button" class="btn btn-danger btn-labeled discard-grade-btn" data-action="discard" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-trash"></i></span>Discard</button>';
+            var saveGradeBtn = '<button type="button" class="btn btn-primary btn-labeled save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-floppy-disk"></i></span>Save</button>';
+            var discardGradeBtn = '<button type="button" class="btn btn-danger btn-labeled discard-grade-btn" data-action="discard" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span>Discard</button>';
             
             
             detailRowHTML += '<tr class="active parent-detail-row" data-id="' + theCat.exam_cat_id + '" data-parent-id="item-' + detailData.id + '">'
@@ -759,7 +807,7 @@ function finalizeGrades(e)
                 state: "Archived",
                 request: "update_state"
             });
-            
+
             $("#detail-modal").modal("hide");
 
             $.post("../grade/finalize_all_grade.php",

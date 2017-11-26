@@ -276,7 +276,7 @@ function onclickEditSeat(e)
 
         $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",false);
         $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit'] .glyphicon").removeClass("glyphicon-pencil").addClass("glyphicon-floppy-disk");
-        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit']").attr("data-action", "save");
+        $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='edit']").attr("data-action", "save").removeClass("btn-warning").addClass("btn-primary");
     }
     else
         if(e.currentTarget.dataset["action"] == "save")
@@ -286,7 +286,7 @@ function onclickEditSeat(e)
             onSaveSeat(e);
             $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",true);
             $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save'] .glyphicon").removeClass("glyphicon-floppy-disk").addClass("glyphicon-pencil");
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit");
+            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit").removeClass("btn-primary").addClass("btn-warning");
             _isEditing = false;
             
         }
@@ -341,7 +341,7 @@ function loadRosterTableNoGrades(item)
     $bttnDel.attr("data-id", summaryData.id);
     $bttnDel.click(onclickDeleteStudent);
 
-    var $bttnEditSeat = $('<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><span class="sr-only"></span></button>');
+    var $bttnEditSeat = $('<button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>');
     $bttnEditSeat.attr("data-id", summaryData.id);
     $bttnEditSeat.attr("data-action", "edit");
     $bttnEditSeat.click(onclickEditSeat);
@@ -478,8 +478,8 @@ function buildGradeDetailRow(detailData)
 
 
             var editGradeBtn = '<button type="button" class="btn btn-warning btn-labeled edit-grade-btn" data-action="edit" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-pencil"></i></span>Edit Grade</button>';
-            var saveGradeBtn = '<button type="button" class="btn btn-warning btn-labeled save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-floppy-disk"></i></span>Save</button>';
-            var discardGradeBtn = '<button type="button" class="btn btn-danger btn-labeled discard-grade-btn" data-action="discard" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-trash"></i></span>Discard</button>';
+            var saveGradeBtn = '<button type="button" class="btn btn-primary btn-labeled save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-floppy-disk"></i></span>Save</button>';
+            var discardGradeBtn = '<button type="button" class="btn btn-danger btn-labeled discard-grade-btn" data-action="discard" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span>Discard</button>';
             
             
             detailRowHTML += '<tr class="active parent-detail-row" data-id="' + theCat.exam_cat_id + '" data-parent-id="item-' + detailData.id + '">'

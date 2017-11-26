@@ -55,6 +55,9 @@
                             updateState();
                             updateInfo();
                             break;    
+        case "update_disabled":
+                            updateDisabled();
+                            break;
         default: http_response_code(400);
                 echo "Unrecognized request string.";          
     }
@@ -152,5 +155,25 @@
                             WHERE student_id LIKE :id";
 
         sqlExecute($sqlUpdateStudent, array(':state'=>$state, ':id'=>$id, ':comment'=>$comment, ':edited_by'=>$editedBy), False);
+    }
+
+    function updateDisabled()
+    {
+        $id = $_POST["id"];
+        $disabled = $_POST["disabled"];
+
+        //Sanitize the input
+        $id = sanitize_input($id);
+        $disabled = sanitize_input($disabled);
+
+        //Ensure input is well-formed
+        validate_numbers_letters($id);
+        validate_only_numbers($disabled);
+
+        $sqlUpdateStudent = "UPDATE user
+        SET disabled = :disabled
+        WHERE user_id LIKE :id";
+
+        sqlExecute($sqlUpdateStudent, array(':disabled'=>$disabled, ':id'=>$id), False);   
     }
 ?>

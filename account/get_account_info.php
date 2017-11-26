@@ -132,7 +132,7 @@
                 $curQuarterStart = $GLOBALS["settings"]["curQuarterStart"];
                 $curQuarterEnd = $GLOBALS["settings"]["curQuarterEnd"];
 
-                $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state
+                $sqlGetStudents = "SELECT U.user_id, U.f_name, U.l_name, U.email, S.state, U.disabled
                 FROM in_class_student ICS JOIN user U ON (ICS.student_id = U.user_id)
                 JOIN student S ON (ICS.student_id = S.student_id)
                 WHERE ICS.teacher_id LIKE :teacher_id AND ICS.start_date = :start_date AND ICS.end_date = :end_date";
@@ -149,7 +149,8 @@
             }
             else
             {
-                $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state FROM student JOIN user ON student_id LIKE user_id";
+                $sqlGetAllStudents = "SELECT user_id, f_name, l_name, email, state, disabled 
+                                        FROM student JOIN user ON student_id LIKE user_id";
                 $sqlResult = sqlExecute($sqlGetAllStudents, null, True);
             }
             
@@ -157,7 +158,7 @@
         }
         else 
         {
-            $sqlGetAllNonStudents = "SELECT user_id, f_name, l_name, email
+            $sqlGetAllNonStudents = "SELECT user_id, f_name, l_name, email, disabled
                                     FROM faculty JOIN user ON faculty_id LIKE user_id
                                     WHERE faculty.type LIKE :type";
             $sqlResult = sqlExecute($sqlGetAllNonStudents, array('type'=>$type), True);
@@ -172,7 +173,7 @@
     */
     function getStudentInfo($id)
     {
-        $sqlGetAccount = "SELECT student_id as user_id, u.f_name, u.l_name, u.email, s.state, s.comment, CONCAT(u2.f_name,' ',u2.l_name) AS edited_by
+        $sqlGetAccount = "SELECT student_id as user_id, u.f_name, u.l_name, u.email, u.disabled, s.state, s.comment, CONCAT(u2.f_name,' ',u2.l_name) AS edited_by
                         FROM student s JOIN user u ON s.student_id LIKE u.user_id
                         JOIN user u2 ON s.edited_by LIKE u2.user_id
                         WHERE s.student_id LIKE :id";

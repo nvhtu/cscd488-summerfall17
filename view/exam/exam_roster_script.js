@@ -8,11 +8,19 @@ function loadTabRoster()
 {
     toggleSubmitEdit(false, true);
 
-    $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", false);
-    $("#submit-button").html("Finalize All Grades");
-    
+    if(_selectedTab == "Grading")
+    {
+        $('#submit-button').attr("data-tab", "roster").toggleClass("hidden", false);
+        $("#submit-button").html("Finalize All Grades");
+    }
+    else
+    {
+        $('#submit-button').toggleClass("hidden", true);
+    }
+
+
     _isEditing = false;
-    headersArr = ["ID", "First Name", "Last Name", "Email", "State", "Action"];
+    headersArr = ["ID", "First Name", "Last Name", "State", "Action"];
     table = buildMainTable(headersArr);
     $("#lookup-results").html(table);
     $("#lookup-string").val("");
@@ -184,7 +192,6 @@ function loadLookupTable(data)
             ewu_id: item.user_id,
             f_name: item.f_name,
             l_name: item.l_name,
-            email: item.email,
             state: item.state
         };
     
@@ -229,7 +236,7 @@ function onclickRegisterStudent(e)
     function(data){
         alert("Student has been added to the exam successfully.");
 
-        $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Registered");
+        $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(4)").html("Registered");
         $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",true);
 
         var item = {
@@ -471,8 +478,8 @@ function buildGradeDetailRow(detailData)
 
 
             var editGradeBtn = '<button type="button" class="btn btn-warning btn-labeled edit-grade-btn" data-action="edit" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-pencil"></i></span>Edit Grade</button>';
-            var saveGradeBtn = '<button type="button" class="btn btn-warning save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '">Save</button>';
-            var discardGradeBtn = '<button type="button" class="btn btn-warning discard-grade-btn" data-action="discard" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '">Discard</button>';
+            var saveGradeBtn = '<button type="button" class="btn btn-warning btn-labeled save-grade-btn" data-action="save" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-floppy-disk"></i></span>Save</button>';
+            var discardGradeBtn = '<button type="button" class="btn btn-danger btn-labeled discard-grade-btn" data-action="discard" data-id="' + theCat.exam_cat_id + '" data-parent-id="' + detailData.id + '" data-passing-grade="' + detailData.passing_grade + '"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-trash"></i></span>Discard</button>';
             
             
             detailRowHTML += '<tr class="active parent-detail-row" data-id="' + theCat.exam_cat_id + '" data-parent-id="item-' + detailData.id + '">'
@@ -752,7 +759,16 @@ function finalizeGrades(e)
                 state: "Archived",
                 request: "update_state"
             });
+            
             $("#detail-modal").modal("hide");
+
+            $.post("../grade/finalize_all_grade.php",
+            {
+                requester_id: _userId,
+                requester_type: _userType,
+                requester_session_id: _userSessionId,
+                exam_id: examId
+            });
         }
     }
 

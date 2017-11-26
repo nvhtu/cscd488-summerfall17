@@ -6,6 +6,7 @@
  */
 	require_once "../util/sql_exe.php";
 	require_once "../auth/user_auth.php";
+	require_once "../util/check_id.php";
 	require_once "../util/send_mail.php";
 	require_once "../util/input_validate.php";
 	
@@ -30,8 +31,9 @@
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
 	//Authenticate student being registered
-	$allowedType = array("Student");
-	user_auth($student_id, "Student", $allowedType);
+	//$allowedType = array("Student");
+	//user_auth($student_id, "Student", $allowedType);
+	checkStudentExists($student_id);
 	
 	//Find number of seats in exam location
 	$numSeats = getMaxSeats($exam_id);

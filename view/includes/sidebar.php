@@ -3,27 +3,21 @@
     $_GET["is_client"] = False;
     require_once $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "util" . DIRECTORY_SEPARATOR . "get_cur_user_info.php";
 
-    $userInfo = getCurUserInfo(False);
-
-    if(count($userInfo) != 0)
-    {
-        echo '<a href="https://www.ewu.edu" class="list-group-item">
+    echo '<a href="https://www.ewu.edu" class="list-group-item">
             <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
         </a>
-
-        <div class="list-group-item media user">
-            <div class="media-left media-middle">
-                <svg viewBox="0 0 75 75" id="avatar" class="img-circle">
-                    <circle r="27%" cx="50%" cy="35%"></circle>
-                    <circle cy="100%" cx="50%" r="45%"></circle>
-                </svg>
-            </div>
-            <div class="media-body media-middle">
-                <h4 id="username">'. $userInfo["userFname"] . ' ' . $userInfo["userLname"] . '</h4>
+        
+        <div class="list-group-item user-wrapper">
+            <div class="user">
+                <h5>Welcome,</h5>
+                <h4>'. $userInfo["userFname"] . ' ' . $userInfo["userLname"] . '</h4>
             </div>
         </div>';
 
-
+    $userInfo = getCurUserInfo(False);
+    
+    if(count($userInfo) != 0)
+    {
         switch (count($userInfo["userType"]))
         {
             case 1: switch ($userInfo["userType"][0])
@@ -65,10 +59,10 @@
         
     }
 
-    echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span>Feedback</p>
-    <div class="list-group">
-        <a class="list-group-item" href="mailto:tunguyen@eagles.ewu.edu?subject=Team 1 APE Website feedback"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Email the team</a>
-    </div>';
+    echo '<p class="list-group-item user-cat"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>Feedback</p>
+        <div class="list-group">
+            <a class="list-group-item" href="mailto:tunguyen@eagles.ewu.edu?subject=Team 1 APE Website feedback"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Email the team</a>
+        </div>';
     //"/home/index.php?page=admin_home" put a "page" variable into $_GET for view/index.php to display the correct requested home
 
     function adminType()

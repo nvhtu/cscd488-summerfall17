@@ -82,9 +82,28 @@
 	{
 		while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) 
 		{
+			for($i=0; $i<count($data); $i++)
+			{
+				$data[$i] = sanitize_input($data[$i]);
+			}
+
+			checkCSVFormat($data, $row);
 			$num = count($data);
 			if ($row>1)
 			{
+				validate_numbers_letters($data[0]);
+				validate_name($data[1]);
+				validate_name($data[2]);
+		
+				if(!isset($data[3]))
+				{
+					$data[3] = NULL;
+				}
+				else
+				{
+					validate_email($data[3]);
+				}
+
 				if(checkUserExists($data[0]))
 				{
 					if(checkStudentExists($data[0]))
@@ -129,11 +148,42 @@
 		fclose($handle);
 	}
 
-	function createInClassStudent($studentId, $teacherId)
+	function checkCSVFormat($data, $row)
 	{
-		$sqlInsertInClassStudent = "INSERT INTO in_class_student (student_id, teacher_id, start_date, end_date) 
-									VALUES (:student_id, :teacher_id, :start_date, :end_date)";  
-		sqlExecute($sqlInsertInClassStudent, array(':student_id'=>$studentId, ':teacher_id'=>$teacherId, ':start_date'=>$GLOBALS["settings"]["curQuarterStart"], ':end_date'=>$GLOBALS["settings"]["curQuarterEnd"]), False);
+
+		if($row==1)
+		{
+			if(count($data) != 4)
+			{
+				echo "Your CSV file is not in the correct format.";
+				http_response_code(400);
+				die();
+			}
+
+			$error = false;
+
+			if ($data[0] != "EWU ID")
+				$error = true;
+			
+			if ($data[1] != "First Name")
+				$error = true;
+			
+			if ($data[2] != "Last Name")
+				$error = true;
+			
+			if ($data[3] != "Email")
+				$error = true;
+
+			if ($error == true)
+			{
+				echo "Your CSV file header is not in the correct format.";
+				http_response_code(400);
+				die();
+			}
+
+		}
+
+	
 	}
 
 

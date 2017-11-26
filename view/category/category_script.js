@@ -146,7 +146,7 @@ function updateItem()
 function onclickCreate()
 {
     clearForm();
-    $("#modal-title").html("Create a Category");
+    $(".modal-title").html("Create a Category");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 }
@@ -156,7 +156,7 @@ function onclickDetails(e)
     clearForm();
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
-    $("#modal-title").html("Edit a Category");
+    $(".modal-title").html("Edit a Category");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 

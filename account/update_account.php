@@ -71,7 +71,7 @@
 
         //Sanitize the input
         $id = sanitize_input($id);
-        $type = sanitize_input($type);
+        //$type = sanitize_input($type);
         
         //Ensure input is well-formed
         validate_numbers_letters($id);
@@ -119,8 +119,8 @@
         //Ensure input is well-formed
         validate_numbers_letters($id);
         validate_email($email);
-        validate_numbers_letters($fname);
-        validate_numbers_letters($lname);
+        validate_name($fname);
+        validate_name($lname);
 
         $sqlUpdateUser = "UPDATE user
                         SET f_name = :fname, l_name = :lname, email = :email

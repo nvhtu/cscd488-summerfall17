@@ -16,6 +16,8 @@
     $allowedType = array("Admin", "Teacher", "Student");
 
     $request = $_GET["request"];
+    //Sanitize the input
+    $request = sanitize_input($request);
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
@@ -83,6 +85,10 @@
     {
         $id = $_GET["id"];
 
+        //Sanitize the input
+        $id = sanitize_input($id);
+        //Ensure input is well-formed
+        validate_numbers_letters($id);
 
         $sqlCountStudent = "SELECT COUNT(student_id) as count
                                     FROM student
@@ -108,10 +114,13 @@
     {
         $type = $_GET["type"];
         $sqlResult;
+        //Sanitize the input
+        $type = sanitize_input($type);
+
 
         if(strcmp($type, "Student") == 0)
         {
-            $requesterType = $_GET["requester_type"];$requesterSessionId = $_GET["requester_session_id"];
+            $requesterType = $_GET["requester_type"];
             
             //If requester is a Teacher, only get students belong to them. They are who uploaded
             //by that Teacher. A Teacher is prevented from getting students from previous quarters.

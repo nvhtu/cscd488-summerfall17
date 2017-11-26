@@ -15,7 +15,7 @@
       <?php if ( count($modalTabsArr) == 1 ): ?>
          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="modal-title"><?php echo $modalTabsTitles[0]; ?></h4>
+            <h4 class="modal-title"><?php echo $modalTabsTitles[0]; ?></h4>
          </div>
 
       <?php require_once $modalTabsArr[0] . "_modal.html"; ?>
@@ -24,7 +24,7 @@
       <?php else: ?>
          <div class="modal-header with-nav-tabs clearfix">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title pull-left" id="modal-title"><?php echo $modalTabsTitles[0]; ?></h4>
+            <h4 class="modal-title pull-left"><?php echo $modalTabsTitles[0]; ?></h4>
             <ul class="nav nav-tabs pull-right" role="tablist">
 
             <?php 

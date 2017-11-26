@@ -42,7 +42,12 @@
         {
             $state = $_POST["state"];
             createStudentAccount($id, $state);
-    
+            $isInclass = $_POST["is_inclass"];
+            $teacherId = $_POST["teacher_id"];
+            if($isInclass == "true")
+            {
+                createInClassStudent($id, $teacherId);
+            }
         }
         else //Teacher, Grader account
         {
@@ -78,4 +83,16 @@
         VALUES (:id, :type)";
         sqlExecute($sqlAddAccount, array(':id'=>$id, ':type'=>$type), False);
     }
+
+    function createInClassStudent($studentId, $teacherId)
+	{
+        require_once "../settings/init_settings.php";
+
+        if(!isset($GLOBALS["settings"]))
+        initializeSettings();
+
+		$sqlInsertInClassStudent = "INSERT INTO in_class_student (student_id, teacher_id, start_date, end_date) 
+									VALUES (:student_id, :teacher_id, :start_date, :end_date)";  
+		sqlExecute($sqlInsertInClassStudent, array(':student_id'=>$studentId, ':teacher_id'=>$teacherId, ':start_date'=>$GLOBALS["settings"]["curQuarterStart"], ':end_date'=>$GLOBALS["settings"]["curQuarterEnd"]), False);
+	}
 ?>    

@@ -90,7 +90,7 @@ function loadUpcomingExams()
 
 function buildExamsTable()
 {
-    headersArr = ["Name", "Date", "Start Time", "Location", "Available Seats", "Action"];
+    headersArr = ["Name", "Date", "Start Time", "Location", "Registered Seats", "Action"];
 
     var table = buildMainTable(headersArr);
     $(".table-responsive").html(table);
@@ -144,7 +144,7 @@ function buildItemSummaryRow(item)
         date: item.date,
         start_time: item.start_time,
         location: locName,
-        registered_seats: item.remaining_seats + "/" + locSeats
+        registered_seats: locSeats - item.remaining_seats + "/" + locSeats
     };
 
     var row = buildItemRow(summaryData, false);

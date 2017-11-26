@@ -161,3 +161,18 @@ function onClickSort(th) {
       $table.append($('.item-detail-row[data-id="' + id + '"]'));
    });
 }
+
+function showErrorMessage(msg)
+{
+
+}
+
+function showInfoMessage(msg)
+{
+
+}
+
+function showWarningMessage(msg)
+{
+    
+}

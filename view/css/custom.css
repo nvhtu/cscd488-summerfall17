@@ -58,7 +58,7 @@ body > .container {
         top: 0;
         bottom: 0;
         left: 0;
-        z-index: 1050;
+        z-index: 1035;
         display: block;
         padding: 0px;
         overflow-x: hidden;
@@ -78,16 +78,6 @@ body > .container {
 
 .sidebar a img {
     margin: 15px auto;
-}
-
-#avatar {
-    width: 50px;
-    background: #444;
-    fill: #292929;
-}
-
-#username {
-    margin: 0;
 }
 
 .sidebar .list-group {
@@ -121,14 +111,17 @@ body > .container {
     background-color: #444;
 }
 
-.sidebar .list-group-item.user {
-    padding: 20px 15px;
-    margin: 0;
+.sidebar .list-group-item.user-wrapper {
     border: 0;
+    text-align: center;
 }
 
-.sidebar .list-group-item.user:hover, .sidebar .list-group-item.user:focus {
-    color: #ccc;
+.sidebar .user {
+    display: inline-block;
+    text-align: left;
+}
+
+.sidebar .user-wrapper:hover, .sidebar .user-wrapper:focus {
     background-color: inherit;
 }
 

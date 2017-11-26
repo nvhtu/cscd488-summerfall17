@@ -20,6 +20,8 @@ var _statechanged = false;
 
 var _validator;
 
+var _isCreateClicked = false;
+
 $(document).ready(loaded);
 
 function loaded() 
@@ -52,10 +54,13 @@ function init()
         $("#upload-button").click(onsubmitUploadForm);
         $("#lookup-button").click(onsubmitLookupForm);
         
+        $('#lookup-string').on("keypress", function (e) {
+            if (e.which == 13) $('#lookup-button').trigger('click');
+        });
     
         $("input[name='requester_id']").val(_userId);
         $("input[name='requester_type']").val(_userType);
-        $("input[name='requester_session']").val(_userSessionId);
+        $("input[name='requester_session_id']").val(_userSessionId);
     
         //Create import button in Students tab
         //$("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#upload-modal" id="import-students-button">Import Students</button>');
@@ -63,7 +68,7 @@ function init()
         if(_userType != "Teacher")
         {
             //Create look up button in Students tab
-            $("#create-button").after('<button type="button" class="btn btn-primary pull-left students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button">Look up Students</button>');
+            $("#create-button").after('<button type="button" class="btn btn-primary pull-left btn-labeled students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-search"></i></span>Look up Students</button>');
         }
         else
         {
@@ -79,7 +84,7 @@ function init()
                 _selectedTab = "Student"; 
     
         $(".btn-group > .btn-danger").remove();
-        $("#state-form-group").hide();
+        $(".state-form-group").hide();
     
     
     
@@ -106,7 +111,12 @@ function init()
             
             if($("#type-student-checkbox").prop("checked"))
             {
-                $("#state-form-group").fadeIn(100);
+                $(".state-form-group").fadeIn(100);
+                if(_isCreateClicked)
+                {
+                    $(".student-exam-history-form").hide();
+                    $(".student-comment-form").hide();
+                }
                 $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", true);
     
             } 
@@ -122,7 +132,7 @@ function init()
                     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox").prop("disabled", false);
                 }
                 
-                $("#state-form-group").fadeOut(100);
+                $(".state-form-group").fadeOut(100);
             }
     
         });
@@ -317,6 +327,14 @@ function submitForm (e)
 
 function createItem()
 {
+    var isInclass = false;
+    var teacherId = null;
+
+    if (_userType == "Teacher")
+    {
+        isInclass = true;
+        teacherId = _userId;
+    }
 
     var type = buildTypeString();
 
@@ -329,7 +347,9 @@ function createItem()
         l_name: $("input[name='l_name']").val(),
         email: $("input[name='email']").val(),
         type: type,
-        state: $("select[name='state']").val()}, 
+        state: $("select[name='state']").val(),
+        is_inclass: isInclass,
+        teacher_id: teacherId}, 
         function(lastInsertId){
             $.get("../account/get_account_info.php", 
             {requester_id: _userId,
@@ -338,8 +358,6 @@ function createItem()
             request: "get_by_id",
             id: lastInsertId},
             function(item){
-                console.log(xhr.status);
-                //console.log(item);
                 $.each(type, function(i, theType){
                     loadTable(item, theType);
                 });
@@ -426,15 +444,15 @@ function buildTypeString()
 
 function onclickCreate()
 {
-    
+    _isCreateClicked = true;
     //getAllLoc();
-    $("#modal-title").html("Create a User");
+    $(".modal-title").html("Create a User");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
 
     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     $("input[name='user_id']").prop("disabled", false);
-    $("#state-form-group").hide();
+    $(".state-form-group").hide();
     $("#type-student-wrap").show();
     $(".type-nonstudent-wrap").show();
     $(".student-exam-history-form").hide();
@@ -448,6 +466,7 @@ function onclickCreate()
 
 function onclickDetails(e) 
 {
+    _isCreateClicked = false;
     clearForm();
     $("select[name='state']").on("change", function(){$(".student-comment-form").show()});
     //$("input[name='user_id']").prop("disabled", true);
@@ -456,7 +475,7 @@ function onclickDetails(e)
 
     var itemId = e.currentTarget.dataset["id"];
     $("#item-id").val(e.currentTarget.dataset["id"]);
-    $("#modal-title").html("Edit a User");
+    $(".modal-title").html("Edit a User");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
 
@@ -500,7 +519,7 @@ function onclickDetails(e)
 
     if(_selectedTab == "Student")
     {
-        $("#state-form-group").show();
+        $(".state-form-group").show();
         $("#type-student-wrap").show();
         $("input[name='type']").prop('disabled', true);
         $(".type-nonstudent-wrap").hide();
@@ -513,7 +532,7 @@ function onclickDetails(e)
     else
     {
         $("#type-student-wrap").hide();
-        $("#state-form-group").hide();
+        $(".state-form-group").hide();
         $(".type-nonstudent-wrap").show();
         $("input[name='type']").prop('disabled', false);
 

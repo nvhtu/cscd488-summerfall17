@@ -7,6 +7,7 @@
 	require_once "../util/sql_exe.php";
 	require_once "../auth/user_auth.php";
 	require_once "../util/input_validate.php";
+	require_once "../util/check_id.php";
 	require_once "../util/send_mail.php";
 	
 	$requesterId = $_POST["requester_id"];
@@ -30,8 +31,9 @@
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
 	//Authenticate student being registered
-	$allowedType = array("Student");
-	user_auth($student_id, "Student", $allowedType);
+	//$allowedType = array("Student");
+	//user_auth($student_id, "Student", $allowedType);
+	checkStudentExists($student_id);
 	
 	sqlExecute("DELETE FROM exam_roster WHERE exam_id = :exam AND student_id LIKE :student",
 				array(':exam' => $exam_id, ':student' => $student_id),

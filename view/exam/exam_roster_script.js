@@ -328,7 +328,6 @@ function onSaveSeat(e)
     var examId = _origClickEvent.currentTarget.dataset["id"];
     var seatNum = $("#roster-table-wrapper tr[data-id='item-" + studentId + "'] .student-seat-input").val();
     var maxSeats = $("#roster-table-wrapper").attr("max-seats");
-    console.log(parseInt(maxSeats));
 
     var count = 0;
     $(".student-seat-input").each(function(){

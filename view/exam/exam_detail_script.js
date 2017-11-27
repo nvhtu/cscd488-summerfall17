@@ -627,6 +627,7 @@ function onclickAddCat(isUserClick) {
 
     if($("[name='passing_grade']").hasClass("error"))
         _examValidator.element("[name='passing_grade']");
+    _examValidator.element("[name='possible_grade']");
  }
 
  function buildOptions(data, type) {

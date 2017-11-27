@@ -808,6 +808,7 @@ function finalizeGrades(e)
             });
 
             $("#detail-modal").modal("hide");
+            $("tr[data-id='item-" + examId + "']").remove();
 
             $.post("../grade/finalize_all_grade.php",
             {

@@ -413,7 +413,8 @@ function updateItem()
     requester_type: _userType,
     requester_session_id: _userSessionId,
     request: request,
-    id: $("input[name='user_id']").val(),
+    old_id: $("#item-id").val(),
+    new_id: $("input[name='user_id']").val(),
     f_name: $("input[name='f_name']").val(),
     l_name: $("input[name='l_name']").val(),
     email: $("input[name='email']").val(),
@@ -429,11 +430,11 @@ function updateItem()
                     requester_type: _userType,
                     requester_session_id: _userSessionId,
                     request: "get_by_id",
-                    id: $("#item-id").val()
+                    id: $("input[name='user_id']").val()
                 }, function(item){
                     var row = buildItemSummaryRow(item[0], _selectedTab);
                     //console.log($("tr[data-id='#item-" + item[0].user_id + "']"));
-                    $("tr[data-id='item-" + item[0].user_id + "']").replaceWith(row);
+                    $("tr[data-id='item-" + $("#item-id").val() + "']").replaceWith(row);
                     $(".btn-group > .btn-danger").remove();
                 }, "json");
         }

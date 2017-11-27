@@ -67,7 +67,7 @@
 
     function updateType()
     {
-        $id = $_POST["id"];
+        $id = $_POST["old_id"];
         $type = $_POST["type"];
 
         $requesterType = $_POST["requester_type"];
@@ -108,33 +108,36 @@
 
     function updateInfo()
     {
-        $id = $_POST["id"];
+        $oldId = $_POST["old_id"];
+        $newId = $_POST["new_id"];
         $fname = $_POST["f_name"];
         $lname = $_POST["l_name"];
         $email = $_POST["email"];
 
         //Sanitize the input
-        $id = sanitize_input($id);
+        $oldId = sanitize_input($oldId);
+        $newId = sanitize_input($newId);
         $fname = sanitize_input($fname);
         $lname = sanitize_input($lname);
         $email = sanitize_input($email);
         
         //Ensure input is well-formed
-        validate_numbers_letters($id);
+        validate_numbers_letters($oldId);
+        validate_numbers_letters($newId);
         validate_email($email);
         validate_name($fname);
         validate_name($lname);
 
         $sqlUpdateUser = "UPDATE user
-                        SET f_name = :fname, l_name = :lname, email = :email
-                        WHERE user_id LIKE :id";
+                        SET user_id = :newId, f_name = :fname, l_name = :lname, email = :email
+                        WHERE user_id LIKE :oldId";
         
-        sqlExecute($sqlUpdateUser, array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':id'=>$id), False);
+        sqlExecute($sqlUpdateUser, array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':oldId'=>$oldId, ':newId'=>$newId), False);
     }
 
     function updateState()
     {
-        $id = $_POST["id"];
+        $id = $_POST["old_id"];
         $state = $_POST["state"];
         $comment = $_POST["comment"];
         $editedBy = $_POST["edited_by"];

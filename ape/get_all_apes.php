@@ -181,16 +181,19 @@
         
         
 
-        //Add categories grades to each exam
+        //Add categories grades to each exam that has been finalized
         for ($theExam=0; $theExam<count($sqlResultExams); $theExam++)
         {
-            $sqlResultExams[$theExam]["cats"] = array();
-
-            for ($theCat=0; $theCat<count($sqlResultCats); $theCat++)
+            if (strcmp($sqlResultExams[$theExam]["state"],"Archived") == 0)
             {
-                if($sqlResultCats[$theCat]["exam_id"] == $sqlResultExams[$theExam]["exam_id"])
+                $sqlResultExams[$theExam]["cats"] = array();
+
+                for ($theCat=0; $theCat<count($sqlResultCats); $theCat++)
                 {
-                    $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["final_grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
+                    if($sqlResultCats[$theCat]["exam_id"] == $sqlResultExams[$theExam]["exam_id"])
+                    {
+                        $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["final_grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
+                    }
                 }
             }
         }

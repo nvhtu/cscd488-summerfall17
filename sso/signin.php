@@ -65,8 +65,10 @@ function checkFacultyTypes()
     $sqlResult = sqlExecute($sqlCheckFaculty, array('faculty_id'=>$userId), True);
     if(count($sqlResult) == 0)
     {
+        if(!isset($GLOBALS["settings"]))
+            initializeSettings();
         http_response_code(400);
-        die("You don't have an account in the APE system. Please contact Stu Steiner to setup an account");
+        die("You don't have an account in the APE system. Please contact " . $GLOBALS["settings"]["contactName"] . " to setup an account");
     }
     else 
     {

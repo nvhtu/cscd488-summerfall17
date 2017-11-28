@@ -30,6 +30,12 @@
     if(strpos($name, "Start") !== false || strpos($name, "End") !== false){
         validate_date($value);
     }
+    else if(strpos($name, "Email") !== false){
+        validate_email($value);
+    }
+    else if(strpos($name, "Name") !== false){
+        validate_name($value);
+    }
     else{
         validate_only_numbers($value);
     }

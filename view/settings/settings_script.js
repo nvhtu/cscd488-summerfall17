@@ -67,6 +67,14 @@ function buildForm(){
 
         $("#submit-button").click(submitForm);
 
+        jQuery.validator.addMethod("isName", function(value, element) {
+            return this.optional(element) || /^[a-z ,.'-]+$/i.test(value);
+            }, "Please enter a valid name");
+        
+        jQuery.validator.addMethod("myEmail", function(value, element) {
+            return this.optional(element) || /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
+            }, "Please enter valid email");
+
         jQuery.validator.addMethod("myDate", function(value, element) {
             return this.optional(element) || /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(value);
             }, "Please enter a date in YYYY-MM-DD format");
@@ -80,6 +88,14 @@ function buildForm(){
                 pointDiffRange: {
                     required: true,
                     digits: true
+                },
+                contactName: {
+                    required: true,
+                    isName: true
+                },
+                contactEmail: {
+                    required: true,
+                    myEmail: true
                 },
                 date: {
                     required: true,

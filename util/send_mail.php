@@ -9,6 +9,9 @@
 	 */
     function sendMail ($receiver, $subject, $message)
     {
+		if(!isset($GLOBALS["settings"]))
+			initializeSettings();
+			
         global $_siteEmail, $_siteEmailPass;
 
         $headers['To'] = $receiver["f_name"] . ' ' . $receiver["l_name"] . ' <' . $receiver["email"] . '>';	 
@@ -21,7 +24,7 @@
 				",<br><br>" .
 				$message .
 				"<br><br>" .
-				"If you have any questions or concerns, please e-mail or talk to Stu Steiner at ssteiner@ewu.edu<br><br>" .
+				"If you have any questions or concerns, please e-mail or talk to " . $GLOBALS["settings"]["contactName"] . " at " . $GLOBALS["settings"]["contactEmail"] . "<br><br>" .
 				"Please DO NOT RESPOND TO THIS EMAIL ACCOUNT, it is unmonitored and messages will be ignored.<br><br>" .
 				"Regards,<br><br>" .
 				"The APE Team<br></body></html>";

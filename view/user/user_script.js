@@ -78,8 +78,10 @@ function init()
         
 
 
-        if(_userType == "Admin")
+        if(_userType == "Admin"){
             $(".students-specific-btn").hide();
+            _selectedTab = "Admin";
+        }
         else if(_userType == "Teacher")
                 _selectedTab = "Student"; 
     
@@ -153,6 +155,10 @@ function init()
             return this.optional(element) || /^[a-z0-9]+$/i.test(value);
             }, "Please enter only digits and letters");
 
+        jQuery.validator.addMethod("myEmail", function(value, element) {
+            return this.optional(element) || /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
+            }, "Please enter valid email");
+
         _validator = $("#main-form").validate({
             invalidHandler: function(form, validator) {
                 var errors = validator.numberOfInvalids();
@@ -172,7 +178,7 @@ function init()
                     isName: true
                 },
                 email: {
-                    email: true
+                    myEmail: true
                 },
                 checkboxes: {
                     required: function (element) {
@@ -435,7 +441,7 @@ function updateItem()
                     var row = buildItemSummaryRow(item[0], _selectedTab);
                     //console.log($("tr[data-id='#item-" + item[0].user_id + "']"));
                     $("tr[data-id='item-" + $("#item-id").val() + "']").replaceWith(row);
-                    $(".btn-group > .btn-danger").remove();
+                    //$(".btn-group > .btn-danger").remove();
                 }, "json");
         }
         else{

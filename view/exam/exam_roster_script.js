@@ -172,7 +172,7 @@ function onclickDeleteStudent(e)
         student_id: studentId},
         function(){
             $("#roster-table-wrapper tr[data-id='item-" + studentId + "']").remove();
-            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Ready");
+            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(4)").html("Ready");
             $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",false);
 
         });
@@ -271,8 +271,8 @@ function onclickRegisterStudent(e)
 
         var item = {
             student_id: studentId,
-            f_name: studentLName,
-            l_name: studentFName,
+            f_name: studentFName,
+            l_name: studentLName,
             seat_num: data
         };
         

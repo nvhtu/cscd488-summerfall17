@@ -3,6 +3,8 @@
     $_GET["is_client"] = False;
     require_once $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "util" . DIRECTORY_SEPARATOR . "get_cur_user_info.php";
 
+    $userInfo = getCurUserInfo(False);
+
     echo '<a href="https://www.ewu.edu" class="list-group-item">
             <img src="img/horizontal-logo-transparent-150x50.png" class="img-responsive" alt="EWU Logo">
         </a>
@@ -14,7 +16,7 @@
             </div>
         </div>';
 
-    $userInfo = getCurUserInfo(False);
+    
     
     if(count($userInfo) != 0)
     {
@@ -75,6 +77,7 @@
             <a class="list-group-item' . (isset($_GET["page"]) && strstr($_GET["page"], 'admin_user') ? ' active':'') . '" href="/cscd488-summerfall17/view/user/?page=admin_user"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Users</a>
             <a class="list-group-item' . (!isset($_GET["page"]) && strstr($page, 'category') ? ' active':'') . '" href="/cscd488-summerfall17/view/category/"><span class="glyphicon glyphicon-list" aria-hidden="true"></span>Categories</a>
             <a class="list-group-item' . (!isset($_GET["page"]) && strstr($page, 'location') ? ' active':'') . '" href="/cscd488-summerfall17/view/location/"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Locations</a>
+            <a class="list-group-item' . (!isset($_GET["page"]) && strstr($page, 'home') ? ' active':'') . '" href="/cscd488-summerfall17/view/home/?page=homepage_editor"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Homepage Editor</a>
             <a class="list-group-item' . (!isset($_GET["page"]) && strstr($page, 'settings') ? ' active':'') . '" href="/cscd488-summerfall17/view/settings/"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Configurations</a>
         </div>';
     }

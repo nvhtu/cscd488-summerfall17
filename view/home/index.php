@@ -21,16 +21,21 @@
                 $page = "grader_home";
                 require_once "../index.php";
             }
-            else 
+            else if(strcmp($_GET["page"],"homepage_editor") == 0)
             {
-                $page = "admin_teacher_home";
-                $modalTabsArr = array("../exam/exam", "../exam/roster", "../exam/report");
-                $modalTabsTitles = array("Exam", "Roster", "Report");
-                $modalSize = "large";
-                $jsArr = array("../exam/exam_modal", "../exam/exam_detail", "../exam/exam_report", "../exam/exam_roster");
+                $page = "admin_home_editor";
+                $modalsArr = array("admin_home_editor");
                 require_once "../index.php";
             }
-            
+                else
+                {
+                    $page = "admin_teacher_home";
+                    $modalTabsArr = array("../exam/exam", "../exam/roster", "../exam/report");
+                    $modalTabsTitles = array("Exam", "Roster", "Report");
+                    $modalSize = "large";
+                    $jsArr = array("../exam/exam_modal", "../exam/exam_detail", "../exam/exam_report", "../exam/exam_roster");
+                    require_once "../index.php";
+                } 
         }
         else if(in_array("Grader", $userInfo["userType"]))
                 {

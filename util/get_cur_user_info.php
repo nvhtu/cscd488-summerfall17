@@ -11,16 +11,16 @@
     function getCurUserInfo($isClient)
     {
 
-        $isDev = true;
+        $isDev = false;
         $userInfo = array();
 
         if($isDev)
         {
-            $userInfo = array('userId' => '2223', 
+            $userInfo = array('userId' => '', 
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
-                            'userFname' => 'Tom',
-                            'userLname' => 'Capaul',
+                            'userFname' => 'Stu',
+                            'userLname' => 'Steiner',
                             'userEmail' => 'abc@xyz.com' );
 
             /*$userInfo = array('userId' => 'y', 

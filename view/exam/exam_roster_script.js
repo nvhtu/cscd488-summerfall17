@@ -97,8 +97,29 @@ function loadTabRoster()
     get_grade: getGrade}, 
     loadRosterTable,
     "json");
+
+    $.get("../ape/get_all_apes.php",
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_by_id",
+    exam_id: itemId},
+    function(exam){
+        $.get("../location/get_all_locations.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        loc_id: exam[0].location}, 
+        addMaxSeats,
+        "json");
+    },
+    "json");
 }
 
+function addMaxSeats(location){
+    $("#roster-table-wrapper").attr("max-seats", location[0].seats);
+    console.log($("#roster-table-wrapper"));
+}
 
 function loadRosterTable(data)
 {
@@ -151,7 +172,7 @@ function onclickDeleteStudent(e)
         student_id: studentId},
         function(){
             $("#roster-table-wrapper tr[data-id='item-" + studentId + "']").remove();
-            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(5)").html("Ready");
+            $("#lookup-results tr[data-id='item-" + studentId + "'] > td:nth-child(4)").html("Ready");
             $("#lookup-results tr[data-id='item-" + studentId + "'] > .btns > .btn-group > .btn-primary").prop("disabled",false);
 
         });
@@ -250,8 +271,8 @@ function onclickRegisterStudent(e)
 
         var item = {
             student_id: studentId,
-            f_name: studentLName,
-            l_name: studentFName,
+            f_name: studentFName,
+            l_name: studentLName,
             seat_num: data
         };
         
@@ -292,12 +313,12 @@ function onclickEditSeat(e)
         {
             //console.log("save");
 
-            onSaveSeat(e);
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",true);
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save'] .glyphicon").removeClass("glyphicon-floppy-disk").addClass("glyphicon-pencil");
-            $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit").removeClass("btn-primary").addClass("btn-warning");
-            _isEditing = false;
-            
+            if(onSaveSeat(e)){
+                $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] .student-seat-input").prop("disabled",true);
+                $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save'] .glyphicon").removeClass("glyphicon-floppy-disk").addClass("glyphicon-pencil");
+                $("#roster-table-wrapper tr[data-id='item-" + itemId + "'] button[data-action='save']").attr("data-action", "edit").removeClass("btn-primary").addClass("btn-warning");
+                _isEditing = false;
+            }            
         }
 }
 
@@ -306,14 +327,31 @@ function onSaveSeat(e)
     var studentId = e.currentTarget.dataset["id"];
     var examId = _origClickEvent.currentTarget.dataset["id"];
     var seatNum = $("#roster-table-wrapper tr[data-id='item-" + studentId + "'] .student-seat-input").val();
+    var maxSeats = $("#roster-table-wrapper").attr("max-seats");
 
-    $.post("../ape/update_student_seat.php", 
-    {requester_id: _userId,
-    requester_type: _userType,
-    requester_session_id: _userSessionId,
-    exam_id: examId,
-    student_id: studentId,
-    seat_num: seatNum});
+    var count = 0;
+    $(".student-seat-input").each(function(){
+        if($(this).val() === seatNum)
+            count++;
+    });
+
+    if(/^[0-9]+$/.test(seatNum) && count === 1 && parseInt(seatNum) > 0 && parseInt(seatNum) <= parseInt(maxSeats)){
+        $.post("../ape/update_student_seat.php", 
+        {requester_id: _userId,
+        requester_type: _userType,
+        requester_session_id: _userSessionId,
+        exam_id: examId,
+        student_id: studentId,
+        seat_num: seatNum});
+
+        return true;
+    }
+    else{
+        //should be a message box instead
+        alert("Seat numbers must be unique integers between 1 and " + maxSeats);
+
+        return false;
+    }
 }
 
 
@@ -768,8 +806,9 @@ function finalizeGrades(e)
                 state: "Archived",
                 request: "update_state"
             });
-            
+
             $("#detail-modal").modal("hide");
+            $("tr[data-id='item-" + examId + "']").remove();
 
             $.post("../grade/finalize_all_grade.php",
             {

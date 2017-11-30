@@ -43,21 +43,24 @@
 
     function getExamById()
     {
+        $examId = sanitize_input($_GET["exam_id"]);
+        validate_only_numbers($examId);
         $sqlSelectExam = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
         FROM exam
         WHERE exam_id LIKE :exam_id";
-        return $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$_GET["exam_id"]), true);
+        return $sqlResult = sqlExecute($sqlSelectExam, array(":exam_id"=>$examId), true);
     }
 
     function getExamByState($requesterType, $requesterId)
     {
-
+        $state = sanitize_input($_GET["state"]);
+        validate_exam_state($state);
         switch($requesterType)
         {
             case "Admin":  $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
                                             FROM exam
                                             WHERE state LIKE :state";
-                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
+                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$state), true);
                             break;
 
             case "Teacher":  $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
@@ -65,7 +68,7 @@
                                                 INNER JOIN in_class_exam
                                                 USING (exam_id)
                                                 WHERE teacher_id LIKE :teacher_id AND state LIKE :state";
-                            $data = array(':teacher_id' => $requesterId, ":state"=>$_GET["state"]);
+                            $data = array(':teacher_id' => $requesterId, ":state"=>$state);
                             return $sqlResult = sqlExecute($sqlSelectExams, $data, true);
                             break;
 
@@ -73,7 +76,7 @@
             case "Student": $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
                             FROM exam
                             WHERE state LIKE :state AND exam.exam_id NOT IN (SELECT exam_id FROM in_class_exam)";
-                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$_GET["state"]), true);
+                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$state), true);
                             break;
         }
            
@@ -181,16 +184,19 @@
         
         
 
-        //Add categories grades to each exam
+        //Add categories grades to each exam that has been finalized
         for ($theExam=0; $theExam<count($sqlResultExams); $theExam++)
         {
-            $sqlResultExams[$theExam]["cats"] = array();
-
-            for ($theCat=0; $theCat<count($sqlResultCats); $theCat++)
+            if (strcmp($sqlResultExams[$theExam]["state"],"Archived") == 0)
             {
-                if($sqlResultCats[$theCat]["exam_id"] == $sqlResultExams[$theExam]["exam_id"])
+                $sqlResultExams[$theExam]["cats"] = array();
+
+                for ($theCat=0; $theCat<count($sqlResultCats); $theCat++)
                 {
-                    $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["final_grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
+                    if($sqlResultCats[$theCat]["exam_id"] == $sqlResultExams[$theExam]["exam_id"])
+                    {
+                        $sqlResultExams[$theExam]["cats"][$sqlResultCats[$theCat]["cat"]] = $sqlResultCats[$theCat]["final_grade"] . "/" . $sqlResultCats[$theCat]["possible_grade"];
+                    }
                 }
             }
         }

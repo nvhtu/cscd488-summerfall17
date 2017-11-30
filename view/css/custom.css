@@ -309,10 +309,10 @@ body > .container {
 }
 
 .table .btn-group {
-   display: flex;
-}
-
-.btn-group {
+    display: flex;
+ }
+ 
+ .btn-group {
     float: right;
 }
 
@@ -416,4 +416,8 @@ input[type=file][hidden] {
 
 .cat-comment-input {
     float: right;
+}
+
+.panel-body {
+    padding: 10px;
 }

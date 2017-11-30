@@ -45,6 +45,7 @@ function init()
 
     //$(".msg-box").addClass("alert-info");
     
+    getHomepageContent();
     
     
     $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
@@ -355,5 +356,26 @@ function onRegister()
     exam_id: $("#item-id").val()}, 
     function(){
         location.reload();
+    });
+}
+
+function getHomepageContent()
+{
+    $.get("../homepage/get_all_sections.php", 
+    {requester_id: _userId,
+    requester_type: _userType,
+    requester_session_id: _userSessionId,
+    request: "get_all"}, 
+    loadHomepageContent,
+    "json");
+}
+
+function loadHomepageContent(data)
+{
+    $sectionNum = data.length;
+    $(data).each(function(i, section){
+        var temp = i+1;
+        $("#panel-title-" + temp + " a").text(section.title);
+        $("#panel-body-" + temp).html(section.html_content);
     });
 }

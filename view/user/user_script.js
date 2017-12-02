@@ -287,11 +287,11 @@ function buildItemSummaryRow(item, type)
 
         if(item.disabled == 0)
         {
-            $btnDisable = $('<button type="button" class="btn btn-danger btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ban-circle"></i></span>Disable</button>');
+            $btnDisable = $('<button type="button" class="btn btn-danger btn-labeled btn-justified"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ban-circle"></i></span><span>Disable</span></button>');
         }
         else
         {
-            $btnDisable = $('<button type="button" class="btn btn-success btn-labeled"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ok-circle"></i></span>&nbsp;Enable&nbsp;</button>');
+            $btnDisable = $('<button type="button" class="btn btn-success btn-labeled btn-justified"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-ok-circle"></i></span><span>Enable</span></button>');
         }
 
         $btnDisable.attr("data-id", summaryData.id);
@@ -576,7 +576,10 @@ function buildStudentHistory(studentId)
     headersArr = ["Name", "Date", "Start Time", "Overall Grade", "Result", "Action"];
     var table = buildMainTable(headersArr);
     
-    $("#exams-student-table-wrapper").html(table);
+    $("#exams-student-table-wrapper").html(table)
+        .find(".main-table>thead th").not("th:last-of-type")
+        .click(onClickSort)
+        .mousedown(function(e){ e.preventDefault(); });
 
     $.get("../ape/get_all_apes.php", 
     {requester_id: _userId,
@@ -620,7 +623,7 @@ function onclickDisable(e)
                 $btnDisable.attr("data-disabled", 0);
                 $btnDisable.removeClass("btn-success");
                 $btnDisable.addClass("btn-danger");
-                $btnDisable.html("<span class='btn-label' aria-hidden='true'><i class='glyphicon glyphicon-ban-circle'></i></span>Disable");
+                $btnDisable.html("<span class='btn-label' aria-hidden='true'><i class='glyphicon glyphicon-ban-circle'></i></span><span>Disable</span>");
             }
             else
             {
@@ -628,7 +631,7 @@ function onclickDisable(e)
                 $btnDisable.attr("data-disabled", 1);
                 $btnDisable.removeClass("btn-danger");
                 $btnDisable.addClass("btn-success");
-                $btnDisable.html("<span class='btn-label' aria-hidden='true'><i class='glyphicon glyphicon-ok-circle'></i></span>&nbsp;Enable&nbsp;");
+                $btnDisable.html("<span class='btn-label' aria-hidden='true'><i class='glyphicon glyphicon-ok-circle'></i></span><span>Enable</span>");
             }
             
         });

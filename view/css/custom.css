@@ -310,6 +310,7 @@ body > .container {
 
 .table .btn-group {
     display: flex;
+    width: 100%;
  }
  
  .btn-group {
@@ -319,6 +320,27 @@ body > .container {
 .table .btn-group .btn {
    display: inline-block;
    float: none;
+   flex: 1;
+}
+
+.table .btn-group .btn:last-of-type {
+    flex: 2;
+}
+
+.table .btn-group .btn-justified {
+    display: flex;
+    padding: 0;
+    align-items: center;
+}
+
+.table .btn-group .btn-justified span:first-of-type {
+    flex: 0;
+    left: -1px;
+}
+
+.table .btn-group .btn-justified span:last-of-type {
+    flex: 1;
+    padding: 0 12px;
 }
 
 .table .item-detail-row>td {

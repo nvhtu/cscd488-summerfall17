@@ -70,6 +70,7 @@ function init()
         {
             //Create look up button in Students tab
             $("#create-button").after('<button type="button" class="btn btn-primary pull-left btn-labeled students-specific-btn" data-toggle="modal" data-target="#lookup-modal" id="lookup-students-button"><span class="btn-label" aria-hidden="true"><i class="glyphicon glyphicon-search"></i></span>Look up Students</button>');
+            $("#lookup-students-button").click(function(){$(".modal-title").html("Lookup Students");});
         }
         else
         {

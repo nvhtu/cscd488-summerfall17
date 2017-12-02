@@ -72,6 +72,11 @@ function init()
     });
 
     buildStudentTable();
+
+    $(".main-table>thead th").not("th:last-of-type")
+    .click(onClickSort)
+    .mousedown(function(e){ e.preventDefault(); });
+    
     getAllStudentItems();
 
     $(".main-table>thead th").not("th:last-of-type")

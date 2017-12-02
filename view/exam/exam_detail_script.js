@@ -72,7 +72,6 @@ function loadTabExam()
     }
     else
     {
-        $('#edit-button').toggleClass("hidden", false);
         toggleSubmitEdit(true);
     }
 

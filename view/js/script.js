@@ -177,6 +177,17 @@ function onClickSort(th) {
     });
 }
 
+function onclickDiscard() {
+    onclickDetails();
+}
+
+function toggleSubmitEdit(isReadonly, hideDiscard) {
+    $('#submit-button').toggleClass('hidden', isReadonly);
+    $('#edit-button').toggleClass('hidden', !isReadonly);
+    $('#discard-button').toggleClass('hidden', hideDiscard === undefined ? isReadonly : hideDiscard);
+    $('input, select', '#detail-modal').not('input[type="hidden"]').prop("disabled", isReadonly);
+}
+
 function showErrorMessage(msg)
 {
 

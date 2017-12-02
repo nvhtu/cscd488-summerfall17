@@ -18,6 +18,7 @@ var _selectedTab = "";
 
 var _statechanged = false; 
 
+var _origClickEvent;
 var _validator;
 
 var _isCreateClicked = false;
@@ -92,6 +93,8 @@ function init()
     
         $("#create-button").click(onclickCreate);
         $("#submit-button").click(submitForm);
+        $('#discard-button').click(onclickDiscard);
+        $('#edit-button').click(function(){toggleSubmitEdit(false);});
     
         $("a[href='#Admins-panel']").click(function(){getAllItems("Admin"); _selectedTab = "Admin"; $(".students-specific-btn").hide();});
         $("a[href='#Teachers-panel']").click(function(){getAllItems("Teacher"); _selectedTab = "Teacher"; $(".students-specific-btn").hide();});
@@ -476,6 +479,7 @@ function onclickCreate()
     $(".modal-title").html("Create a User");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
+    toggleSubmitEdit(false, true);
 
     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     $("input[name='user_id']").prop("disabled", false);
@@ -494,14 +498,19 @@ function onclickCreate()
 function onclickDetails(e) 
 {
     _isCreateClicked = false;
+
+    if (e !== undefined) {
+        _origClickEvent = e;
+    }
+
     clearForm();
     $("select[name='state']").on("change", function(){$(".student-comment-form").show()});
     //$("input[name='user_id']").prop("disabled", true);
     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     
 
-    var itemId = e.currentTarget.dataset["id"];
-    $("#item-id").val(e.currentTarget.dataset["id"]);
+    var itemId = _origClickEvent.currentTarget.dataset["id"];
+    $("#item-id").val(_origClickEvent.currentTarget.dataset["id"]);
     $(".modal-title").html("Edit a User");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
@@ -566,6 +575,7 @@ function onclickDetails(e)
         $(".student-exam-history-form").hide();
         $(".student-comment-form").hide();
     }
+    toggleSubmitEdit(true);
 
     
 

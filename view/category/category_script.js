@@ -12,6 +12,7 @@ var _targetModal = "detail-modal";
 var _tableId = "main-table";
 var _formId = "main-form";
 
+var _origClickEvent;
 var _validator;
 
 $(document).ready(loaded);
@@ -29,6 +30,8 @@ function loaded()
 
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
+    $('#discard-button').click(onclickDiscard);
+    $('#edit-button').click(function(){toggleSubmitEdit(false);});
 }
 
 
@@ -149,16 +152,22 @@ function onclickCreate()
     $(".modal-title").html("Create a Category");
     $("#submit-button").attr("data-action", "create");
     $("#submit-button").html("Create");
+    toggleSubmitEdit(false, true);
 }
 
 function onclickDetails(e) 
 {
+    if (e !== undefined) {
+        _origClickEvent = e;
+    }
+
     clearForm();
-    var itemId = e.currentTarget.dataset["id"];
-    $("#item-id").val(e.currentTarget.dataset["id"]);
+    var itemId = _origClickEvent.currentTarget.dataset["id"];
+    $("#item-id").val(_origClickEvent.currentTarget.dataset["id"]);
     $(".modal-title").html("Edit a Category");
     $("#submit-button").attr("data-action", "update");
     $("#submit-button").html("Save changes");
+    toggleSubmitEdit(true);
 
     $.get("../category/get_all_categories.php", 
     {requester_id: _userId,

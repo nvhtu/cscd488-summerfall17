@@ -300,7 +300,7 @@ function buildItemSummaryRow(item, type)
 
         row.append(
             $('<td class="btns">').append(
-            $('<div class="btn-group" role="group">').append($btnDetails, $btnDisable, ' ')
+            $('<div class="btn-group btn-group-justified" role="group">').append($btnDetails, $btnDisable, ' ')
             )
         );
     }

@@ -24,6 +24,26 @@ $('#edit-button').click(function(){toggleSubmitEdit(false);});
 
 function initValidators()
 {
+      jQuery.validator.setDefaults({
+            errorElement: 'span',
+            errorClass: 'error help-block',
+            errorPlacement: function(error, element) {
+                  if (element.parent().hasClass('input-group')) {
+                        error.insertAfter(element.parent());
+                  } else {
+                        error.insertAfter(element);
+                  }
+            },
+            highlight: function(element, errorClass) {
+                  $(element).removeClass('help-block');
+                  $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element, errorClass) {
+                  console.log($(element).closest('.form-group'));
+                  $(element).closest('.form-group').removeClass('has-error');
+            }
+      });
+      
       jQuery.validator.addMethod("myDate", function(value, element) {
             return /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test(value);
             }, "Please enter a date in YYYY-MM-DD format");
@@ -90,7 +110,7 @@ function initValidators()
                   },
                   possible_grade: "Fill out category info to add possible grade"
             },
-            errorElement: 'span',
+            /*errorElement: 'span',
             errorClass: 'error help-block',
             errorPlacement: function(error, element) {
                 if (element.parent().hasClass('input-group')) {
@@ -106,7 +126,7 @@ function initValidators()
             unhighlight: function(element, errorClass) {
                 console.log($(element).closest('.form-group'));
                 $(element).closest('.form-group').removeClass('has-error');
-            }
+            }*/
       });
 
       jQuery.validator.addMethod("fileName", function(value, element) {

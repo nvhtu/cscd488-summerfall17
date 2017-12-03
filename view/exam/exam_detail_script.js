@@ -434,8 +434,10 @@ function onclickAddCat(isUserClick) {
     $curRow.find('td.graders').append(
         $('<form class="grader-form">').append(
             $('<div class="input-group">').append(
-                $('<select class="form-control" name="grader">').append(
-                    _graderOptions
+                $('<div class="form-group">').append(
+                    $('<select class="form-control" name="grader">').append(
+                        _graderOptions
+                    )
                 ),
                 $('<span class="input-group-btn">').append(
                     $btnDel
@@ -520,15 +522,19 @@ function onclickAddCat(isUserClick) {
  
     return $('<tr class="cat-row" aria-expanded="true">').attr("data-id", "cat-" + _catCount).attr("data-target", "#cat-" + _catCount).append(  
         $('<td>').append(
-            $('<form class="cat-form">').append(            
-                $('<select class="form-control" name="category">').append(
-                    _catOptions
-                )
+            $('<form class="cat-form form-group">').append(
+                //$('<div class="form-group">').append(            
+                    $('<select class="form-control" name="category">').append(
+                        _catOptions
+                    )
+                //)
             )
         ),
         $('<td>').append(
-            $('<form class="cat-form">').append(
-                $maxScore
+            $('<form class="cat-form form-group">').append(
+                //$('<div class="form-group">').append(  
+                    $maxScore
+                //)
             )
         ),
         $('<td>').append(

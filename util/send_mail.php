@@ -1,5 +1,6 @@
 <?php
-    require_once "../pdoconfig.php";
+	require_once "../pdoconfig.php";
+	require_once "../settings/init_settings.php";
 
 	$_siteEmail = "";
 	$_siteEmailPass = "";

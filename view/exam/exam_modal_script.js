@@ -39,7 +39,7 @@ function initValidators()
                   $(element).closest('.form-group').addClass('has-error');
             },
             unhighlight: function(element, errorClass) {
-                  console.log($(element).closest('.form-group'));
+                  //console.log($(element).closest('.form-group'));
                   $(element).closest('.form-group').removeClass('has-error');
             }
       });
@@ -110,23 +110,6 @@ function initValidators()
                   },
                   possible_grade: "Fill out category info to add possible grade"
             },
-            /*errorElement: 'span',
-            errorClass: 'error help-block',
-            errorPlacement: function(error, element) {
-                if (element.parent().hasClass('input-group')) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            },
-            highlight: function(element, errorClass) {
-                $(element).removeClass('help-block');
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function(element, errorClass) {
-                console.log($(element).closest('.form-group'));
-                $(element).closest('.form-group').removeClass('has-error');
-            }*/
       });
 
       jQuery.validator.addMethod("fileName", function(value, element) {

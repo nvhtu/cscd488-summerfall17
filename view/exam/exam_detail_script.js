@@ -509,7 +509,7 @@ function onclickAddCat(isUserClick) {
  
  function buildCatRow() {
     //create max score input
-    var $maxScore = $('<input type="text" class="form-control" name="max-score">');
+    var $maxScore = $('<input type="text" class="form-control" name="max-score" autocomplete="off">');
     $maxScore.focusout(calcPossibleGrade);
  
     //create grader button
@@ -522,19 +522,15 @@ function onclickAddCat(isUserClick) {
  
     return $('<tr class="cat-row" aria-expanded="true">').attr("data-id", "cat-" + _catCount).attr("data-target", "#cat-" + _catCount).append(  
         $('<td>').append(
-            $('<form class="cat-form form-group">').append(
-                //$('<div class="form-group">').append(            
-                    $('<select class="form-control" name="category">').append(
-                        _catOptions
-                    )
-                //)
+            $('<form class="cat-form form-group" style="margin-bottom:0">').append(
+                $('<select class="form-control" name="category">').append(
+                    _catOptions
+                )
             )
         ),
         $('<td>').append(
-            $('<form class="cat-form form-group">').append(
-                //$('<div class="form-group">').append(  
-                    $maxScore
-                //)
+            $('<form class="cat-form form-group" style="margin-bottom:0">').append(
+                $maxScore
             )
         ),
         $('<td>').append(

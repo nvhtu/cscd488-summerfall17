@@ -55,6 +55,7 @@ function buildForm(){
         .on("hide", function(){
             if($(this).find("input").val() != _settings[$(this).find("input").attr("id")])
             $("#submit-button").prop("disabled", false);
+            _validator.element("#" + $(this).find("input").attr("id"));
         });
 
         $('input[name="date"]').keydown(function(e){
@@ -66,6 +67,26 @@ function buildForm(){
         });
 
         $("#submit-button").click(submitForm);
+
+        jQuery.validator.setDefaults({
+            errorElement: 'span',
+            errorClass: 'error help-block',
+            errorPlacement: function(error, element) {
+                  if (element.parent().hasClass('input-group')) {
+                        error.insertAfter(element.parent());
+                  } else {
+                        error.insertAfter(element);
+                  }
+            },
+            highlight: function(element, errorClass) {
+                  $(element).removeClass('help-block');
+                  $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element, errorClass) {
+                  //console.log($(element).closest('.form-group'));
+                  $(element).closest('.form-group').removeClass('has-error');
+            }
+      });
 
         jQuery.validator.addMethod("isName", function(value, element) {
             return this.optional(element) || /^[a-z ,.'-]+$/i.test(value);
@@ -103,6 +124,8 @@ function buildForm(){
                 }
             }
         });
+
+        $("form, input").attr("autocomplete", "off");
     });
 }
 

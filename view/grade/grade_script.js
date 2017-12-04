@@ -47,6 +47,26 @@ function init()
     $(".main-table>thead th").not("th:last-of-type")
      .click(onClickSort)
      .mousedown(function(e){ e.preventDefault(); });
+
+     jQuery.validator.setDefaults({
+        errorElement: 'span',
+        errorClass: 'error help-block',
+        errorPlacement: function(error, element) {
+              if (element.parent().hasClass('input-group')) {
+                    error.insertAfter(element.parent());
+              } else {
+                    error.insertAfter(element);
+              }
+        },
+        highlight: function(element, errorClass) {
+              $(element).removeClass('help-block');
+              $(element).closest('.form-group').addClass('has-error');
+        },
+        unhighlight: function(element, errorClass) {
+              //console.log($(element).closest('.form-group'));
+              $(element).closest('.form-group').removeClass('has-error');
+        }
+    });
 }
 
 function buildTable()
@@ -229,7 +249,7 @@ function buildModalForm(ungradedSeats, graderExamCat)
                             "<div class='form-group'>" +
                                 "<label for='name' class='col-sm-4 control-label'>Seat Number " + sNum + " Grade:</label>" +
                                 "<div class='col-sm-3'>" +
-                                    "<input type='text' class='form-control' name='grade' required></input>" +
+                                    "<input type='text' class='form-control' name='grade' autocomplete='off' required></input>" +
                                 "</div>" +
                                 "<button type='button' class='btn btn-primary col-sm-3' name='submit-button' seat='" + sNum + 
                                 "' grader-exam-cat-id='" + gecid + "' exam-id='" + exam + "' possible-grade='" + possGrade + "'>Submit</button>" +
@@ -277,6 +297,7 @@ function buildModalForm(ungradedSeats, graderExamCat)
                 {
                     bttnSubmit.prop("disabled", true);
                     submitGradedCheck();
+                    bttnSubmit.closest("form").data("validator").resetForm();
                 }
 
                 //limit grades to range 0 - maximum category score

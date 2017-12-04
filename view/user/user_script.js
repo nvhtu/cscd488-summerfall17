@@ -78,7 +78,9 @@ function init()
         }
         
         
-
+        $('#lookup-modal').on('shown.bs.modal', function() {
+            $("#lookup-string").focus();
+        })
 
         if(_userType == "Admin"){
             $(".students-specific-btn").hide();
@@ -105,8 +107,10 @@ function init()
         //$("#btn-search").click(function(){search($("#search").val())});
 
         $("[name='state']").change(function(){
-            if($("#submit-button").attr("data-action") == "update")
+            if($("#submit-button").attr("data-action") == "update"){
                 _statechanged = true;
+                $(".student-comment-form").show();
+            }
         });
     
         //show/hide student state select when check/uncheck student type
@@ -149,6 +153,27 @@ function init()
             $(".msg-box").addClass("alert-danger");
             $(".msg-box").fadeIn();
             $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
+        });
+
+        jQuery.validator.setDefaults({
+            errorElement: 'span',
+            errorClass: 'error help-block',
+            errorPlacement: function(error, element) {
+                  if (element.parent().hasClass('input-group')) {
+                        error.insertAfter(element.parent());
+                  } else {
+                        error.insertAfter(element);
+                  }
+            },
+            highlight: function(element, errorClass) {
+                  $(element).removeClass('help-block');
+                  $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element, errorClass) {
+                //   console.log(element);
+                //   console.log($(element).closest('.form-group'));
+                  $(element).closest('.form-group').removeClass('has-error');
+            }
         });
 
         jQuery.validator.addMethod("isName", function(value, element) {
@@ -205,6 +230,8 @@ function init()
                 comment:    "Comment required for state change"
             }
         });
+
+        $("form, input").attr("autocomplete", "off");
 }
 
 function buildTable()
@@ -482,6 +509,8 @@ function onclickCreate()
     $("#submit-button").html("Create");
     toggleSubmitEdit(false, true);
 
+    clearForm();
+
     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     $("input[name='user_id']").prop("disabled", false);
     $(".state-form-group").hide();
@@ -489,11 +518,8 @@ function onclickCreate()
     $(".type-nonstudent-wrap").show();
     $(".student-exam-history-form").hide();
     $(".student-comment-form").hide();
-    $("select[name='state']").unbind("change");
+    //$("select[name='state']").unbind("change");
     $("input[name='type']").prop('disabled', false);
-
-    clearForm();
-
 }
 
 function onclickDetails(e) 
@@ -505,7 +531,7 @@ function onclickDetails(e)
     }
 
     clearForm();
-    $("select[name='state']").on("change", function(){$(".student-comment-form").show()});
+    //$("select[name='state']").on("change", function(){console.log("changed");$(".student-comment-form").show();});
     //$("input[name='user_id']").prop("disabled", true);
     $("#type-admin-checkbox, #type-teacher-checkbox, #type-grader-checkbox, #type-student-checkbox").prop("disabled",false);
     
@@ -654,6 +680,7 @@ function clearForm()
 {
     $("input[type=text]").val("");
     $("input[type=checkbox]").prop("checked", false);
+    $("input[name='comment']").closest('.form-group').removeClass('has-error');
     _statechanged = false;
     _validator.resetForm(); 
 }

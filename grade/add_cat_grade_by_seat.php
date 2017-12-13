@@ -35,6 +35,7 @@
     
     $sqlResult = sqlExecute($sql, array(':exam_id' => $examId, ':seat_num' => $seatNum), true);
 
+    //student_id is used in add_cat_grade.php
     $_POST["student_id"] = $sqlResult[0]["student_id"];
 
     require "./add_cat_grade.php";

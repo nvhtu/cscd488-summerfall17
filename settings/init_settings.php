@@ -13,9 +13,11 @@
 
 
         $GLOBALS["settings"] = array_reduce($sqlResult, "sqlArrReduce");
+        //add current quarter start and end dates to settings array
         getCurQuarterDates();
     }
 
+    //makes an associative array out of the SQL result
     function sqlArrReduce($obj, $item)
     {
         $obj[$item["name"]] = $item["value"];

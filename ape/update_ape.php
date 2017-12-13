@@ -30,11 +30,12 @@
 
     }
 
+    //update all exam attributes
     function updateAll()
     {
         $name = $_POST["name"];
         $exam_id = $_POST["exam_id"];
-        $quarter = $_POST["quarter"];   //Shouldn't come from the user! Use date to determine quarter
+        $quarter = $_POST["quarter"];   
         $date = $_POST["date"];
         $location = $_POST["location"];
         $state = $_POST["state"];
@@ -101,6 +102,7 @@
         sqlExecute($sqlUpdateExam, $data, false);
     }
 
+    //update exam state only
     function updateState()
     {
         $exam_id = $_POST["exam_id"];
@@ -124,6 +126,7 @@
         sqlExecute($sqlUpdateState, $data, false);
     }
 
+    //check exam is a valid in-class exam
     function checkTeacherExam()
     {
         $requesterId = $_POST["requester_id"];

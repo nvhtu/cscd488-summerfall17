@@ -19,13 +19,15 @@
     $allowedType = array("Admin", "Teacher", "Grader");
 	
 	//User authentication
-    user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
+	user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
+	//get category by id
 	if(!empty($_GET["cat_id"]))
 	{
 		$sqlResult = sqlExecute("SELECT * FROM category WHERE cat_id = :id",
 					 array(":id" => $_GET["cat_id"]),
 					 true);
 	}
+	//get all categories
 	else 
 	{
 		$sqlResult = sqlExecute("SELECT * FROM category",

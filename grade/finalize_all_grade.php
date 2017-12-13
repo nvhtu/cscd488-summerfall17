@@ -40,17 +40,19 @@ function changeAllStudentState($examId)
     {
         $state = "";
 
+        //if the student passed an exam, change state to "Passed"
         if($theStudent["passed"] == 1)
         {
             $state = "Passed";
         }
         else
         {
-            //Check if the student has failed 3 times
+            //if the student has failed 3 times, change state to "Blocked"
             if($theStudent["attempt"] >= 3)
             {
                 $state = "Blocked";
             }
+            //if the student has failed less than 3 times, change state back to "Ready"
             else {
                 $state = "Ready";
             }
@@ -69,11 +71,13 @@ function changeAllStudentState($examId)
 
 function sendMailAll($examId)
 {
+    //get the exam info to be put in the email
     $sqlGetExamInfo = "SELECT exam.name, DATE_FORMAT(date, '%m/%d/%Y') AS date, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, location.name AS location_name
     FROM exam JOIN location ON (location = loc_id)
     WHERE exam.exam_id = :exam_id";
     $theExamInfo = sqlExecute($sqlGetExamInfo, array(":exam_id"=>$examId), true);
     
+    //set up message content
     $mailSubject = "Your APE grades are available";
     $mailMsg = "Grades are available now for the following APE:" .
     "<br><br>" .
@@ -81,11 +85,13 @@ function sendMailAll($examId)
     "<br><br>" .
     "Sign in to https://ape.compsci.ewu.edu/ to view your grades.";
     
+    //get student names and emails to send to
     $sqlGetExamRoster = "SELECT f_name, l_name, email
                         FROM exam_roster JOIN user ON (student_id = user_id)
                         WHERE exam_id = :exam_id";
     $sqlResultExamRoster = sqlExecute($sqlGetExamRoster, array(":exam_id"=>$examId), true);
     
+    //send emails to each student
     foreach ($sqlResultExamRoster as $theStudent)
     {
         sendMail($theStudent, $mailSubject, $mailMsg);

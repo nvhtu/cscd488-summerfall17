@@ -1,7 +1,7 @@
 <?php
 /**
- * Update a section or title content
- * @author: Andrew Robinson
+ * Update a section or title content of the homepage HTML
+ * @author: Tu Nguyen
  * @version: 1.0
  */
 	require_once "../util/sql_exe.php";

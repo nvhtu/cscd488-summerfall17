@@ -53,6 +53,8 @@
         $examId = $_GET["exam_id"];
 
         $examId = sanitize_input($examId);
+
+        validate_only_numbers($examId);
         
         $sqlGetGraders = "SELECT user_id,  COUNT(*) AS assigned_cat_num, exam_id, f_name, l_name
         FROM exam_category NATURAL JOIN assigned_grader JOIN user USING (user_id)

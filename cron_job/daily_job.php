@@ -16,11 +16,14 @@
         
         $today = new DateTime(date("Y-m-d"));
 
+        //for each open exam
         foreach ($openExamsArr as $theExam)
         {
             $examDate = new DateTime($theExam["date"]);
+            //if the exam is in 1 week
             if(date_diff($today, $examDate)->days == 7)
             {
+                //email registered students
                 sendMailAllStudents($theExam);
             }
         }
@@ -28,6 +31,7 @@
 
     }
 
+    //send email reminder to students registered for this exam
     function sendMailAllStudents($theExam)
     {
         $sqlGetExamRoster = "SELECT f_name, l_name, email

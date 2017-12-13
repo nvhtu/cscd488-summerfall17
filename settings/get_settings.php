@@ -20,6 +20,7 @@
 	//User authentication
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
+    //if the global settings array has not been initialized yet, do so
     if(!isset($GLOBALS["settings"]))
         initializeSettings();
 

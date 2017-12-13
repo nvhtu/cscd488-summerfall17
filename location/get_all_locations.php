@@ -21,12 +21,14 @@
 	//User authentication
 	user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
+	//get single location by id
 	if(!empty($_GET["loc_id"]))
 	{
 		$sqlResult = sqlExecute("SELECT * FROM location WHERE loc_id = :id",
 					 array(":id" => $_GET["loc_id"]),
 					 true);
 	}
+	//get all locations
 	else 
 	{
 		$sqlResult = sqlExecute("SELECT * FROM location",

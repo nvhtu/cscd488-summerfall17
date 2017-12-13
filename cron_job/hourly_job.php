@@ -19,15 +19,19 @@
         WHERE state LIKE 'Open'";
         $openExamsArr = sqlExecute($sqlOpenExams, array(), true);
 
+        //for each open exam
         foreach ($openExamsArr as $theExam)
         {
             $examDate = new DateTime($theExam["date"]);
             $examStart = strtotime($theExam["start_time"]);
 
+            //if the exam is today
             if(date_diff($today, $examDate)->days == 0)
             {
+                //if the start time has been reached
                 if($curHour >= $examStart)
                 {
+                    //move the exam to the in progress state
                     changeState($theExam["exam_id"], "In_Progress");
                 }
             } 
@@ -40,13 +44,15 @@
         WHERE state LIKE 'In_Progress'";
         $InProgressExamsArr = sqlExecute($sqlInProgressExams, array(), true);
 
+        //for each in progress exam
         foreach ($InProgressExamsArr as $theExam)
         {
             //$examDate = new DateTime($theExam["date"]);
             $examEnd = strtotime($theExam["start_time"]) + 60*60*$theExam["duration"];
-
+            //if the exam is over
             if($curHour >= $examEnd)
             {
+                //move the exam to the grading state
                 changeState($theExam["exam_id"], "Grading");
             }
         }

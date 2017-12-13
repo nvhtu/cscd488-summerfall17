@@ -180,6 +180,7 @@
 
         $sqlResult = sqlExecute($sqlGetAccount, array('id'=>$id), True);
 
+        //store registered exams in array
         if(strcmp($sqlResult[0]["state"], "Registered") == 0)
         {
             $sqlGetRegisteredExam = "SELECT exam_id

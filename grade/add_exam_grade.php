@@ -55,6 +55,7 @@
 
     }
 
+    //adds all final category scores for this student and returns sum
     function calculateExamTotalGrade($examId, $studentId)
     {
         $sqlGetFinalCatGrades = "SELECT SUM(final_grade) as total_grade
@@ -73,6 +74,7 @@
         }
     }
 
+    //checks if the passed in grade is greater than or equal to the passing grade for the exam
     function isExamGradePassed($examId, $totalGrade)
     {
         if($totalGrade >= 0)

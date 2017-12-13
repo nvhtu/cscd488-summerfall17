@@ -64,7 +64,7 @@
 
 
     
-
+    //update account type (faculty)
     function updateType()
     {
         $id = $_POST["old_id"];
@@ -106,6 +106,7 @@
         
     }
 
+    //update info of a user (student or faculty)
     function updateInfo()
     {
         $oldId = $_POST["old_id"];
@@ -135,6 +136,7 @@
         sqlExecute($sqlUpdateUser, array(':fname'=>$fname, ':lname'=>$lname, ':email'=>$email, ':oldId'=>$oldId, ':newId'=>$newId), False);
     }
 
+    //update the state of a student.
     function updateState()
     {
         $id = $_POST["old_id"];
@@ -160,6 +162,7 @@
         sqlExecute($sqlUpdateStudent, array(':state'=>$state, ':id'=>$id, ':comment'=>$comment, ':edited_by'=>$editedBy), False);
     }
 
+    //disable or re-enable an account
     function updateDisabled()
     {
         $id = $_POST["id"];

@@ -88,6 +88,7 @@
 	{
         require_once "../settings/init_settings.php";
 
+        //settings are used to determine the start and end date of the in_class_student record
         if(!isset($GLOBALS["settings"]))
         initializeSettings();
 

@@ -22,12 +22,13 @@
     //Sanitize the input
     $examId = sanitize_input($examId);
 
+    //Ensure input is well-formed
     validate_only_numbers($examId);
 
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
-    //Get 
+    //Get the exam_cats
     $sql = "SELECT * 
             FROM exam_category NATURAL JOIN category
             WHERE exam_id = :exam_id";

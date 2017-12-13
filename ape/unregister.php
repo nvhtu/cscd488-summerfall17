@@ -15,7 +15,6 @@
 	$requesterSessionId = $_POST["requester_session_id"];
     $allowedType = array("Admin", "Teacher", "Student");
 	
-	//TODO: validate id is set/valid
 	$student_id = $_POST["student_id"];
 	$exam_id = $_POST["exam_id"];
 	
@@ -31,8 +30,6 @@
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 	
 	//Authenticate student being registered
-	//$allowedType = array("Student");
-	//user_auth($student_id, "Student", $allowedType);
 	checkStudentExists($student_id);
 	
 	sqlExecute("DELETE FROM exam_roster WHERE exam_id = :exam AND student_id LIKE :student",
@@ -42,6 +39,7 @@
 	//change student state to "Ready"
 	sqlExecute("UPDATE student SET state = :state WHERE student_id LIKE :id", array(":state" => "Ready", ":id" => $student_id), false);
 
+	//send confirmation email to student
 	$sqlGetStudentInfo = "SELECT f_name, l_name, email
 	FROM user
 	WHERE user_id LIKE :user_id";

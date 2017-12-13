@@ -23,8 +23,8 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
-    $whereArgs = array();
-    $sqlDataArr = array();
+    $whereArgs = array();//holds dynamic contents of SQL statement where clause
+    $sqlDataArr = array();//holds data that goes in the placeholders of the where clause
 
     for($i=0; $i<count($graderExamCatIdsArr); $i++)
     {
@@ -32,6 +32,7 @@
         $sqlDataArr[":id" . $i] = $graderExamCatIdsArr[$i];
     }
 
+    //combine all elements of $whereArgs to create where clause
     $whereClause = implode(' OR ', $whereArgs);
 
     $sqlSelectGradedSeats = "SELECT *

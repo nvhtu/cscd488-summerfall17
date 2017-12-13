@@ -24,7 +24,7 @@
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
     
-
+    //ensure valid in-class exam if user is a teacher
     if(strcmp($requesterType, 'Teacher') == 0)
     {
         $sqlSelectId = "SELECT COUNT(*) as count

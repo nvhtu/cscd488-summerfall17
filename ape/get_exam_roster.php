@@ -62,7 +62,7 @@
                     $sqlResultCatGrades = getStudentCatGrades($studentId, $examId);
 
                     
-
+                    //add categories array for each student
                     $sqlStudentsResult[$i]["cats"] = array();
 
                     $catHasGradeCounter = 0;
@@ -74,12 +74,14 @@
                         if($sqlResultStudentAllCats[$theCat]["avg_grade"] != null)
                             $catHasGradeCounter++;
 
+                        //add an array for each individual category within the cats array
                         $sqlStudentsResult[$i]["cats"][$theCat] = array();
 
-
+                        //add data to the new array
                         $sqlStudentsResult[$i]["cats"][$theCat]["exam_cat_id"] = $sqlResultStudentAllCats[$theCat]["exam_cat_id"];
                         $sqlStudentsResult[$i]["cats"][$theCat]["name"] = $sqlResultStudentAllCats[$theCat]["name"];          
                         $sqlStudentsResult[$i]["cats"][$theCat]["possible_grade"] = $sqlResultStudentAllCats[$theCat]["possible_grade"];
+                        //add an array for the graders of the individual category
                         $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"] = array();
 
                         $gradeArr = array();
@@ -87,7 +89,7 @@
                         {
                             if ($sqlResultCatGrades[$theGraderCat]["exam_cat_id"] == $sqlResultStudentAllCats[$theCat]["exam_cat_id"])
                             {
-
+                                //Fill the grader array with key = grader's name and value = grade given
                                 $sqlStudentsResult[$i]["cats"][$theCat]["graders_grades"][$sqlResultCatGrades[$theGraderCat]["grader_name"]] = $sqlResultCatGrades[$theGraderCat]["grade"];
                                 array_push($gradeArr, $sqlResultCatGrades[$theGraderCat]["grade"]);
                             }
@@ -97,6 +99,7 @@
 
                         if(checkStudentCatGradeExists($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"]))
                         {
+                            //grade has been manually changed by admin
                             if(checkCommentExists($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"]))
                             {
                                 $_GET["requester_id"] = "999999";
@@ -112,8 +115,10 @@
                             {
                                 if(strcmp($sqlStudentsResult[$i]["state"],"Archived") != 0)
                                 {
+                                    //if a final category grade is able to be automatically generated
                                     if(updateFinalCatGrade($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentAllCats[$theCat]["avg_grade"], $systemId))
                                     {
+                                        //add the final grade for the category
                                         $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
                                     }
                                     else
@@ -123,6 +128,7 @@
                                     $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
                                     $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
                                 }
+                                //archived exam, no grade generation
                                 else
                                 {
                                     $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
@@ -136,8 +142,10 @@
                         else
                         {   if(strcmp($sqlStudentsResult[$i]["state"],"Archived") != 0)
                             {
+                                //if a final category grade is able to be automatically generated
                                 if(updateFinalCatGrade($studentId, $sqlResultStudentAllCats[$theCat]["exam_cat_id"], $gradeArr, $sqlResultStudentAllCats[$theCat]["avg_grade"], $systemId))
                                 {
+                                    //add the final grade for the category
                                     $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
                                 }
                                 else
@@ -147,6 +155,7 @@
                                 $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
                                 $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
                             }
+                            //archived exam, no grade generation
                             else
                             {
                                 $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = $sqlResultStudentAllCats[$theCat]["avg_grade"];
@@ -183,6 +192,7 @@
                     $data = array(':student_id' => $studentId, ':exam_id' => $examId);
                     $sqlResultExams = sqlExecute($sqlSelectExams, $data, true);
 
+                    //add overall exam grade info to the student data
                     if(count($sqlResultExams) != 0)
                     {
                         foreach ($sqlResultExams[0] as $attrName => $attrVal)

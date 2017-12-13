@@ -1,6 +1,6 @@
 <?php
 /**
- * Update exam category grade for a student
+ * Update exam category grade (not final) for a student
  * @author: Tu Nguyen
  * @version: 1.0
  */

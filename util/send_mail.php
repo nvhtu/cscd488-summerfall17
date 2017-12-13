@@ -10,6 +10,7 @@
 	 */
     function sendMail ($receiver, $subject, $message)
     {
+		//if the global settings array has not been initialized, do so
 		if(!isset($GLOBALS["settings"]))
 			initializeSettings();
 			

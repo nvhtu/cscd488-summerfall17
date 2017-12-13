@@ -32,10 +32,6 @@
     //User authentication
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
-    //Validate strings not empty
-
-    //Validate strings
-
     checkGraderExamCatExists($graderExamCatId);
     checkStudentExists($studentId);
 

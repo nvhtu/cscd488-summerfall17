@@ -1,6 +1,6 @@
 <?php
 /**
- * Get all sections of the homepage
+ * Get all sections of the homepage HTML
  * @author: Tu Nguyen
  * @version: 1.0
  */

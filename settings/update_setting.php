@@ -25,17 +25,21 @@
 	$name = sanitize_input($name);
 	$value = sanitize_input($value);
 
-	//Ensure input is well-formed
+    //Ensure input is well-formed
     
+    //Start or end date of quarter
     if(strpos($name, "Start") !== false || strpos($name, "End") !== false){
         validate_date($value);
     }
+    //contact email
     else if(strpos($name, "Email") !== false){
         validate_email($value);
     }
+    //contact name
     else if(strpos($name, "Name") !== false){
         validate_name($value);
     }
+    //point diff range, max graders per category
     else{
         validate_only_numbers($value);
     }
@@ -43,12 +47,15 @@
 	//User authentication
     user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
+    //update setting in database
 	sqlExecute("UPDATE admin_setting SET value = :value WHERE name = :name",
 				array(':name' => $name, ':value' => $value),
                 False);
 
+    //if global settings array has not been initialized, do so
     if(!isset($GLOBALS["settings"]))
         initializeSettings();
 
+    //update setting in array
     $GLOBALS["settings"][$name] = $value;
 ?>

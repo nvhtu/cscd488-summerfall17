@@ -29,6 +29,7 @@
 
     }
 
+    //gets the final category grade, comment, and first and last name of grade editor for this student
     function getStudentFinalCatGrade($studentId, $examCatId)
     {
         $sqlSelectGrade = "SELECT final_grade, comment, CONCAT(u.f_name,' ',u.l_name) AS edited_by

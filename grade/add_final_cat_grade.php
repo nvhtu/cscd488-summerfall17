@@ -39,6 +39,7 @@
 
     }
 
+    //adds/updates a final category score for this student, with or without a comment
     function updateStudentFinalCatGrade($studentId, $examCatId, $finalGrade, $comment, $editedBy)
     {
         if($comment != NULL)

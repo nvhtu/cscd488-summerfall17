@@ -73,10 +73,34 @@
                             break;
 
             case "000":
-            case "Student": $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff
+            case "Student": $sqlSelectExams = "SELECT exam_id, name, quarter, date, location, state, possible_grade, passing_grade, duration, TIME_FORMAT(start_time, '%h:%i %p') AS start_time, cutoff,  DATE_SUB(start_time, INTERVAL cutoff hour) AS cutoff_time
                             FROM exam
                             WHERE state LIKE :state AND exam.exam_id NOT IN (SELECT exam_id FROM in_class_exam)";
-                            return $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$state), true);
+                            $sqlResult = sqlExecute($sqlSelectExams, array(":state"=>$state), true);
+
+                            for($i=0; $i<count($sqlResult); $i++)
+                            {
+                                date_default_timezone_set('America/Los_Angeles');
+                                $examDate = new DateTime($sqlResult[$i]["date"]);
+                                $examCutoff = strtotime($sqlResult[$i]["cutoff_time"]);
+                        
+                                $today = new DateTime(date("Y-m-d"));
+                                $curHour = strtotime(date("H:i:s"));
+                                //if the exam is today
+                                if(date_diff($today, $examDate)->days == 0)
+                                {
+                                    //if the cutoff time has been reached
+                                    if($curHour >= $examCutoff)
+                                    {
+                                        $sqlResult[$i]["reg_closed"] = 1;
+                                    }
+                                }
+                                else {
+                                    $sqlResult[$i]["reg_closed"] = 0;
+                                }
+                            }
+
+                            return $sqlResult;
                             break;
         }
            

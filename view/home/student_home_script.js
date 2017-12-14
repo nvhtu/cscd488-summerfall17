@@ -163,7 +163,7 @@ function buildItemSummaryRow(item)
             if(item.exam_id == theExam) //Registered by user
             {
                 row.addClass("grey-row");
-                if(item.remaining_seats == "FULL") //Exam full
+                if(item.remaining_seats == "FULL" || item.reg_closed == 1) //Exam full
                 {
                     $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full registered" data-id="' + summaryData.id + '">Register</button>');
                     
@@ -177,7 +177,7 @@ function buildItemSummaryRow(item)
             }
             else //Not registered
             {
-                if(item.remaining_seats == "FULL") //Exam full
+                if(item.remaining_seats == "FULL" || item.reg_closed == 1) //Exam full
                 {
                     $bttnRegister = $('<button type="button" disabled="" class="btn btn-primary register-btn register-full " data-target="#detail-modal" data-toggle="modal" data-id="' + summaryData.id + '">Register</button>');
                     
@@ -256,7 +256,7 @@ function checkAccountState()
 
 function removeDisableBtnInfo($btn)
 {
-
+    $btn.removeAttr("data-id");
     $btn.removeAttr("data-target");
     $btn.prop("disabled",true);
 

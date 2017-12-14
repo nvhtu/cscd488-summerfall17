@@ -43,13 +43,25 @@
                 }
             }
 
+            //Check disabled account
+            $sqlDisableAccount = "SELECT disabled
+                                FROM user
+                                WHERE user_id LIKE :user_id";
+            $sqlResultDisabledAccount = sqlExecute($sqlDisableAccount, array(':user_id'=>$requesterId), True);
+            if($sqlResultDisabledAccount[0]["disabled"] == 1)
+            {
+                http_response_code(400);
+                $conn = null;
+                die("Unauthorized access. Your account is disabled.");
+            }
+
             if(strcmp($requesterType, "Student") == 0) //Student account
             {
                 $sqlCountStudent = "SELECT COUNT(student_id) as count
                                     FROM student
                                     WHERE student_id LIKE :requester_id";
 
-                $sqlResult = sqlExecute($sqlCountStudent, array(':requester_id'=>$requesterId), True, False);
+                $sqlResult = sqlExecute($sqlCountStudent, array(':requester_id'=>$requesterId), True);
 
                 if($sqlResult[0]["count"] == 0)
                 {

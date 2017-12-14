@@ -31,7 +31,33 @@
 	
 	//Authenticate student being registered
 	checkStudentExists($student_id);
-	
+
+	//Check exam cutoff time only for Student account
+	if(strcmp($requesterType,"Student") == 0)
+	{
+		date_default_timezone_set('America/Los_Angeles');
+		
+		$sqlGetExam = "SELECT exam_id, name, date, start_time, DATE_SUB(start_time, INTERVAL cutoff hour) AS cutoff_time
+		FROM exam
+		WHERE exam_id = :exam_id";
+		$theExam = sqlExecute($sqlGetExam, array(":exam_id"=>$exam_id), true);
+
+		$examDate = new DateTime($theExam[0]["date"]);
+		$examCutoff = strtotime($theExam[0]["cutoff_time"]);
+
+		$today = new DateTime(date("Y-m-d"));
+		$curHour = strtotime(date("H:i:s"));
+		//if the exam is today
+		if(date_diff($today, $examDate)->days == 0)
+		{
+			//if the cutoff time has been reached
+			if($curHour >= $examCutoff)
+			{
+				http_response_code(400);
+				die("Registration unsucessful. The exam has passed its open registration time.");
+			}
+		} 
+	}
 	//Find number of seats in exam location
 	$numSeats = getMaxSeats($exam_id);
 	//Find number of students currently registered

@@ -9,6 +9,7 @@ require_once "../util/sql_exe.php";
 require_once "../auth/user_auth.php";
 require_once "../util/send_mail.php";
 require_once "../util/input_validate.php";
+require_once "../util/check_id.php";
 
 $requesterId = $_POST["requester_id"];
 $requesterType = $_POST["requester_type"];
@@ -23,17 +24,29 @@ validate_only_numbers($examId);
 //User authentication
 user_auth($requesterId, $requesterType, $allowedType, $requesterSessionId);
 
-changeAllStudentState($examId);
+//Check if in-class exam
+if(!checkInclassExamExists($examId))
+{
+    changeAllStudentState($examId);
+}
+
 sendMailAll($examId);
 
 function changeAllStudentState($examId)
 {
-    $sqlGetExamStudents = "SELECT student_id, passed, count(student_id) AS attempt
-                            FROM exam_grade
-                            WHERE student_id IN (SELECT student_id
-                                                FROM exam_grade
-                                                WHERE exam_id = :exam_id)
-                            GROUP BY student_id";
+    $sqlGetExamStudents = "SELECT A.student_id, passed, attempt FROM 
+                        (SELECT student_id, passed
+                        FROM exam_grade
+                        WHERE exam_id = 1071) as A
+                        JOIN 
+                        (SELECT student_id, count(student_id) AS attempt
+                        FROM exam_grade
+                        WHERE student_id IN (SELECT student_id
+                                            FROM exam_grade
+                                            WHERE exam_id = :exam_id)
+                                            GROUP BY student_id) as B 
+                        ON A.student_id = B.student_id";
+
     $sqlResultGetExamStudents = sqlExecute($sqlGetExamStudents, array(":exam_id"=>$examId), true);
 
     foreach ($sqlResultGetExamStudents as $theStudent)

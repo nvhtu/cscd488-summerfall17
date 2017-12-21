@@ -36,7 +36,7 @@
         case ("get_by_id"): //Student and Grader can't request account info other than their own
                             if(strcmp($requesterType, "Student") == 0 || strcmp($requesterType, "Grader") == 0) 
                             {
-                                http_response_code(400);
+                                http_response_code(401);
                                 die("Unauthorized access. Your account type can't use this function.");
                             }
                             else 

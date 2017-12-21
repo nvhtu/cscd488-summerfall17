@@ -67,7 +67,7 @@ function checkFacultyTypes()
     {
         if(!isset($GLOBALS["settings"]))
             initializeSettings();
-        http_response_code(400);
+        http_response_code(401);
         die("You don't have an account in the APE system. Please contact " . $GLOBALS["settings"]["contactName"] . " to setup an account");
     }
     else 

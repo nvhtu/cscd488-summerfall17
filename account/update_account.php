@@ -82,7 +82,7 @@
         //Validate only admin can change admin account
         if(strcmp($requesterType, 'Admin') != 0 && strcmp($type, 'Admin') == 0)
         {
-            http_response_code(400);
+            http_response_code(401);
             $conn = null;
             die("Unauthorized access. You must be an admin to chanage an admin account.");
         }

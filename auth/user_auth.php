@@ -37,7 +37,7 @@
                 $userInfo = getCurUserInfo(False);
                 if(strcmp($requesterSessionId, $userInfo["userSession"]) != 0)
                 {
-                    http_response_code(400);
+                    http_response_code(401);
                     $conn = null;
                     die("Unauthorized access. Account is not signed in.");
                 }
@@ -50,7 +50,7 @@
             $sqlResultDisabledAccount = sqlExecute($sqlDisableAccount, array(':user_id'=>$requesterId), True);
             if($sqlResultDisabledAccount[0]["disabled"] == 1)
             {
-                http_response_code(400);
+                http_response_code(401);
                 $conn = null;
                 die("Unauthorized access. Your account is disabled.");
             }
@@ -65,7 +65,7 @@
 
                 if($sqlResult[0]["count"] == 0)
                 {
-                    http_response_code(400);
+                    http_response_code(401);
                     $conn = null;
                     die("Unauthorized access. Account does not exist.");
                 }
@@ -91,7 +91,7 @@
                 if(!$isAuth)
                 {
                     //echo "False";
-                    http_response_code(400);
+                    http_response_code(401);
                     $conn = null;
                     die("Unauthorized access. Account does not exist.");
                     
@@ -115,7 +115,7 @@
             if(!$isAuth)
             {
                 //echo "False";
-                http_response_code(400);
+                http_response_code(401);
                 $conn = null;
                 die("Unauthorized access. Your account type can't use this function.");
                 

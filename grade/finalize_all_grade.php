@@ -37,7 +37,7 @@ function changeAllStudentState($examId)
     $sqlGetExamStudents = "SELECT A.student_id, passed, attempt FROM 
                         (SELECT student_id, passed
                         FROM exam_grade
-                        WHERE exam_id = 1071) as A
+                        WHERE exam_id = :exam_id) as A
                         JOIN 
                         (SELECT student_id, count(student_id) AS attempt
                         FROM exam_grade

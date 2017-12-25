@@ -34,7 +34,7 @@
         $sqlResult = sqlExecute($sqlSelectId, $data, true);
 
         if($sqlResult[0]["count"] == 0) {
-            http_response_code(400);
+            http_response_code(401);
             die("Unauthorized access. Teachers can only delete their own in-class exam.");
         }
     }

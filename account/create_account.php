@@ -43,9 +43,10 @@
             $state = $_POST["state"];
             createStudentAccount($id, $state);
             $isInclass = $_POST["is_inclass"];
-            $teacherId = $_POST["teacher_id"];
+            
             if($isInclass == "true")
             {
+                $teacherId = $_POST["teacher_id"];
                 createInClassStudent($id, $teacherId);
             }
         }

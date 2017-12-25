@@ -17,6 +17,22 @@
             return True;
         }
     }
+
+    function checkInclassExamExists($examId)
+    {
+        $sqlCheckExists = "SELECT COUNT(*) as count
+                                FROM in_class_exam
+                                WHERE exam_id LIKE :exam_id";
+        $sqlResult = sqlExecute($sqlCheckExists, array('exam_id'=>$examId), TRUE);
+
+        if($sqlResult[0]["count"] == 0)
+        {
+            return False;
+        }
+        else {
+            return True;
+        }
+    }
     
     function checkStudentExists($studentId)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Get the graders of an exam or all Grading exam
+ * Get the graders of an exam, exam category, or all Grading exam
  * @author: Tu Nguyen
  * @version: 1.0
  */

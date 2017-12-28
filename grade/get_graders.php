@@ -87,11 +87,11 @@
 
     function getGradersOpenExams()
     {
-        $sqlGetGradersOpeExams = "SELECT user_id, grader_exam_cat_id, exam_category.possible_grade, exam_id
+        $sqlGetGradersOpenExams = "SELECT user_id, grader_exam_cat_id, exam_category.possible_grade, exam_id
         FROM exam_category NATURAL JOIN assigned_grader JOIN exam USING (exam_id)
         WHERE exam.state = 'Grading'";
 
-        return sqlExecute($sqlGetGraders, array(), true);
+        return sqlExecute($sqlGetGradersOpenExams, array(), true);
     }
 
     function getGradersByExamCatId()

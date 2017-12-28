@@ -10,7 +10,8 @@
     require_once "../util/input_validate.php";
     
     $requesterId = $_GET["requester_id"];
-    $requesterType = $_GET["requester_type"];$requesterSessionId = $_GET["requester_session_id"];
+    $requesterType = $_GET["requester_type"];
+    $requesterSessionId = $_GET["requester_session_id"];
     
     $allowedType = array("Admin", "Teacher", "Grader");
 

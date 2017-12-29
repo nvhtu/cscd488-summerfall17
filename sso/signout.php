@@ -22,7 +22,7 @@ $_SESSION['loggedIn'] = false;
 unset($_SESSION['phpCAS']);
 unset($_SESSION['ewuid']);
 
-$projectDirName = "cscd488-summerfall17";
+$projectDirName = "ape";
 $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view" . DIRECTORY_SEPARATOR . "home";
 
 phpCAS::logoutWithRedirectService($absPath);

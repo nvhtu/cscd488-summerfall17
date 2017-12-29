@@ -27,7 +27,7 @@ function loadUserInfo(data)
         _userSessionId = "000";
 
         $("#signin-btn").text("Sign in");
-        $("#signin-btn").attr("href","/cscd488-summerfall17/sso/signin.php");
+        $("#signin-btn").attr("href","/ape/sso/signin.php");
     }
     else
     {
@@ -37,7 +37,7 @@ function loadUserInfo(data)
         _userSessionId = data.userSession;
 
         $("#signin-btn").text("Sign out");
-        $("#signin-btn").attr("href","/cscd488-summerfall17/sso/signout.php");
+        $("#signin-btn").attr("href","/ape/sso/signout.php");
 
         //Check all types of the user
         //_userType variable is used for authentication only. On each operation that requires

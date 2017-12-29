@@ -1,5 +1,5 @@
 <?php 
-  $projectDirName = "cscd488-summerfall17";
+  $projectDirName = "ape";
 
    if ( !isset($page) ) {
       $page = "home";

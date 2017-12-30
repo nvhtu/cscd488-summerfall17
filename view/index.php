@@ -73,7 +73,7 @@
    
     <div class="container">
         <div class="row">
-            <div class="sidebar list-group">
+            <div class="sidebar sidebar-collapse list-group" id="ape-sidebar">
                 <?php require_once $absPath . '/includes/sidebar.php'; ?>
             </div>
             <div class="col-sm-12 main">

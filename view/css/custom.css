@@ -35,8 +35,24 @@ body > .container {
    padding-right: 20px;
 }
 
+.navbar .container{
+    display: inline-flex;
+    width: 100%;
+}
+
 .navbar .navbar-text {
    color: white;
+}
+
+.navbar .pull-right
+{
+    margin-left: auto;
+}
+
+.navbar-text{
+    float: left;
+    width: 50%;
+    font-size: 15px;
 }
 
 .navbar .btn {
@@ -48,6 +64,10 @@ body > .container {
     margin-right: 20px;
 }
 
+.main
+{
+    padding-top: 40px;
+}
 
 /*
  * Sidebar
@@ -85,10 +105,16 @@ body > .container {
     .main {
         padding-right: 15px;
         padding-left: 215px;
+        padding-top: 40px;
     }
 
     .navbar>.container, .footer>.container {
         padding-left: 200px;
+    }
+
+    .navbar-text{
+        font-size: 18px !important;
+        width: 100% !important;
     }
 
     .hamburger-menu

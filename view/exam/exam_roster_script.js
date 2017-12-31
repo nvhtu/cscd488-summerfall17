@@ -118,7 +118,7 @@ function loadTabRoster()
 
 function addMaxSeats(location){
     $("#roster-table-wrapper").attr("max-seats", location[0].seats);
-    console.log($("#roster-table-wrapper"));
+   //console.log($("#roster-table-wrapper"));
 }
 
 function loadRosterTable(data)

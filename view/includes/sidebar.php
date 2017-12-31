@@ -11,7 +11,7 @@
         
         <div class="list-group-item user-wrapper">
             <div class="user">
-                <h5>Welcome,</h5>
+                <h5>Welcome</h5>
                 <h4>'. $userInfo["userFname"] . ' ' . $userInfo["userLname"] . '</h4>
             </div>
         </div>';

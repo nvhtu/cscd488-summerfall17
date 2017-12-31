@@ -21,13 +21,6 @@ function loaded()
 {
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
 
-    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
-        console.log(jqxhr.responseText);
-        $(".msg-box").addClass("alert-danger");
-        $(".msg-box").fadeIn();
-        $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
-    });
-
     $("#create-button").click(onclickCreate);
     $("#submit-button").click(submitForm);
     $('#discard-button').click(onclickDiscard);
@@ -41,9 +34,7 @@ function init()
     $("#requester-id").val(_userId);
     $("#requester-type").val(_userType);
     $("#requester-session").val(_userSessionId);
-
     $(".msg-box").hide();
-
     jQuery.validator.setDefaults({
         errorElement: 'span',
         errorClass: 'error help-block',

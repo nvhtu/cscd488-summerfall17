@@ -146,14 +146,7 @@ function init()
             }
     
         });
-    
         $(".msg-box").hide();
-    
-        $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
-            $(".msg-box").addClass("alert-danger");
-            $(".msg-box").fadeIn();
-            $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
-        });
 
         jQuery.validator.setDefaults({
             errorElement: 'span',

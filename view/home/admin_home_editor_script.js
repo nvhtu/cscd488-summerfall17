@@ -21,14 +21,7 @@ function init()
     $("#requester-session").val(_userSessionId);
     
     $("#submit-button").click(submitForm);
-    
-    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
-            console.log(jqxhr.responseText);
-            $(".msg-box").addClass("alert-danger");
-            $(".msg-box").fadeIn();
-            $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
-    });
-
+    $(".msg-box").hide();
 }
 
 function getHomepageContent()

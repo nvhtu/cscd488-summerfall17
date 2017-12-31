@@ -125,7 +125,7 @@
     <script src="js/script.js"></script>
     <script src="js/build_table.js"></script>
     <script src="js/summernote.min.js"></script>
-   
+    <script src="js/bootstrap-notify.min.js"></script>
    
     <?php 
     if (isset($jsArr))

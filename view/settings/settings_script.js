@@ -19,13 +19,6 @@ function loaded()
     $("div .table-toolbar").remove();
 
     $.get("../util/get_cur_user_info.php", {is_client: true}, loadUserInfo, "json");
-
-    $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
-        console.log(jqxhr.responseText);
-        $(".msg-box").addClass("alert-danger");
-        $(".msg-box").fadeIn();
-        $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);
-    });
 }
 
 function init()

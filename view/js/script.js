@@ -16,6 +16,30 @@ function loaded()
       $this.hide();
       onClickSearch(undefined, $search);
    });
+
+   $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+    /*console.log(jqxhr.responseText);
+    $(".msg-box").addClass("alert-danger");
+    $(".msg-box").fadeIn();
+    $("#msg-box-text").html("<strong>Error!</strong> " + jqxhr.responseText);*/
+
+    $.notify({
+        title: '<strong>Error</strong>',
+        message: jqxhr.responseText
+    },{
+        type: 'danger',
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        z_index: 9999
+    });
+});
+
 }
 
 function loadUserInfo(data)

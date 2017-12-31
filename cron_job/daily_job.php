@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Daily cron job that checks all open exams
+ * and sends reminder email to registered students if the exam's date
+ * is a week away.
+ * @author: Tu Nguyen
+ * @version: 1.0
+ */
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
     require_once "../util/input_validate.php";

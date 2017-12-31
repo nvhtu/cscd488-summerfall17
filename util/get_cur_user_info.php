@@ -1,5 +1,15 @@
 <?php
-
+/**
+ * Function that returns an array of current user information, includings:
+ * - userId
+ * - userType
+ * - userSession
+ * - userFname
+ * - userLname
+ * - userEmail
+ * @author: Tu Nguyen
+ * @version: 1.0
+ */
     if(isset($_GET["is_client"]))
     {
         $isClient = $_GET["is_client"];
@@ -16,37 +26,12 @@
 
         if($isDev)
         {
-            $userInfo = array('userId' => '', 
-                            'userType' => array("Admin", "Teacher", "Grader"), 
-                            'userSession' => '111111',
-                            'userFname' => 'Stu',
-                            'userLname' => 'Steiner',
-                            'userEmail' => 'abc@xyz.com' );
-
-            /*$userInfo = array('userId' => 'y', 
-                            'userType' => array("Admin", "Teacher", "Grader"), 
-                            'userSession' => '111111',
-                            'userFname' => 'Stu',
-                            'userLname' => 'Steiner',
-                            'userEmail' => 'ssteiner@ewu.edu' );
-            $userInfo = array('userId' => 'x', 
+            $userInfo = array('userId' => '2223', 
                             'userType' => array("Admin", "Teacher", "Grader"), 
                             'userSession' => '111111',
                             'userFname' => 'Tom',
                             'userLname' => 'Capaul',
-                            'userEmail' => 'tcapaul@ewu.edu' );
-            /*$userInfo = array('userId' => '3333', 
-                            'userType' => array('Student'), 
-                            'userSession' => '111111',
-                            'userFname' => 'A333AAA',
-                            'userLname' => 'B333',
-                            'userEmail' => '1233Abc@xyz.c' );/
-            $userInfo = array('userId' => '2223', 
-                            'userType' => array('Grader'), 
-                            'userSession' => '111111',
-                            'userFname' => 'A3AAA',
-                            'userLname' => 'B3BBB',
-                            'userEmail' => '12Abc@xyz.c' );*/
+                            'userEmail' => 'abc@xyz.com' );
         }
         else 
         {

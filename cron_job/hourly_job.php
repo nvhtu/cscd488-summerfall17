@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Hourly cron jobs that:
+ * - Checks Open exam to move it to In-progress state if it's reached start_time.
+ * - Checks In-progress exam to move it to Grading state if it's finished.
+ * @author: Tu Nguyen
+ * @version: 1.0
+ */
     require_once "../auth/user_auth.php";
     require_once "../util/sql_exe.php";
     require_once "../util/input_validate.php";

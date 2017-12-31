@@ -56,13 +56,19 @@ body > .container {
     font-size: 15px;
 }
 
-.navbar .btn {
-    margin: 8px 0;
+.navbar .btn, .navbar .navbar-toggle{
+    margin: 15px 0;
 }
 
 .hamburger-menu
 {
     margin-right: 20px;
+}
+
+.navbar-toggle
+{
+    border-color: #ccc;
+    background: white;
 }
 
 .main
@@ -116,6 +122,10 @@ body > .container {
     .navbar-text{
         font-size: 18px !important;
         width: 100% !important;
+    }
+
+    .navbar .btn, .navbar .navbar-toggle{
+        margin: 8px 0;
     }
 
     .hamburger-menu

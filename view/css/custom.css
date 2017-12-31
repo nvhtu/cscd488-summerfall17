@@ -33,6 +33,7 @@ body > .container {
    border: 0;
    padding-left: 20px;
    padding-right: 20px;
+   margin-top: -15px;
 }
 
 .navbar .container{
@@ -172,6 +173,7 @@ body > .container {
 .sidebar .user {
     display: inline-block;
     text-align: left;
+    padding-top: 15px;
 }
 
 .sidebar .user-wrapper:hover, .sidebar .user-wrapper:focus {
@@ -423,8 +425,8 @@ body > .container {
    width: 100%;
    /* Set the fixed height of the footer here */
    height: 70px;
-   background: linear-gradient(to bottom, #a10022 0%, #660014 100%);
-   color: white;
+   border-top: 1px solid #ddd;
+   color: #45525A;
 }
 
 .footer .container {
@@ -436,7 +438,7 @@ body > .container {
 }
 
 .footer li {
-   border-right: 1px solid #790016;
+   border-right: 1px solid #ddd;
    padding: 0 10px;
 }
 
@@ -445,7 +447,7 @@ body > .container {
 }
 
 .footer li a {
-   color: white;
+   color: #45525A;
 }
 
 

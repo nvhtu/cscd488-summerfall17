@@ -7,6 +7,7 @@
 
 require_once "CAS/CAS.php";
 require_once "../util/check_id.php";
+require_once "../settings/init_settings.php";
 
 $cas_server_ca_cert_path = 'comodo_combo.pem';
 $cas_real_hosts = array('it-adfs01.eastern.ewu.edu',
@@ -22,40 +23,52 @@ session_start();
 $_SESSION['loggedIn'] = true;
 //get all attributes from returned object.
 //Array includes: "UserType", "Email", "FirstName", "Ewuid", "LastName"
+
+/*
+$userAttr["Ewuid"] = "111";
+$userAttr["UserType"] = "Faculty";
+$userAttr["Email"] = "asdf@asd.com";
+$userAttr["FirstName"] = "SSO";
+$userAttr["LastName"] = "SSOOOO";
+*/
+
 $userAttr = phpCAS::getAttributes();
-$_SESSION['ewuid'] = $userAttr["Ewuid"];
+$_SESSION['Ewuid'] = $userAttr["Ewuid"];
+$_SESSION['UserType'] = $userAttr["UserType"];
+$_SESSION['Email'] = $userAttr["Email"];
+$_SESSION['FirstName'] = $userAttr["FirstName"];
+$_SESSION['LastName'] = $userAttr["LastName"];
 
 //$_SESSION["phpCAS"]["attributes"]["UserType"] = "Admin";
-//echo $_SESSION['ewuid'];
+//echo $_SESSION['Ewuid'];
 //echo $_SESSION["phpCAS"]["attributes"]["UserType"];
 
-if(strcmp($_SESSION["phpCAS"]["attributes"]["UserType"], "Student") == 0)
+if(strcmp($_SESSION["UserType"], "Student") == 0)
 {
-    if(checkStudentExists($_SESSION['ewuid']))
-    {
-        $_SESSION["phpCAS"]["attributes"]["UserType"] = array();
-        array_push($_SESSION["phpCAS"]["attributes"]["UserType"], "Student");
-        
-    }
-    else 
+    if(!checkStudentExists($_SESSION['Ewuid']))
     {
         $_POST["requester_id"] = "999999";
         $_POST["requester_type"] = "System";
-        require_once "create_account.php";
+        $_POST["requester_session_id"] = "0";
+        require_once "../account/create_account.php";
         
-        createStudentAccount($_SESSION['ewuid'], "Ready");
+        createAccount($_SESSION['Ewuid'], $_SESSION['FirstName'], $_SESSION['LastName'], $_SESSION['Email']);
+        createStudentAccount($_SESSION['Ewuid'], "Ready");
     }
+
+    $_SESSION["UserType"] = array();
+    array_push($_SESSION["UserType"], "Student");
 }
 else 
 {
-    $_SESSION["phpCAS"]["attributes"]["UserType"] = checkFacultyTypes();
+    $_SESSION["UserType"] = checkFacultyTypes();
 }
 
 header('Location: ../view/home/');
 
 function checkFacultyTypes()
 {
-    $userId = $_SESSION['ewuid'];
+    $userId = $_SESSION['Ewuid'];
     $userTypes = Array();
 
     $sqlCheckFaculty = "SELECT type 

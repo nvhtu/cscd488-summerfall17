@@ -39,14 +39,14 @@
                 session_start();
                 }
 
-            if(isset($_SESSION['ewuid']))
+            if(isset($_SESSION['Ewuid']))
             {
-                $userInfo = array('userId' => $_SESSION['ewuid'], 
-                'userType' => $_SESSION["phpCAS"]["attributes"]["UserType"], 
+                $userInfo = array('userId' => $_SESSION['Ewuid'], 
+                'userType' => $_SESSION["UserType"], 
                 'userSession' => session_id(),
-                'userFname' => $_SESSION["phpCAS"]["attributes"]["FirstName"],
-                'userLname' => $_SESSION["phpCAS"]["attributes"]["LastName"],
-                'userEmail' => $_SESSION["phpCAS"]["attributes"]["Email"] );
+                'userFname' => $_SESSION["FirstName"],
+                'userLname' => $_SESSION["LastName"],
+                'userEmail' => $_SESSION["Email"] );
             }
 
         }

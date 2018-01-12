@@ -20,7 +20,11 @@ phpCAS::forceAuthentication();
 
 $_SESSION['loggedIn'] = false;
 unset($_SESSION['phpCAS']);
-unset($_SESSION['ewuid']);
+unset($_SESSION['Ewuid']);
+unset($_SESSION['UserType']);
+unset($_SESSION['Email']);
+unset($_SESSION['FirstName']);
+unset($_SESSION['LastName']);
 
 $projectDirName = "ape";
 $absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view" . DIRECTORY_SEPARATOR . "home";

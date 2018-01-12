@@ -73,6 +73,7 @@
 
 	$_POST["requester_id"] = "999999";
 	$_POST["requester_type"] = "System";
+	$_POST["requester_session_id"] = "0";
 	require_once "../account/create_account.php";
 
 	//Reading csv file

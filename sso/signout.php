@@ -26,8 +26,11 @@ unset($_SESSION['Email']);
 unset($_SESSION['FirstName']);
 unset($_SESSION['LastName']);
 
+$projectURL = "https://ape.compsci.ewu.edu";
 $projectDirName = "ape";
-$absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view" . DIRECTORY_SEPARATOR . "home";
+//$absPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . $projectDirName . DIRECTORY_SEPARATOR . "view" . DIRECTORY_SEPARATOR . "home";
+
+$absPath = $projectURL ."/". $projectDirName . "/view/home";
 
 phpCAS::logoutWithRedirectService($absPath);
 ?>

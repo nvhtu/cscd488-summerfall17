@@ -478,6 +478,11 @@ input[type=file][hidden] {
     display: none !important;
 }
 
+.student-seat-input
+{
+    width: 115%;
+}
+
 /*Tu*/
 
 .green-row {

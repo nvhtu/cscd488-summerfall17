@@ -231,7 +231,7 @@ function checkStudentAccountState()
                         break;
         
         case "Blocked":   $(".msg-box").addClass("alert-danger");
-                        $("#msg-box-text").html("Your account is blocked. Please contact Stu.");
+                        $("#msg-box-text").html("Your account is blocked. Please contact Tom Capaul.");
                         break;
     }
 }

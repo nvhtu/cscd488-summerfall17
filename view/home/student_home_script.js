@@ -187,7 +187,7 @@ function buildItemSummaryRow(item)
 
 function checkAccountState()
 {
-    $examBtn = '<button type="button" class="btn btn-primary pull-right" onclick="window.location.href=\'../view/exam/\'">View My Grades</button>';
+    $examBtn = '<button type="button" class="btn btn-primary pull-right" onclick="window.location.href=\'../view/exam/?page=student_exam\'">View My Grades</button>';
     switch(_userState)
     {
         case "Ready":   $(".msg-box").addClass("alert-success");
@@ -236,7 +236,7 @@ function checkAccountState()
                         break;
         
         case "Blocked":   $(".msg-box").addClass("alert-danger");
-                        $("#msg-box-text").html("Your account is blocked. Please contact Stu.");
+                        $("#msg-box-text").html("Your account is blocked. Please contact Tom Capaul.");
                         $(".register-btn").html("Unavailable");
                         removeDisableBtnInfo($(".register-btn"));
                         break;

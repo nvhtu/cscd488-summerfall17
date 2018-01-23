@@ -1,7 +1,7 @@
 <?php
 /**
  * Get an exam roster
- * If grades requires, this file processes all grades operations before return the roster with grades,
+ * If grades are required, this file processes all grades operations before return the roster with grades,
  * Grades operations peformed including calculating avg grade, add avg grade to table student_cat_grade if in diff range,
  * add overall grade to table exam_grade if all cat grades have been graded.
  * @author: Tu Nguyen
@@ -67,6 +67,7 @@
 
                     $catHasGradeCounter = 0;
                     $isGradingFinished = true;
+                    $isFinalGradeGenerated = true;
 
                     for ($theCat=0; $theCat<count($sqlResultStudentAllCats); $theCat++)
                     {
@@ -124,6 +125,7 @@
                                     else
                                     {
                                         $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
+                                        $isFinalGradeGenerated = false;
                                     } 
                                     $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
                                     $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
@@ -151,6 +153,7 @@
                                 else
                                 {
                                     $sqlStudentsResult[$i]["cats"][$theCat]["final_grade"] = false;
+                                    $isFinalGradeGenerated = false;
                                 }  
                                 $sqlStudentsResult[$i]["cats"][$theCat]["comment"] = "";
                                 $sqlStudentsResult[$i]["cats"][$theCat]["edited_by"] = "";
@@ -168,7 +171,7 @@
                         
                     }
 
-                    if($catHasGradeCounter != count($sqlResultStudentAllCats))
+                    if($catHasGradeCounter != count($sqlResultStudentAllCats) || $isFinalGradeGenerated == false)
                     {
                         $isGradingFinished = false;
                     }
